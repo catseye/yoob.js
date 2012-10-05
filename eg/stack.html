@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <title>yoob.Stack Demo</title>
+  <script src="../src/yoob/stack.js"></script>
+  <style>
+#canvas { border: 1px solid blue; }
+  </style>
+</head>
+<body>
+
+<h1>yoob.Stack Demo</h1>
+
+<button id="push_0">Push 0</button>
+<button id="push_1">Push 1</button>
+<button id="pop">Pop</button>
+<br/>
+
+<canvas id="canvas" width="40" height="400">
+Your browser doesn't support displaying an HTML5 canvas.
+</canvas>
+
+</body>
+<script>
+  var canvas = document.getElementById('canvas');
+  var stack = new yoob.Stack();
+
+  document.getElementById('push_0').onclick = function(e) {
+    stack.push("0");
+    stack.drawCanvas(canvas, undefined, 20);
+  };
+
+  document.getElementById('push_1').onclick = function(e) {
+    stack.push("1");
+    stack.drawCanvas(canvas, undefined, 20);
+  };
+
+  document.getElementById('pop').onclick = function(e) {
+    alert(stack.pop());
+    stack.drawCanvas(canvas, undefined, 20);
+  };
+</script>
