@@ -97,18 +97,57 @@ yoob.Playfield = function() {
      * The default implementation just renders them as text.
      * Override if you wish to draw them differently.
      */
-    this.drawElement = function(ctx, x, y, width, height, elem) {
+    this.drawElement = function(ctx, x, y, cellWidth, cellHeight, elem) {
         ctx.fillText(elem.toString(), x, y);
     };
 
     /*
      * Draws the Playfield in a drawing context.
-     * width and height are canvas units of measure for each cell.
+     * cellWidth and cellHeight are canvas units of measure for each cell.
      */
-    this.draw = function(ctx, width, height) {
+    this.drawContext = function(ctx, cellWidth, cellHeight) {
         var me = this;
         this.foreach(function (x, y, elem) {
-            me.drawElement(ctx, x * width, y * height, width, height, elem);
+            me.drawElement(ctx, x * cellWidth, y * cellHeight,
+                           cellWidth, cellHeight, elem);
         });
     };
+
+    /*
+     * Draws the Playfield, and a set of Cursors, on a canvas element.
+     * Resizes the canvas to the needed dimensions.
+     * cellWidth and cellHeight are canvas units of measure for each cell.
+     */
+    this.drawCanvas = function(canvas, cellWidth, cellHeight, cursors) {
+        var ctx = canvas.getContext('2d');
+      
+        var width = this.max_x - this.min_x + 1;
+        var height = this.max_y - this.min_y + 1;
+
+        if (cellWidth === undefined) {
+          ctx.textBaseline = "top";
+          ctx.font = cellHeight + "px monospace";
+          cellWidth = ctx.measureText("@").width;
+        }
+
+        canvas.width = width * cellWidth;
+        canvas.height = height * cellHeight;
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        ctx.textBaseline = "top";
+        ctx.font = cellHeight + "px monospace";
+
+        for (var i = 0; i < cursors.length; i++) {
+            var cursor = cursors[i];
+            ctx.fillStyle = "#50ff50"; // XXX from cursor object
+            ctx.fillRect(cursor.x * cellWidth, cursor.y * cellHeight,
+                         cellWidth, cellHeight);
+        }
+
+        ctx.fillStyle = "black"; // XXX from this
+
+        this.drawContext(ctx, cellWidth, cellHeight);
+    };
+
 };
