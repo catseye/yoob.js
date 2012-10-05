@@ -16,7 +16,7 @@ yoob.Playfield = function() {
      */
     this.get = function(x, y) {
         return this._store[x+','+y];
-    }
+    };
 
     /*
      * Write a new value into (x, y).
@@ -28,7 +28,7 @@ yoob.Playfield = function() {
         if (this.max_y === undefined || y > this.max_y) this.max_y = y;
         /* TODO: if value === undefined { del this._store[x+','+y]; } */
         this._store[x+','+y] = value;
-    }
+    };
 
     /*
      * Clear the contents of this Playfield.
@@ -63,12 +63,13 @@ yoob.Playfield = function() {
                 lx++;
             }
         }
-    }
+    };
 
     /*
      * Iterate over every defined cell in the Playfield.
      * fun is a callback which takes three parameters:
-     * x, y, and value.
+     * x, y, and value.  If this callback returns a value,
+     * it is written into the Playfield at that position.
      * This function ensures a particular order.
      */
     this.foreach = function(fun) {
@@ -87,5 +88,6 @@ yoob.Playfield = function() {
                 }
             }
         }
-    }
-}
+    };
+
+};

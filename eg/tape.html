@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <title>yoob.Tape Demo</title>
+  <script src="../src/yoob/tape.js"></script>
+  <script src="../src/yoob/tape-head.js"></script>
+  <style>
+#canvas { border: 1px solid blue; }
+  </style>
+</head>
+<body>
+
+<h1>yoob.Tape Demo</h1>
+
+<canvas id="canvas" width="400" height="40">
+Your browser doesn't support displaying an HTML5 canvas.
+</canvas>
+
+<button id="write_0">Write 0</button>
+<button id="write_1">Write 1</button>
+<button id="left">Move Left</button>
+<button id="right">Move Right</button>
+
+</body>
+<script>
+  var canvas = document.getElementById('canvas');
+  var tape = new yoob.Tape();
+
+  var draw = function() {
+    var ctx = canvas.getContext('2d');
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.textBaseline = "top";
+
+    var height = 20;
+    ctx.font = height + "px monospace";
+    var width = ctx.measureText("@").width;
+
+    ctx.fillStyle = "black";
+    tape.foreach(function (pos, value) {
+        ctx.fillText(value, pos * width, 0);
+    });
+  };
+
+  var pos = 0;
+
+  document.getElementById('write_0').onclick = function(e) {
+    tape.put(pos, "0");
+    draw();
+  };
+
+  document.getElementById('write_1').onclick = function(e) {
+    tape.put(pos, "1");
+    draw();
+  };
+
+  document.getElementById('left').onclick = function(e) {
+    pos -= 1;
+    draw();
+  };
+
+  document.getElementById('right').onclick = function(e) {
+    pos += 1;
+    draw();
+  };
+
+</script>

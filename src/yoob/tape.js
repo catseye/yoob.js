@@ -14,7 +14,7 @@ yoob.Tape = function() {
      */
     this.get = function(pos) {
         return this._store[pos];
-    }
+    };
 
     /*
      * Write a new value into the given position.
@@ -24,5 +24,28 @@ yoob.Tape = function() {
         if (this.max === undefined || pos > this.max) this.max = pos;
         /* TODO: if value === undefined { del this._store[x+','+y]; } */
         this._store[pos] = value;
-    }
-}
+    };
+
+    /*
+     * Iterate over every defined cell on the Tape
+     * fun is a callback which takes two parameters:
+     * position and value.  If this callback returns a value,
+     * it is written into the Tape at that position.
+     * This function ensures a particular order.
+     */
+    this.foreach = function(fun) {
+        for (var pos = this.min; pos <= this.max; pos++) {
+            var value = this._store[pos];
+            if (value === undefined)
+                continue;
+            var result = fun(pos, value);
+            if (result !== undefined) {
+                if (result === ' ') {
+                    result = undefined;
+                }
+                this.put(pos, result);
+            }
+        }
+    };
+
+};
