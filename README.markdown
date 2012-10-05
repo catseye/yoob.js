@@ -17,9 +17,9 @@ Unlike yoob, yoob.js:
     dynamic approach of the Javascript language, yoob.js simply provides the
     constituent parts; it's up to you to string them together into an esolang
     interpreter (or whatever else) and to lay it out on a web page.
-*   is not limited to providing support for an esolang interpreter;
-    potentially yoob.js could provide all kinds of miscellaneous widgets and
-    other junk.
+*   is not limited to providing support for esolang interpreters; it might
+    be better described as a set of classes for implementing esolangs "and
+    other bizarre things".
 *   does not support unbounded integer values (yet).
 
 Other things you should know about yoob.js are that it:
@@ -30,14 +30,15 @@ Other things you should know about yoob.js are that it:
 *   does not rely on jQuery (yet) (possibly to its detriment.)
 *   does not come minified or agglomerated or anything.  I mean, this isn't
     production web development, we're not trying to optimize page load time
-    here, we just want to run us some esolangs, right?
+    here, we just want to run us some esolangs, right?  You're free to do
+    this yourself.  May we suggest `cat yoob/*.js > yoob.js`?
 
 API
 ---
 
 Each yoob.js class is defined in its own `.js` file, and each `.js` file
 inserts the class it defines into the `yoob` namespace (which it will create
-as a new, empty namespace if it has not already been defined.)
+as a new, empty, global namespace if it has not already been defined.)
 
 The classes are currently:
 
@@ -49,8 +50,9 @@ The classes are currently:
 
 *   `yoob.Cursor`, in `yoob/cursor.js`
     
-    A pointer into a `yoob.Playfield` which also has a "delta" which
-    indicates the putative direction/speed at which it is moving.
+    A pointer (position vector) into two-dimensional Cartesian space
+    (typically a `yoob.Playfield`) which also has a "delta" (direction
+    vector) which need not necessarily be used.
 
 *   `yoob.TextConsole`, in `yoob/text-console.js`
     

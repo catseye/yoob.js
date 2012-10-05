@@ -1,5 +1,10 @@
 if (window.yoob === undefined) yoob = {};
 
+/*
+ * An object representing a pointer (position vector) into two-dimensional
+ * Cartesian space (possibly a yoob.Playfield) with a direction vector
+ * (that need not be used).
+ */
 yoob.Cursor = function(x, y, dx, dy) {
     this.x = x;
     this.y = y;

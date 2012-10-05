@@ -70,16 +70,16 @@ yoob.TextConsole = function() {
   /*
    * Start the cursor blinking, if it's not already.
    */
-  this.startCursor = function() {
+  this._startCursor = function() {
     if (!this.cursorEnabled) {
       return;
     }
     if (this.blinkInterval !== null) {
       clearInterval(this.blinkInterval);
     }
+    this.drawCursor(this.textColor);
+    this.cursorIsShowing = true;
     var me = this;
-    me.drawCursor(me.textColor);
-    me.cursorIsShowing = true;
     this.blinkInterval = setInterval(function() {
       if (!me.cursorIsShowing) {
         me.drawCursor(me.textColor);
@@ -94,7 +94,7 @@ yoob.TextConsole = function() {
   /*
    * Start the cursor blinking, if it's not already.
    */
-  this.stopCursor = function() {
+  this._stopCursor = function() {
     if (!this.cursorEnabled) {
       return;
     }
@@ -120,7 +120,7 @@ yoob.TextConsole = function() {
     ctx.fillStyle = this.backgroundColor;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     this.cursorEnabled = true;
-    this.startCursor();
+    this._startCursor();
   };
 
   /*
@@ -154,7 +154,7 @@ yoob.TextConsole = function() {
     var ctx = this.canvas.getContext('2d');
     ctx.textBaseline = "top";
     ctx.font = this.charHeight + "px monospace";
-    this.stopCursor();
+    this._stopCursor();
     while (i < string.length) {
       var c = string.charAt(i);
       if (c === '\n') {
@@ -176,7 +176,7 @@ yoob.TextConsole = function() {
       }
       i++;
     };
-    this.startCursor();
+    this._startCursor();
   };
 
   /*
@@ -184,19 +184,22 @@ yoob.TextConsole = function() {
    * (0-based) and y is the row number (also 0-based.)
    */
   this.gotoxy = function(x, y) {
-    this.stopCursor();
+    this._stopCursor();
     this.col = x;
     this.row = y;
-    this.startCursor();
+    this._startCursor();
   };
 
+  /*
+   * Make the cursor visible (true) or invisible (false).
+   */
   this.enableCursor = function(b) {
     b = !!b;
     if (b) {
       this.cursorEnabled = true;
-      this.startCursor();
+      this._startCursor();
     } else {
-      this.stopCursor();
+      this._stopCursor();
       this.cursorEnabled = false;
     }
   };

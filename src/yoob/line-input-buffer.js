@@ -1,7 +1,8 @@
 if (window.yoob === undefined) yoob = {};
 
 /*
- * Object that captures keystrokes and optionally updates a TextConsole.
+ * Object that captures keystrokes and accumulates a string from them.
+ * Optionally also updates a TextConsole.
  * Mostly for demonstration purposes so far.
  */
 yoob.LineInputBuffer = function() {
@@ -50,6 +51,7 @@ yoob.LineInputBuffer = function() {
           break;
       }
     }, true);
+    /* TODO support on more browsers, with keyup */
     listenObject.addEventListener('keypress', function(e) {
       if (e.altKey) {
         //alert(e.charCode);

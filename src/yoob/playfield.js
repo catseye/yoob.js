@@ -1,5 +1,8 @@
 if (window.yoob === undefined) yoob = {};
 
+/*
+ * A two-dimensional Cartesian grid of values.
+ */
 yoob.Playfield = function() {
     this._store = {};
     this.min_x = undefined;
@@ -8,20 +11,28 @@ yoob.Playfield = function() {
     this.max_y = undefined;
 
     /*
+     * Obtain the value at (x, y).
      * Cells are undefined if they were never written to.
      */
     this.get = function(x, y) {
         return this._store[x+','+y];
     }
 
+    /*
+     * Write a new value into (x, y).
+     */
     this.put = function(x, y, value) {
         if (this.min_x === undefined || x < this.min_x) this.min_x = x;
         if (this.max_x === undefined || x > this.max_x) this.max_x = x;
         if (this.min_y === undefined || y < this.min_y) this.min_y = y;
         if (this.max_y === undefined || y > this.max_y) this.max_y = y;
+        /* TODO: if value === undefined { del this._store[x+','+y]; } */
         this._store[x+','+y] = value;
     }
 
+    /*
+     * Clear the contents of this Playfield.
+     */
     this.clear = function() {
         this._store = {};
         this.min_x = undefined;
@@ -55,6 +66,7 @@ yoob.Playfield = function() {
     }
 
     /*
+     * Iterate over every defined cell in the Playfield.
      * fun is a callback which takes three parameters:
      * x, y, and value.
      * This function ensures a particular order.
