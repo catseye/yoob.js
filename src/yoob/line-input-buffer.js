@@ -1,4 +1,4 @@
-if (yoob === undefined) yoob = {};
+if (window.yoob === undefined) yoob = {};
 
 /*
  * Object that captures keystrokes and optionally updates a TextConsole.

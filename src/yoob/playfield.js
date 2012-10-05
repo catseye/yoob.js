@@ -1,4 +1,4 @@
-if (yoob === undefined) yoob = {};
+if (window.yoob === undefined) yoob = {};
 
 yoob.Playfield = function() {
     this._store = {};
