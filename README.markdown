@@ -76,9 +76,11 @@ The classes are currently:
     
     An object representing a position on a Tape.
 
-PLANNED:
-
 *   `yoob.Stack`, in `yoob/stack.js`
+    
+    An object implementing a push-down, first-in-first-out stack/
+
+PLANNED:
 
 *   `yoob.Turtle`
     
