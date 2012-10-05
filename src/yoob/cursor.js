@@ -11,7 +11,7 @@ yoob.Cursor = function(x, y, dx, dy) {
     this.dx = dx;
     this.dy = dy;
 
-    this.is_headed = function(dx, dy) {
+    this.isHeaded = function(dx, dy) {
         return this.dx === dx && this.dy === dy;
     };
 
@@ -20,7 +20,7 @@ yoob.Cursor = function(x, y, dx, dy) {
         this.y += this.dy;
     };
 
-    this.rotate_clockwise = function() {
+    this.rotateClockwise = function() {
         if (this.dx === 0 && this.dy === -1) {
             this.dx = 1; this.dy = -1;
         } else if (this.dx === 1 && this.dy === -1) {
@@ -40,7 +40,7 @@ yoob.Cursor = function(x, y, dx, dy) {
         }
     };
 
-    this.rotate_counterclockwise = function() {
+    this.rotateCounterclockwise = function() {
         if (this.dx === 0 && this.dy === -1) {
             this.dx = -1; this.dy = -1;
         } else if (this.dx === -1 && this.dy === -1) {
