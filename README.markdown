@@ -21,6 +21,9 @@ Unlike yoob, yoob.js:
     be better described as a set of classes for implementing esolangs "and
     other bizarre things".
 *   does not support unbounded integer values (yet).
+*   will provide classes which are meant to be used as starting points for
+    further modification.  (It's all public domain, so build on it!)  For
+    example, Scanner and Parser are meant to be adapted to specific grammars.
 
 Other things you should know about yoob.js are that it:
 
@@ -74,5 +77,33 @@ PLANNED:
 *   `yoob.Stack`, in `yoob/stack.js`
 
 *   `yoob.TapeHead`, in `yoob/tape-head.js`
+
+*   `yoob.Turtle`
+    
+    For Turtle Graphics.
+
+*   `yoob.Scanner`
+    
+    A regexp-based lexical analyzer, intended to be copied and adapted for
+    your specific needs.
+
+*   `yoob.Parser`
+    
+    A recursive-descent parser, using `yoob.Scanner`, intended to be copied
+    and adapted for your specific needs.
+
+*   `yoob.AST`
+    
+    An AST (Abstract Syntax Tree) is a string (type), an optional value,
+    and an array of children ASTs.
+
+*   `yoob.List`
+    
+    A List is either an atom (a string) or a pair of a List and a List.
+
+*   `yoob.Term`
+    
+    A Term is a string plus an array of zero or more Terms.
+
 
 [yoob]: http://catseye.tc/node/yoob.html
