@@ -13,12 +13,12 @@ yoob.Cursor = function(x, y, dx, dy) {
 
     this.is_headed = function(dx, dy) {
         return this.dx === dx && this.dy === dy;
-    }
+    };
 
     this.advance = function() {
         this.x += this.dx;
         this.y += this.dy;
-    }
+    };
 
     this.rotate_clockwise = function() {
         if (this.dx === 0 && this.dy === -1) {
@@ -38,7 +38,7 @@ yoob.Cursor = function(x, y, dx, dy) {
         } else if (this.dx === -1 && this.dy === -1) {
             this.dx = 0; this.dy = -1;
         }
-    }
+    };
 
     this.rotate_counterclockwise = function() {
         if (this.dx === 0 && this.dy === -1) {
@@ -58,5 +58,10 @@ yoob.Cursor = function(x, y, dx, dy) {
         } else if (this.dx === 1 && this.dy === -1) {
             this.dx = 0; this.dy = -1;
         }
-    }
+    };
+
+    this.drawContext = function(ctx, x, y, cellWidth, cellHeight) {
+        ctx.fillStyle = "#50ff50";
+        ctx.fillRect(x, y, cellWidth, cellHeight);
+    };
 }
