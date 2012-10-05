@@ -48,4 +48,66 @@ yoob.Tape = function() {
         }
     };
 
+    /*
+     * Draws elements of the Tape in a drawing context.
+     * x and y are canvas coordinates, and width and height
+     * are canvas units of measure.
+     * The default implementation just renders them as text.
+     * Override if you wish to draw them differently.
+     */
+    this.drawElement = function(ctx, x, y, cellWidth, cellHeight, elem) {
+        ctx.fillText(elem.toString(), x, y);
+    };
+
+    /*
+     * Draws the Tape in a drawing context.
+     * cellWidth and cellHeight are canvas units of measure for each cell.
+     */
+    this.drawContext = function(ctx, cellWidth, cellHeight) {
+        var me = this;
+        this.foreach(function (pos, elem) {
+            me.drawElement(ctx, pos * cellWidth, 0,
+                           cellWidth, cellHeight, elem);
+        });
+    };
+
+    /*
+     * Draws the Tape, and a set of TapeHeads, on a canvas element.
+     * Resizes the canvas to the needed dimensions.
+     * cellWidth and cellHeight are canvas units of measure for each cell.
+     */
+    this.drawCanvas = function(canvas, cellWidth, cellHeight, heads) {
+        var ctx = canvas.getContext('2d');
+
+        var width = this.max - this.min + 1;
+        var height = 1;
+
+        if (cellWidth === undefined) {
+          ctx.textBaseline = "top";
+          ctx.font = cellHeight + "px monospace";
+          cellWidth = ctx.measureText("@").width;
+        }
+
+        canvas.width = width * cellWidth;
+        canvas.height = height * cellHeight;
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        ctx.textBaseline = "top";
+        ctx.font = cellHeight + "px monospace";
+
+        /*
+        for (var i = 0; i < cursors.length; i++) {
+            var cursor = cursors[i];
+            ctx.fillStyle = "#50ff50"; // XXX from cursor object
+            ctx.fillRect(cursor.x * cellWidth, cursor.y * cellHeight,
+                         cellWidth, cellHeight);
+        }
+        */
+
+        ctx.fillStyle = "black"; // XXX from this
+
+        this.drawContext(ctx, cellWidth, cellHeight);
+    };
+
 };
