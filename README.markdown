@@ -80,16 +80,16 @@ The classes are currently:
     
     An object implementing a push-down, first-in-first-out stack/
 
+*   `yoob.Scanner`, in `yoob/scanner.js`
+    
+    A regexp-based lexical analyzer, intended to be copied and adapted for
+    your specific needs.
+
 PLANNED:
 
 *   `yoob.Turtle`
     
     For Turtle Graphics.
-
-*   `yoob.Scanner`
-    
-    A regexp-based lexical analyzer, intended to be copied and adapted for
-    your specific needs.
 
 *   `yoob.Parser`
     
