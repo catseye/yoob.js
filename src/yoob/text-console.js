@@ -1,4 +1,4 @@
-if (yoob === undefined) yoob = {};
+if (window.yoob === undefined) yoob = {};
 
 /*
  * A text-based console simulation in Javascript on an HTML5 canvas.

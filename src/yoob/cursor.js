@@ -1,4 +1,4 @@
-if (yoob === undefined) yoob = {};
+if (window.yoob === undefined) yoob = {};
 
 yoob.Cursor = function(x, y, dx, dy) {
     this.x = x;
