@@ -34,23 +34,7 @@ Your browser doesn't support displaying an HTML5 canvas.
   var canvas = document.getElementById('canvas');
   var pf = new yoob.Playfield();
   var ip = new yoob.Cursor();
-
-  var draw = function() {
-    var ctx = canvas.getContext('2d');
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.textBaseline = "top";
-
-    var height = 20;
-    ctx.font = height + "px monospace";
-    var width = ctx.measureText("@").width;
-
-    ctx.fillStyle = "#50ff50";
-    ctx.fillRect(ip.x * width, ip.y * height, width, height);
-
-    ctx.fillStyle = "black";
-    pf.draw(ctx, width, height);
-  };
+  var height = 20;
 
   var textarea = document.getElementById('program');
   document.getElementById('load').onclick = function(e) {
@@ -63,11 +47,11 @@ Your browser doesn't support displaying an HTML5 canvas.
     });
     ip.dx = 1;
     ip.dy = 0;
-    draw();
+    pf.drawCanvas(canvas, undefined, height, [ip]);
   };
 
   document.getElementById('step').onclick = function(e) {
     ip.advance();
-    draw();
+    pf.drawCanvas(canvas, undefined, height, [ip]);
   };
 </script>
