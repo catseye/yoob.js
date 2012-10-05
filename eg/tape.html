@@ -46,22 +46,22 @@ Your browser doesn't support displaying an HTML5 canvas.
 
   document.getElementById('write_0').onclick = function(e) {
     tape.put(pos, "0");
-    draw();
+    tape.drawCanvas(canvas, undefined, 20, []);
   };
 
   document.getElementById('write_1').onclick = function(e) {
     tape.put(pos, "1");
-    draw();
+    tape.drawCanvas(canvas, undefined, 20, []);
   };
 
   document.getElementById('left').onclick = function(e) {
     pos -= 1;
-    draw();
+    tape.drawCanvas(canvas, undefined, 20, []);
   };
 
   document.getElementById('right').onclick = function(e) {
     pos += 1;
-    draw();
+    tape.drawCanvas(canvas, undefined, 20, []);
   };
 
 </script>
