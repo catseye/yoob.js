@@ -49,9 +49,7 @@ Your browser doesn't support displaying an HTML5 canvas.
     ctx.fillRect(ip.x * width, ip.y * height, width, height);
 
     ctx.fillStyle = "black";
-    pf.foreach(function (x, y, value) {
-        ctx.fillText(value, x * width, y * height);
-    });
+    pf.draw(ctx, width, height);
   };
 
   var textarea = document.getElementById('program');

@@ -90,4 +90,25 @@ yoob.Playfield = function() {
         }
     };
 
+    /*
+     * Draws elements of the Playfield in a drawing context.
+     * x and y are canvas coordinates, and width and height
+     * are canvas units of measure.
+     * The default implementation just renders them as text.
+     * Override if you wish to draw them differently.
+     */
+    this.drawElement = function(ctx, x, y, width, height, elem) {
+        ctx.fillText(elem.toString(), x, y);
+    };
+
+    /*
+     * Draws the Playfield in a drawing context.
+     * width and height are canvas units of measure for each cell.
+     */
+    this.draw = function(ctx, width, height) {
+        var me = this;
+        this.foreach(function (x, y, elem) {
+            me.drawElement(ctx, x * width, y * height, width, height, elem);
+        });
+    };
 };
