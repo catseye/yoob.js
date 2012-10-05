@@ -65,11 +65,13 @@ The classes are currently:
     text.  Typically it is associated with a `yoob.TextConsole` object, on
     which the text is displayed as the user types it.
 
+*   `yoob.Tape`, in `yoob/tape.js`
+    
+    A (theoretically) unbounded tape, like you'd find on a Turing machine.
+
 PLANNED:
 
 *   `yoob.Stack`, in `yoob/stack.js`
-
-*   `yoob.Tape`, in `yoob/tape.js`
 
 *   `yoob.TapeHead`, in `yoob/tape-head.js`
 
