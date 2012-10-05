@@ -94,10 +94,12 @@ yoob.Playfield = function() {
      * Draws elements of the Playfield in a drawing context.
      * x and y are canvas coordinates, and width and height
      * are canvas units of measure.
-     * The default implementation just renders them as text.
+     * The default implementation just renders them as text,
+     * in black.
      * Override if you wish to draw them differently.
      */
     this.drawElement = function(ctx, x, y, cellWidth, cellHeight, elem) {
+        ctx.fillStyle = "black";
         ctx.fillText(elem.toString(), x, y);
     };
 
@@ -139,13 +141,12 @@ yoob.Playfield = function() {
         ctx.font = cellHeight + "px monospace";
 
         for (var i = 0; i < cursors.length; i++) {
-            var cursor = cursors[i];
-            ctx.fillStyle = "#50ff50"; // XXX from cursor object
-            ctx.fillRect(cursor.x * cellWidth, cursor.y * cellHeight,
-                         cellWidth, cellHeight);
+            cursors[i].drawContext(
+              ctx,
+              cursors[i].x * cellWidth, cursors[i].y * cellHeight,
+              cellWidth, cellHeight
+            );
         }
-
-        ctx.fillStyle = "black"; // XXX from this
 
         this.drawContext(ctx, cellWidth, cellHeight);
     };

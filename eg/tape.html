@@ -25,43 +25,26 @@ Your browser doesn't support displaying an HTML5 canvas.
 <script>
   var canvas = document.getElementById('canvas');
   var tape = new yoob.Tape();
-
-  var draw = function() {
-    var ctx = canvas.getContext('2d');
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.textBaseline = "top";
-
-    var height = 20;
-    ctx.font = height + "px monospace";
-    var width = ctx.measureText("@").width;
-
-    ctx.fillStyle = "black";
-    tape.foreach(function (pos, value) {
-        ctx.fillText(value, pos * width, 0);
-    });
-  };
-
-  var pos = 0;
+  var th = new yoob.TapeHead(tape, 0);
 
   document.getElementById('write_0').onclick = function(e) {
-    tape.put(pos, "0");
-    tape.drawCanvas(canvas, undefined, 20, []);
+    th.write("0");
+    tape.drawCanvas(canvas, undefined, 20, [th]);
   };
 
   document.getElementById('write_1').onclick = function(e) {
-    tape.put(pos, "1");
-    tape.drawCanvas(canvas, undefined, 20, []);
+    th.write("1");
+    tape.drawCanvas(canvas, undefined, 20, [th]);
   };
 
   document.getElementById('left').onclick = function(e) {
-    pos -= 1;
-    tape.drawCanvas(canvas, undefined, 20, []);
+    th.moveLeft();
+    tape.drawCanvas(canvas, undefined, 20, [th]);
   };
 
   document.getElementById('right').onclick = function(e) {
-    pos += 1;
-    tape.drawCanvas(canvas, undefined, 20, []);
+    th.moveRight();
+    tape.drawCanvas(canvas, undefined, 20, [th]);
   };
 
 </script>

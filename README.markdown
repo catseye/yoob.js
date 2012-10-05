@@ -72,11 +72,13 @@ The classes are currently:
     
     A (theoretically) unbounded tape, like you'd find on a Turing machine.
 
+*   `yoob.TapeHead`, in `yoob/tape-head.js`
+    
+    An object representing a position on a Tape.
+
 PLANNED:
 
 *   `yoob.Stack`, in `yoob/stack.js`
-
-*   `yoob.TapeHead`, in `yoob/tape-head.js`
 
 *   `yoob.Turtle`
     
