@@ -26,7 +26,9 @@ yoob.Playfield = function() {
         if (this.max_x === undefined || x > this.max_x) this.max_x = x;
         if (this.min_y === undefined || y < this.min_y) this.min_y = y;
         if (this.max_y === undefined || y > this.max_y) this.max_y = y;
-        /* TODO: if value === undefined { del this._store[x+','+y]; } */
+        if (value === undefined) {
+            delete this._store[x+','+y];
+        }
         this._store[x+','+y] = value;
     };
 
@@ -107,10 +109,10 @@ yoob.Playfield = function() {
      * Draws the Playfield in a drawing context.
      * cellWidth and cellHeight are canvas units of measure for each cell.
      */
-    this.drawContext = function(ctx, cellWidth, cellHeight) {
+    this.drawContext = function(ctx, offsetX, offsetY, cellWidth, cellHeight) {
         var me = this;
         this.foreach(function (x, y, elem) {
-            me.drawElement(ctx, x * cellWidth, y * cellHeight,
+            me.drawElement(ctx, offsetX + x * cellWidth, offsetY + y * cellHeight,
                            cellWidth, cellHeight, elem);
         });
     };
@@ -140,6 +142,9 @@ yoob.Playfield = function() {
         ctx.textBaseline = "top";
         ctx.font = cellHeight + "px monospace";
 
+        var offsetX = this.min_x * cellWidth * -1;
+        var offsetY = this.min_y * cellHeight * -1;
+
         for (var i = 0; i < cursors.length; i++) {
             cursors[i].drawContext(
               ctx,
@@ -148,7 +153,7 @@ yoob.Playfield = function() {
             );
         }
 
-        this.drawContext(ctx, cellWidth, cellHeight);
+        this.drawContext(ctx, offsetX, offsetY, cellWidth, cellHeight);
     };
 
 };

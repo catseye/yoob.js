@@ -22,7 +22,9 @@ yoob.Tape = function() {
     this.put = function(pos, value) {
         if (this.min === undefined || pos < this.min) this.min = pos;
         if (this.max === undefined || pos > this.max) this.max = pos;
-        /* TODO: if value === undefined { del this._store[x+','+y]; } */
+        if (value === undefined) {
+            delete this._store[pos];
+        }
         this._store[pos] = value;
     };
 
@@ -65,10 +67,10 @@ yoob.Tape = function() {
      * Draws the Tape in a drawing context.
      * cellWidth and cellHeight are canvas units of measure for each cell.
      */
-    this.drawContext = function(ctx, cellWidth, cellHeight) {
+    this.drawContext = function(ctx, offsetX, offsetY, cellWidth, cellHeight) {
         var me = this;
         this.foreach(function (pos, elem) {
-            me.drawElement(ctx, pos * cellWidth, 0,
+            me.drawElement(ctx, offsetX + pos * cellWidth, offsetY,
                            cellWidth, cellHeight, elem);
         });
     };
@@ -98,15 +100,18 @@ yoob.Tape = function() {
         ctx.textBaseline = "top";
         ctx.font = cellHeight + "px monospace";
 
+        var offsetX = this.min * cellWidth * -1;
+        var offsetY = 0;
+
         for (var i = 0; i < heads.length; i++) {
             heads[i].drawContext(
               ctx,
-              heads[i].pos * cellWidth, 0,
+              offsetX + heads[i].pos * cellWidth, offsetY,
               cellWidth, cellHeight
             );
         }
 
-        this.drawContext(ctx, cellWidth, cellHeight);
+        this.drawContext(ctx, offsetX, offsetY, cellWidth, cellHeight);
     };
 
 };
