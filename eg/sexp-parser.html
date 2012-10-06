@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <title>yoob.SexpParser Demo</title>
+  <script src="../src/yoob/ast.js"></script>
+  <script src="../src/yoob/scanner.js"></script>
+  <script src="../src/yoob/sexp-parser.js"></script>
+</head>
+<body>
+
+<h1>yoob.SexpParser Demo</h1>
+
+<textarea id="input">(three (two   one  ) (two (three) four five six))</textarea>
+
+<button id="parse">Parse</button>
+
+</body>
+<script>
+  var input = document.getElementById('input');
+
+  document.getElementById('parse').onclick = function(e) {
+    var p = new yoob.SexpParser();
+    p.init(input.value);
+    var ast = p.parse();
+    alert(ast.toString());
+  };
+</script>
