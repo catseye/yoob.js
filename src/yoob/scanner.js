@@ -2,48 +2,58 @@ if (window.yoob === undefined) yoob = {};
 
 /*
  * A lexical analyzer.
+ * Create a new yoob.Scanner object, then call init, passing it an
+ * array of two-element arrays; first element of each of these is the
+ * type of token, the second element is a regular expression (in a
+ * String) which matches that token at the start of the string.  The
+ * regular expression should have exactly one capturing group.
+ * Then call reset, passing it the string to be scanned.
+ * 
  */
 yoob.Scanner = function() {
   this.text = undefined;
-  this.index = undefined;
   this.token = undefined;
   this.type = undefined;
   this.error = undefined;
+  this.table = undefined;
+  this.whitespacePattern = "^[ \\t\\n\\r]*";
 
-  this.init = function(text) {
+  this.init = function(table) {
+    this.table = table;
+  };
+
+  this.reset = function(text) {
     this.text = text;
-    this.index = 0;
     this.token = undefined;
     this.type = undefined;
     this.error = undefined;
     this.scan();
   };
   
-  this.scanPattern = function(pattern, type, tokenGroup) {
+  this.scanPattern = function(pattern, type) {
     var re = new RegExp(pattern);
     var match = re.exec(this.text);
     if (match === null) return false;
     this.type = type;
-    if (tokenGroup !== undefined) {
-      this.token = match[tokenGroup];
-    }
+    this.token = match[1];
     this.text = this.text.substr(match[0].length);
     return true;
   };
 
   this.scan = function() {
-    this.scanPattern("^[ \\t\\n\\r]*", "whitespace");
+    this.scanPattern(this.whitespacePattern, "whitespace");
     if (this.text.length === 0) {
       this.token = null;
       this.type = "EOF";
       return;
     }
-    if (this.scanPattern("^(\\(|\\)|\\[|\\])", "bracket", 1)) return;
-    if (this.scanPattern("^(\\d+)", "integer literal", 1)) return;
-    if (this.scanPattern("^([a-zA-Z]\\w*)", "identifier", 1)) return;
-    if (this.scanPattern("^\"(.*?)\"", "string literal", 1)) return;
-    if (this.scanPattern("^([\\s\\S])", "unknown character", 1)) return;
-    // todo insert catchall case
+    for (var i = 0; i < this.table.length; i++) {
+      var type = this.table[i][0];
+      var pattern = this.table[i][1];
+      if (this.scanPattern(pattern, type)) return;
+    }
+    if (this.scanPattern("^([\\s\\S])", "unknown character")) return;
+    // should never get here
   };
 
   this.expect = function(token) {
