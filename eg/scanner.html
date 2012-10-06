@@ -18,7 +18,13 @@
 
   document.getElementById('scan').onclick = function(e) {
     var s = new yoob.Scanner();
-    s.init(input.value);
+    s.init([
+      ['bracket',         "^(\\(|\\)|\\[|\\])"],
+      ['integer literal', "^(\\d+)"],
+      ['identifier',      "^([a-zA-Z]\\w*)"],
+      ['string literal',  "^\"(.*?)\""]
+    ]);
+    s.reset(input.value);
     while (s.token !== null) {
       alert("'" + s.token + "', type: " + s.type);
       s.scan();

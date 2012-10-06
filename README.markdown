@@ -98,8 +98,8 @@ The classes are currently:
 *   `yoob.Scanner`, in `yoob/scanner.js`
     
     A simple, inefficient lexical analyzer, parameterized with a table of
-    regexps (TODO).  Can also serve as a starting point for writing your
-    own simple, inefficient lexical analyzer.
+    regexps.  Can also serve as a starting point for writing your own, less
+    simple, inefficient lexical analyzer.
 
 PLANNED:
 
