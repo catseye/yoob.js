@@ -95,25 +95,25 @@ The classes are currently:
     An object implementing a push-down, first-in-first-out stack of values,
     optionally associated with a `<canvas>` on which it is depicted.
 
+*   `yoob.AST`
+    
+    An AST (Abstract Syntax Tree) is a type identifier (String), an optional
+    value (of any type), and an array of zero or more children ASTs.
+
 *   `yoob.Scanner`, in `yoob/scanner.js`
     
     A simple, inefficient lexical analyzer, parameterized with a table of
     regexps.  Can also serve as a starting point for writing your own, less
     simple, inefficient lexical analyzer.
 
-PLANNED:
-
-*   `yoob.Parser`
+*   `yoob.SexpParser`, in `yoob/sexp-parser.js`
     
-    A recursive-descent parser, using `yoob.Scanner`, intended to be copied
-    and adapted for your specific needs.  TODO: put these sort of classes
-    in someplace other than `src/yoob`.  `eg` doesn't seem quite right, as
-    that's for examples of *using* yoob.js.  Maybe `src/yoob-starter`?
+    A simple recursive-descent parser which parses S-expressions.  Uses
+    `yoob.Scanner` to analyze the input string and `yoob.AST` to create the
+    parsed version.  Can also serve as a starting point for writing your own
+    recursive-descent parser for some other, more complex language.
 
-*   `yoob.AST`
-    
-    An AST (Abstract Syntax Tree) is a type identifier (String), an optional
-    value (of any type), and an array of zero or more children ASTs.
+### Planned ###
 
 *   `yoob.List`
     
@@ -125,9 +125,20 @@ PLANNED:
     namespace), plus an array of zero or more children Terms.  Should
     include facilities for matching and unification.
 
+*   `yoob.Environment`
+    
+    A scoped associative structure, suitable for implementing a symbol
+    table or an evaluation context.
+
 *   `yoob.Turtle`
     
     For Turtle Graphics.
+
+*   `yoob.Error`
+    
+    For error handling.  Scanning and Parsing should accumulate a
+    list of these objects before choking and dying.  They should be
+    displayable nicely somehow.
 
 *   unbounded integer support
     
