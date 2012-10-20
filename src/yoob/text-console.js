@@ -19,22 +19,30 @@ if (window.yoob === undefined) yoob = {};
  * between calls to t.write().  You can call t.reset() to clear the
  * simulated screen (to the selected backgroundColor.)  You can also set
  * or clear overStrike mode.
+ *
+ * TODO:
+ * - make this completely dumb, with no control codes whatsoever, even
+ *   newline.  then make a text-terminal which inherits from it, but
+ *   which knows about control codes.
+ * - add onDrawCharacter() callback, which can draw the character
+ *   itself and return false, or return true to allow the console to
+ *   draw it.
  */
 yoob.TextConsole = function() {
-  this.canvas = null;
-  this.charHeight = null;
-  this.charWidth = null;
-  this.rows = null;
-  this.cols = null;
-  this.row = null;
-  this.col = null;
-  this.overStrike = null;
-  this.textColor = null;
-  this.backgroundColor = null;
+  this.canvas = undefined;
+  this.charHeight = undefined;
+  this.charWidth = undefined;
+  this.rows = undefined;
+  this.cols = undefined;
+  this.row = undefined;
+  this.col = undefined;
+  this.overStrike = undefined;
+  this.textColor = undefined;
+  this.backgroundColor = undefined;
 
-  this.cursorEnabled = null;  
-  this.blinkInterval = null;
-  this.cursorIsShowing = null;
+  this.cursorEnabled = undefined;  
+  this.blinkInterval = undefined;
+  this.cursorIsShowing = undefined;
 
   /*
    * Attach a canvas to this TextConsole.  The canvas will
@@ -74,7 +82,7 @@ yoob.TextConsole = function() {
     if (!this.cursorEnabled) {
       return;
     }
-    if (this.blinkInterval !== null) {
+    if (this.blinkInterval !== undefined) {
       clearInterval(this.blinkInterval);
     }
     this.drawCursor(this.textColor);
@@ -98,8 +106,9 @@ yoob.TextConsole = function() {
     if (!this.cursorEnabled) {
       return;
     }
-    if (this.blinkInterval !== null) {
+    if (this.blinkInterval !== undefined) {
       clearInterval(this.blinkInterval);
+      this.blinkInterval = undefined;
     }
     this.drawCursor(this.backgroundColor);
     this.cursorIsShowing = false;
