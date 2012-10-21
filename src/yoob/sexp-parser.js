@@ -27,13 +27,14 @@ yoob.SexpParser = function() {
       return new yoob.AST('atom', x);
     } else if (this.scanner.consume('(')) {
       var children = []
-      while (!this.scanner.on(')')) {
+      while (!this.scanner.on(')') && !this.scanner.onType('EOF')) {
         children.push(this.parse());
       }
       this.scanner.expect(')');
       return new yoob.AST('list', undefined, children);
     } else {
       /* register some kind of error */
+      this.scanner.scan();
     }
   };
 
