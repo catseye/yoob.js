@@ -20,13 +20,9 @@ if (window.yoob === undefined) yoob = {};
  * simulated screen (to the selected backgroundColor.)  You can also set
  * or clear overStrike mode.
  *
- * TODO:
- * - make this completely dumb, with no control codes whatsoever, even
- *   newline.  then make a text-terminal which inherits from it, but
- *   which knows about control codes.
- * - add onDrawCharacter() callback, which can draw the character
- *   itself and return false, or return true to allow the console to
- *   draw it.
+ * Note, this console is completely "dumb": it does not understand any
+ * control codes whatsoever, not even newline.  For a subclass of this
+ * which does understand (some) control codes, use text-terminal.js.
  */
 yoob.TextConsole = function() {
   this.canvas = undefined;
@@ -133,10 +129,11 @@ yoob.TextConsole = function() {
   };
 
   /*
-   * Advance the cursor to the next line, scrolling the
+   * Advance the cursor to the next row, scrolling the
    * TextConsole display if necessary.
    */
-  this.advance = function() {
+  this.advanceRow = function() {
+    this._stopCursor();
     this.col = 0;
     this.row += 1;
     var ctx = this.canvas.getContext('2d');
@@ -151,12 +148,54 @@ yoob.TextConsole = function() {
       );
       this.row -= 1;
     }
+    this._startCursor();
   };
 
   /*
-   * Write a string to the TextConsole.  Line feeds will cause a
-   * new line, and backspaces will move the cursor left if it is not
-   * already at the left edge.
+   * Advance the cursor to the next column, advancing to the
+   * next row if necessary.
+   */
+  this.advanceCol = function() {
+    this._stopCursor();
+    this.col += 1;
+    if (this.col >= this.cols) {
+      this.advanceRow();
+    }
+    this._startCursor();
+  };
+
+  /*
+   * Called when a character is written to the console.  This
+   * may be overridden by subclasses.  If it returns false, the
+   * character is written with the default logic.  If it returns
+   * true, it is not, and neither is the cursor advanced.  (A
+   * subclass which overrides this may write the character and/or
+   * advance the cursor itself.
+   */
+  this.onWriteChar = function(character, ctx) {
+    return false;
+  };
+
+  /*
+   * Write a character to the console.
+   */
+  this.writeChar = function(c) {
+    // Inefficient!
+    var ctx = this.canvas.getContext('2d');
+    ctx.textBaseline = "top";
+    ctx.font = this.charHeight + "px monospace";
+    ctx.fillStyle = this.textColor;
+
+    if (this.onWriteChar(c))
+      return;
+    if (c >= ' ') {  // && c != DEL ?
+      ctx.fillText(c, this.col * this.charWidth, this.row * this.charHeight);
+      this.advanceCol();
+    }
+  };
+
+  /*
+   * Write a string to the TextConsole.  Control characters are not heeded.
    */
   this.write = function(string) {
     var i = 0;
@@ -166,23 +205,12 @@ yoob.TextConsole = function() {
     this._stopCursor();
     while (i < string.length) {
       var c = string.charAt(i);
-      if (c === '\n') {
-        this.advance();
-      } else if (c === '\b' && this.col > 0) {
-        this.col--;
-      } else if (c >= ' ') {
-        if (!this.overStrike) {
-          ctx.fillStyle = this.backgroundColor;
-          ctx.fillRect(this.col * this.charWidth, this.row * this.charHeight,
-                       this.charWidth, this.charHeight);
-        }
-        ctx.fillStyle = this.textColor;
-        ctx.fillText(c, this.col * this.charWidth, this.row * this.charHeight);
-        this.col += 1;
-        if (this.col >= this.cols) {
-          this.advance();
-        }
+      if (!this.overStrike) {
+        ctx.fillStyle = this.backgroundColor;
+        ctx.fillRect(this.col * this.charWidth, this.row * this.charHeight,
+                     this.charWidth, this.charHeight);
       }
+      this.writeChar(c);
       i++;
     };
     this._startCursor();

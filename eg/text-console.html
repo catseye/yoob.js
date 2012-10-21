@@ -3,7 +3,6 @@
   <meta charset="utf-8">
   <title>yoob.TextConsole Demo</title>
   <script src="../src/yoob/text-console.js"></script>
-  <script src="../src/yoob/line-input-buffer.js"></script>
 </head>
 <body>
 
@@ -29,16 +28,11 @@
     t.write("That's nice.");
     t.textColor = "green";
     t.backgroundColor = "black";
-    t.write(" Supercalifragilisticexpialadociousness!!!!!\n");
-    t.overStrike = true;
-    t.write("Whatever\b\b!!\n");
-    t.overStrike = false;
-    t.write("Whatever\b\b!!\n");
+    t.write(" Supercalifragilisticexpialadociousness!!!!!");
+    t.advanceRow();
+    t.write("What??");
+    t.advanceRow();
     z++;
   };
-  var ib = new yoob.LineInputBuffer();
-  ib.init(canvas, t, function(str) {
-    alert(str);
-  });
   canvas.focus();
 </script>
