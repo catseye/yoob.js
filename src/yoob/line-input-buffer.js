@@ -2,28 +2,29 @@ if (window.yoob === undefined) yoob = {};
 
 /*
  * Object that captures keystrokes and accumulates a string from them.
- * Optionally also updates a TextConsole.
+ * Optionally also updates a TextTerminal (not a TextConsole as it sends
+ * control codes such as backspace which TextConsole does not understand.)
  * Mostly for demonstration purposes so far.
  */
 yoob.LineInputBuffer = function() {
   this.listenObject = undefined;
-  this.console = undefined;
+  this.terminal = undefined;
   this.callback = undefined;
   this.text = undefined;
 
-  this.init = function(listenObject, console, callback) {
+  this.init = function(listenObject, terminal, callback) {
     this.listenObject = listenObject;
-    this.console = console;
+    this.terminal = terminal;
     this.callback = callback;
     this.text = "";
     
-    me = this;
+    var me = this;
     listenObject.addEventListener('keyup', function(e) {
       //alert(e.keyCode);
       switch (e.keyCode) {
         case 8:   /* Backspace */
-          if (me.console !== undefined) {
-            me.console.write('\b \b');
+          if (me.terminal !== undefined) {
+            me.terminal.write('\b \b');
           }
           if (me.text.length > 0) {
             me.text = me.text.substring(0, me.text.length-2);
@@ -31,8 +32,8 @@ yoob.LineInputBuffer = function() {
           e.cancelBubble = true;
           break;
         case 13:  /* Enter */
-          if (me.console !== undefined) {
-            me.console.write('\n');
+          if (me.terminal !== undefined) {
+            me.terminal.write('\n');
           }
           me.text = me.text.substring(0, me.text.length-1);
           if (me.callback !== undefined) {
@@ -58,8 +59,8 @@ yoob.LineInputBuffer = function() {
         return;
       }
       var chr = String.fromCharCode(e.charCode);
-      if (me.console !== undefined) {
-        me.console.write(chr);
+      if (me.terminal !== undefined) {
+        me.terminal.write(chr);
       }
       me.text += chr;
       e.cancelBubble = true;
