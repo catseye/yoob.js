@@ -1,3 +1,7 @@
+/*
+ * This file is part of yoob.js version 0.1
+ * This file is in the public domain.  See http://unlicense.org/ for details.
+ */
 if (window.yoob === undefined) yoob = {};
 
 /*
