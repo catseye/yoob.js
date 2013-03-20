@@ -1,7 +1,9 @@
 yoob.js
 =======
 
-yoob.js is the Javascript/HTML5 counterpart to [yoob][].
+*Version 0.1.  Everything subject to change.*
+
+yoob.js is the HTML5 counterpart to [yoob][].
 
 Like yoob, yoob.js:
 
@@ -9,29 +11,42 @@ Like yoob, yoob.js:
     esoteric programming languages (esolangs).
 *   is written amateurishly.
 *   has an API that is not particularly good, finalized, or stable.
-*   will ship with some public-domain implementations of some esolangs
-    (but the approach is different from yoob's; see below.)
+*   will eventually ship with some public-domain implementations of some
+    esolangs (but the approach is different from yoob's; see below.)
 
 Unlike yoob, yoob.js:
 
-*   is written in Javascript.
-*   does not provide an overarching framework which "knows" how to interpret
-    and display your esolang implementation.  Instead, more fitting with the
-    dynamic approach of the Javascript language, yoob.js simply provides the
-    constituent parts; it's up to you to string them together into an esolang
-    interpreter (or whatever else) and to lay it out on a web page.
-*   extends the idea of "a component to help implement an esolang" to
-    encompass esolang implementations themselves.  So, for example, yoob.js
-    might include an implementation of brainfuck, but this would not be
-    provided solely as an "end implementation" but also as a component for
-    implementing other brainfuck-derived esolangs, and other mashups.
+*   is written in Javascript which assumes HTML5 capabilities in the browser
+    (mainly `<canvas>` elements.)
+*   does not provide a single canonical overarching framework which "knows"
+    how to interpret and display and run an esolang implementation.  Instead,
+    more fitting with the dynamic approach of the Javascript language, yoob.js
+    provides the constituent parts, and it's up to the developer to string
+    them together into an esolang interpreter (or whatever else) and to lay it
+    out on a web page.
 *   is not limited to providing support for esolang interpreters; it might
     be better described as a set of components for implementing esolangs "and
     other bizarre things".
 *   does not support unbounded integer values (yet; see "Planned", below).
-*   will provide components which are meant to be used as starting points for
+*   provides components which are meant to be used as starting points for
     further modification.  (It's all public domain, so build on it!)  For
-    example, `yoob.Parser` is meant to be adapted to your specific grammar.
+    example, `yoob.sexpParser` is meant to be used as an example or basis for
+    a specific grammar of your choice.
+
+yoob.js will eventually:
+
+*   extend the idea of "a component to help implement an esolang" to
+    encompass esolang implementations themselves.  So, for example, yoob.js
+    might include an implementation of brainfuck, but this would not be
+    provided solely as an "end implementation" but also as a component for
+    implementing other brainfuck-derived esolangs, and other mashups.
+    
+    This emphasizes a thing with yoob, which is that while the yoob
+    distribution may contain implementations of various languages, it does
+    not contain the reference implementation of any language; but the
+    reference implementations of some languages may be written in yoob.
+    yoob allows for this approach, but yoob.js hopes to accomodate it
+    better than just allowing for it.
 
 Other things you should know about yoob.js are that it:
 
@@ -43,8 +58,9 @@ Other things you should know about yoob.js are that it:
     production web development, we're not trying to optimize page load time
     here, we just want to run us some esolangs, right?  You're free to do
     this yourself.  May we suggest `cat yoob/*.js > yoob.js`?  (Note: there
-    will probably one day be a small script to do this sort of thing for
-    you, more intelligently, respecting dependencies and whatnot.)
+    may one day be a small script to do this sort of thing for you, more
+    intelligently, respecting dependencies and whatnot.  Especially if you
+    write it and send a pull request.)
 
 API
 ---
@@ -74,6 +90,11 @@ The classes are currently:
     A crude simulation of a text-based addressable console on a `<canvas>`
     element.  Not recommended for serious use; mainly intended to provide a
     sort of retro feel to input and ouput.
+
+*   `yoob.TextTerminal`, in `yoob/text-terminal.js`
+    
+    A subclass of `yoob.TextConsole` which understands some terminal control
+    codes such as newline and backspace.
 
 *   `yoob.LineInputBuffer`, in `yoob/line-input-buffer.js`
     
