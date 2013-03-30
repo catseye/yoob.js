@@ -176,9 +176,11 @@ Used in
 yoob.js is currently used in the HTML5 implementations of:
 
 *   [Gemooy][]
+*   [noit o' mnain worb][]
 *   [Super Wumpus Land][]
 
 [yoob]: http://catseye.tc/node/yoob.html
 [Gemooy]: http://catseye.tc/node/Gemooy.html
 [Javascript BigInteger]: https://github.com/silentmatt/javascript-biginteger
+[noit o' mnain worb]: http://catseye.tc/node/noit%20o%27%20mnain%20worb.html
 [Super Wumpus Land]: http://catseye.tc/node/Super%20Wumpus%20Land.html
