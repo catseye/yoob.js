@@ -37,7 +37,12 @@ Your browser doesn't support displaying an HTML5 canvas.
 
   var textarea = document.getElementById('program');
   document.getElementById('load').onclick = function(e) {
-    pf.load(0, 0, textarea.value);
+    pf.load(0, 0, textarea.value, function(c) {
+        if (c === '#')
+            return '%';
+        else
+            return c;
+    });
     pf.foreach(function (x, y, value) {
         if (value === '$') {
             ip.x = x;
