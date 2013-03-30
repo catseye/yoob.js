@@ -34,6 +34,7 @@ yoob.Controller = function() {
      * with those ids will be obtained from the document and used.
      */
     this.connect = function(dict) {
+        var self = this;
         var keys = ["start", "stop", "step", "load"];
         for (var i in keys) {
             var key = keys[i];
@@ -60,6 +61,14 @@ yoob.Controller = function() {
         }
         if (speed !== undefined) {
             this.speed = speed;
+            speed.value = self.delay;
+            speed.onchange = function(e) {
+                self.delay = speed.value;
+                if (self.intervalId !== undefined) {
+                    self.stop();
+                    self.start();
+                }
+            }
         }        
     };
 
