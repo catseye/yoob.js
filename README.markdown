@@ -1,7 +1,7 @@
 yoob.js
 =======
 
-*Version 0.1.  Everything subject to change.*
+*Version 0.2-PRE.  Everything subject to change.*
 
 yoob.js is the HTML5 counterpart to [yoob][].
 
@@ -170,5 +170,15 @@ The classes are currently:
     exposed by Matthew Crumley's [Javascript BigInteger][] class, which is
     unastonishing.
 
+Used in
+-------
+
+yoob.js is currently used in the HTML5 implementations of:
+
+*   [Gemooy][]
+*   [Super Wumpus Land][]
+
 [yoob]: http://catseye.tc/node/yoob.html
+[Gemooy]: http://catseye.tc/node/Gemooy.html
 [Javascript BigInteger]: https://github.com/silentmatt/javascript-biginteger
+[Super Wumpus Land]: http://catseye.tc/node/Super%20Wumpus%20Land.html
