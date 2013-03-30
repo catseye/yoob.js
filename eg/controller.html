@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <title>yoob.Controller Demo</title>
+  <script src="../src/yoob/controller.js"></script>
+</head>
+<body>
+
+<h1>yoob.Controller Demo</h1>
+
+<textarea id="input">The* [900beast] of7   "whee  galee"</textarea>
+
+<p id="output" style="border: 1px solid blue"></p>
+
+<button id="start">Start</button>
+<button id="stop">Stop</button>
+<button id="step">Step</button>
+<button id="load">Load</button>
+
+</body>
+<script>
+  var c = new yoob.Controller();
+  var state = '';
+  c.load = function(text) {
+      state = text;
+      var output = document.getElementById('output');
+      output.innerHTML = state;
+  };
+  c.step = function() {
+      state = state.substr(0, state.length - 1);
+      var output = document.getElementById('output');
+      output.innerHTML = state;
+  };
+  c.connect({
+    'start': 'start',
+    'stop': 'stop',
+    'step': 'step',
+    'load': 'load',
+    'source': 'input'
+  });
+</script>

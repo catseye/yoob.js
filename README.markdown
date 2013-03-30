@@ -134,6 +134,12 @@ The classes are currently:
     parsed version.  Can also serve as a starting point for writing your own
     recursive-descent parser for some other, more complex language.
 
+*   `yoob.Controller`, in `yoob/controller.js`
+    
+    A controller for animating the evolution and animation of a state
+    (such as an esolang program state or a cellular automaton configuration).
+    Can be hooked up to DOM elements in the UI (typically buttons.)
+
 ### Planned ###
 
 *   `yoob.List`
