@@ -26,12 +26,17 @@
   t.write("yoob REPL\n");
   var p = new yoob.SexpParser();
   var ast = null;
+  var quit = new yoob.Tree('list', undefined, [new yoob.Tree('atom', 'quit', [])]);
   var ib = new yoob.LineInputBuffer();
   ib.init(canvas, t, function(str) {
     p.init(str);
     ast = p.parse();
     if (ast !== undefined) {
-      t.write(ast.toString());
+      if (ast.equals(quit)) {
+        t.write("You can't give up yet!");
+      } else {
+        t.write(ast.toString());
+      }
       t.write("\n");
     } else {
       t.write("*** parse error\n");
