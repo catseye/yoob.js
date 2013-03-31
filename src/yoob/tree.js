@@ -1,10 +1,10 @@
 /*
- * This file is part of yoob.js version 0.1
+ * This file is part of yoob.js version 0.3-PRE
  * This file is in the public domain.  See http://unlicense.org/ for details.
  */
 if (window.yoob === undefined) yoob = {};
 
-yoob.AST = function(type, value, children) {
+yoob.Tree = function(type, value, children) {
   this.type = type;
   this.value = value;
   this.children = children;
