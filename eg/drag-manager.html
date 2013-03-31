@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <title>yoob.DragManager Demo</title>
+  <style>
+#canvas { border: 1px solid blue; }
+  </style>
+</head>
+<body>
+
+<h1>yoob.DragManager Demo</h1>
+
+<canvas id="canvas" width="600" height="400">
+Your browser doesn't support displaying an HTML5 canvas.
+</canvas>
+
+</body>
+<script src="../src/yoob/drag-manager.js"></script>
+<script type="text/javascript">
+  var c = document.getElementById('canvas');
+
+  var draw = function(ctx) {
+    ctx.shadowOffsetX = 10;
+    ctx.shadowOffsetY = 10;
+    ctx.shadowBlur = 15;
+    ctx.shadowColor = "black";
+
+    if (this.selected) {
+      var max = this.w > this.h ? this.w : this.h;
+      var gradient = ctx.createLinearGradient(
+        this.x, this.y, this.x+max, this.y+max
+      );
+      gradient.addColorStop(0, this.style);
+      gradient.addColorStop(0.5, "white");
+      gradient.addColorStop(1, this.style);
+      ctx.fillStyle = gradient;
+    } else {
+      ctx.fillStyle = this.style;
+    }
+    ctx.fillRect(this.x, this.y, this.w, this.h);
+
+    ctx.lineWidth = "1";
+    ctx.strokeStyle = "black";
+    ctx.shadowColor = "transparent";
+    ctx.strokeRect(this.x, this.y, this.w, this.h);
+  };
+  
+  var dm = new yoob.DragManager();
+  dm.init(c);
+  var add = function(x, y, w, h, style) {
+    var d = new yoob.Draggable();
+    d.init(x, y, w, h);
+    d.draw = draw;
+    d.style = style;
+    dm.addDraggable(d);
+  };
+
+  add(100, 100, 60, 60, "green");
+  add(200, 100, 100, 40, "red");
+  add(100, 200, 50, 90, "yellow");
+
+  interval_id = setInterval(function() {
+    var ctx = canvas.getContext("2d");
+    ctx.clearRect(0, 0, c.width, c.height);
+    dm.draw();
+  }, 20);
+</script>
