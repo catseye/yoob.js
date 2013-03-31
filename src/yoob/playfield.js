@@ -188,6 +188,35 @@ yoob.Playfield = function() {
     };
 
     /*
+     * Analogous to (monoid) map in functional languages,
+     * iterate over this Playfield, transform each value using
+     * a supplied function, and write the transformed value into
+     * a destination Playfield.
+     *
+     * Supplied function should take a Playfield (this Playfield),
+     * x, and y, and return a value.
+     *
+     * The map source may extend beyond the internal bounds of
+     * the Playfield, by giving the min/max Dx/Dy arguments
+     * (which work like margin offsets.)
+     *
+     * Useful for evolving a cellular automaton playfield.  In this
+     * case, min/max Dx/Dy should be computed from the neighbourhood.
+     */
+    this.map = function(destPf, fun, minDx, minDy, maxDx, maxDy) {
+        if (minDx === undefined) minDx = 0;
+        if (minDy === undefined) minDy = 0;
+        if (maxDx === undefined) maxDx = 0;
+        if (maxDy === undefined) maxDy = 0;
+        for (var y = this.minY + minDy; y <= this.maxY + maxDy; y++) {
+            for (var x = this.minX + minDx; x <= this.maxX + maxDx; x++) {
+                destPf.putDirty(x, y, fun(pf, x, y));
+            }
+        }
+        destPf.recalculateBounds();
+    };
+
+    /*
      * Draws elements of the Playfield in a drawing context.
      * x and y are canvas coordinates, and width and height
      * are canvas units of measure.
