@@ -29,4 +29,22 @@ yoob.Tree = function(type, value, children) {
     }
     return s + ")";
   };
+  
+  this.equals = function(tree) {
+    if (this.type !== tree.type) {
+      return false;
+    }
+    if (this.value !== tree.value) {
+      return false;
+    }
+    if (this.children.length !== tree.children.length) {
+      return false;
+    }
+    for (var i = 0; i < this.children.length; i++) {
+      if (!this.children[i].equals(tree.children[i])) {
+        return false;
+      }
+    }
+    return true;
+  };
 };
