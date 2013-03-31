@@ -13,17 +13,32 @@ yoob.Playfield = function() {
     this.minY = undefined;
     this.maxX = undefined;
     this.maxY = undefined;
+    this._default = undefined;
 
     /*
-     * Obtain the value at (x, y).
-     * Cells are undefined if they were never written to.
+     * Set the default value for this Playfield.  This
+     * value is returned by get() for any cell that was
+     * never written to, or had `undefined` put() into it.
      */
-    this.get = function(x, y) {
-        return this._store[x+','+y];
+    this.setDefault = function(v) {
+        this._default = v;
     };
 
     /*
-     * Write a new value into (x, y).
+     * Obtain the value at (x, y).  The default value will
+     * be returned if the cell was never written to.
+     */
+    this.get = function(x, y) {
+        var v = this._store[x+','+y];
+        if (v === undefined) return this._default;
+        return v;
+    };
+
+    /*
+     * Write a new value into (x, y).  Note that writing
+     * `undefined` into a cell has the semantics of deleting
+     * the value at that cell; a subsequent get() for that
+     * location will return this Playfield's default value.
      */
     this.put = function(x, y, value) {
         if (this.minX === undefined || x < this.minX) this.minX = x;
@@ -31,10 +46,47 @@ yoob.Playfield = function() {
         if (this.minY === undefined || y < this.minY) this.minY = y;
         if (this.maxY === undefined || y > this.maxY) this.maxY = y;
         var key = x+','+y;
-        if (value === undefined) {
+        if (value === undefined || value === this._default) {
             delete this._store[key];
         }
         this._store[key] = value;
+    };
+
+    /*
+     * Like put(), but does not update the playfield bounds.  Do
+     * this if you must do a batch of put()s in a more efficient
+     * manner; after doing so, call recalculateBounds().
+     */
+    this.putDirty = function(x, y, value) {
+        var key = x+','+y;
+        if (value === undefined || value === this._default) {
+            delete this._store[key];
+        }
+        this._store[key] = value;
+    };
+
+    /*
+     * Recalculate the bounds (min/max X/Y) which are tracked
+     * internally to support methods like foreach().  This is
+     * not needed *unless* you've used putDirty() at some point.
+     * (In which case, call this immediately after your batch
+     * of putDirty()s.)
+     */
+    this.recalculateBounds = function() {
+        this.minX = undefined;
+        this.minY = undefined;
+        this.maxX = undefined;
+        this.maxX = undefined;
+
+        for (var cell in this._store) {
+            var pos = cell.split(',');
+            var x = parseInt(pos[0], 10);
+            var y = parseInt(pos[1], 10);
+            if (this.minX === undefined || x < this.minX) this.minX = x;
+            if (this.maxX === undefined || x > this.maxX) this.maxX = x;
+            if (this.minY === undefined || y < this.minY) this.minY = y;
+            if (this.maxY === undefined || y > this.maxY) this.maxY = y;
+        }
     };
 
     /*
@@ -49,7 +101,7 @@ yoob.Playfield = function() {
     };
 
     /*
-     * Load a string into the playfield.
+     * Load a string into this Playfield.
      * The string may be multiline, with newline (ASCII 10)
      * characters delimiting lines.  ASCII 13 is ignored.
      *
@@ -77,10 +129,35 @@ yoob.Playfield = function() {
                 ly++;
             } else if (c === '\r') {
             } else {
-                this.put(lx, ly, transformer(c));
+                this.putDirty(lx, ly, transformer(c));
                 lx++;
             }
         }
+        this.recalculateBounds();
+    };
+
+    /*
+     * Convert this Playfield to a multi-line string.  Each row
+     * is a line, delimited with a newline (ASCII 10).
+     *
+     * If transformer is given, it should be a one-argument
+     * function which accepts a playfield element and returns a
+     * character (or string) you wish to place in the resulting
+     * string for that element.
+     */
+    this.dump = function(transformer) {
+        var text = "";
+        if (transformer === undefined) {
+            transformer = function(c) { return c; }
+        }
+        for (var y = this.minY; y <= this.maxY; y++) {
+            var row = "";
+            for (var x = this.minX; x <= this.maxX; x++) {
+                row += transformer(this.get(x, y));
+            }
+            text += row + "\n";
+        }
+        return text;
     };
 
     /*
