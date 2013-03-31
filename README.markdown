@@ -152,6 +152,11 @@ The classes are currently:
     A controller for animating the evolution and animation of a state
     (such as an esolang program state or a cellular automaton configuration).
     Can be hooked up to DOM elements in the UI (typically buttons.)
+    
+*   `yoob.DragManager` and `yoob.Draggable`, in `yoob/drag-manager.js`
+    
+    A set of classes for (crudely) managing things which can be dragged
+    around a canvas.
 
 ### Planned ###
 
