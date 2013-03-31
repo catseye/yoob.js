@@ -41,14 +41,15 @@ yoob.Playfield = function() {
      * location will return this Playfield's default value.
      */
     this.put = function(x, y, value) {
+        var key = x+','+y;
+        if (value === undefined || value === this._default) {
+            delete this._store[key];
+            return;
+        }
         if (this.minX === undefined || x < this.minX) this.minX = x;
         if (this.maxX === undefined || x > this.maxX) this.maxX = x;
         if (this.minY === undefined || y < this.minY) this.minY = y;
         if (this.maxY === undefined || y > this.maxY) this.maxY = y;
-        var key = x+','+y;
-        if (value === undefined || value === this._default) {
-            delete this._store[key];
-        }
         this._store[key] = value;
     };
 
@@ -61,6 +62,7 @@ yoob.Playfield = function() {
         var key = x+','+y;
         if (value === undefined || value === this._default) {
             delete this._store[key];
+            return;
         }
         this._store[key] = value;
     };
