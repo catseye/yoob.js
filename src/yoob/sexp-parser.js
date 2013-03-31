@@ -1,5 +1,5 @@
 /*
- * This file is part of yoob.js version 0.1
+ * This file is part of yoob.js version 0.3-PRE
  * This file is in the public domain.  See http://unlicense.org/ for details.
  */
 if (window.yoob === undefined) yoob = {};
@@ -28,14 +28,14 @@ yoob.SexpParser = function() {
     if (this.scanner.onType('atom')) {
       var x = this.scanner.token;
       this.scanner.scan();
-      return new yoob.Tree('atom', x);
+      return (new yoob.Tree('atom')).setValue(x);
     } else if (this.scanner.consume('(')) {
       var children = []
       while (!this.scanner.on(')') && !this.scanner.onType('EOF')) {
         children.push(this.parse());
       }
       this.scanner.expect(')');
-      return new yoob.Tree('list', undefined, children);
+      return new yoob.Tree('list', children);
     } else {
       /* register some kind of error */
       this.scanner.scan();

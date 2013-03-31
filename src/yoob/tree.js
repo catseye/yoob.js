@@ -4,14 +4,28 @@
  */
 if (window.yoob === undefined) yoob = {};
 
-yoob.Tree = function(type, value, children) {
+yoob.Tree = function(type, children) {
   this.type = type;
-  this.value = value;
+  this.value = undefined;
+  /*
+   * If this is set to a string, this Tree node is a variable.
+   */
+  this.variable = undefined;
   this.children = children;
   if (this.children === undefined) {
     this.children = [];
   }
-  
+
+  // chain methods
+  this.setValue = function(value) {
+    this.value = value;
+    return this;
+  };
+  this.setVariable = function(variable) {
+    this.variable = variable;
+    return this;
+  };
+
   this.toString = function() {
     var s = this.type + "("
     if (this.value !== undefined) {
@@ -47,4 +61,37 @@ yoob.Tree = function(type, value, children) {
     }
     return true;
   };
+
+  this.match = function(tree, unifier) {
+    if (unifier === undefined) {
+      unifier = {};
+    }
+
+    if (this.variable !== undefined) {
+      var existing = unifier[this.variable];
+      if (existing === undefined) {
+        unifier[this.variable] = tree;
+        return unifier;
+      } else {
+        return unifier[this.variable].match(tree, unifier);
+      }
+    }
+
+    if (this.type !== tree.type) {
+      return false;
+    }
+    if (this.value !== tree.value) {
+      return false;
+    }
+    if (this.children.length !== tree.children.length) {
+      return false;
+    }
+    for (var i = 0; i < this.children.length; i++) {
+      if (!this.children[i].match(tree.children[i], unifier)) {
+        return false;
+      }
+    }
+    return unifier;
+  };
+
 };
