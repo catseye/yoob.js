@@ -1,7 +1,7 @@
 yoob.js
 =======
 
-*Version 0.2.  Everything subject to change.*
+*Version 0.3-PRE.  Everything subject to change.*
 
 yoob.js is the HTML5 counterpart to [yoob][].
 
@@ -116,11 +116,24 @@ The classes are currently:
     An object implementing a push-down, first-in-first-out stack of values,
     optionally associated with a `<canvas>` on which it is depicted.
 
-*   `yoob.AST`, in `yoob/ast.js`
+*   `yoob.Tree`, in `yoob/tree.js`
     
-    An AST (Abstract Syntax Tree) is a type identifier (String), an optional
-    value (of any type), and an array of zero or more children ASTs.
-
+    A multi-purpose, n-ary tree, with optional node name (String identifier)
+    and payload (arbitrary value.)  Children are indexed by integer, 0-based.
+    It's meant to serve two main purposes:
+    
+    *   as an AST (Abstract Syntax Tree) for the (initial) intermediate
+        representation(s) of a program in an interpreter or compiler, in
+        which case the node name is the node type and the payload is anything
+        that might be handy, such as what the tree evaluated to; and
+    *   as _terms_, roughly as defined in the science of term rewriting.  In
+        this case the node name is the "constructor" and the payload is
+        probably not used.  For this purpose, the `tree.js` module should
+        eventually include facilities for matching and unification.
+    
+    Trees, with only two children, could also be used as lists a la Lisp.  In
+    this case the node name and payload would both go unused.
+    
 *   `yoob.Scanner`, in `yoob/scanner.js`
     
     A simple, inefficient lexical analyzer, parameterized with a table of
@@ -141,16 +154,6 @@ The classes are currently:
     Can be hooked up to DOM elements in the UI (typically buttons.)
 
 ### Planned ###
-
-*   `yoob.List`
-    
-    A List is either an atom (String) or a pair of a List and a List.
-
-*   `yoob.Term`
-    
-    A Term is either an atom (String) or a variable (String in a special
-    namespace), plus an array of zero or more children Terms.  Should
-    include facilities for matching and unification.
 
 *   `yoob.Environment`
     
