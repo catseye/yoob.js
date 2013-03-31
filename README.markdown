@@ -1,7 +1,7 @@
 yoob.js
 =======
 
-*Version 0.2-PRE.  Everything subject to change.*
+*Version 0.2.  Everything subject to change.*
 
 yoob.js is the HTML5 counterpart to [yoob][].
 
@@ -116,7 +116,7 @@ The classes are currently:
     An object implementing a push-down, first-in-first-out stack of values,
     optionally associated with a `<canvas>` on which it is depicted.
 
-*   `yoob.AST`
+*   `yoob.AST`, in `yoob/ast.js`
     
     An AST (Abstract Syntax Tree) is a type identifier (String), an optional
     value (of any type), and an array of zero or more children ASTs.
@@ -185,8 +185,30 @@ yoob.js is currently used in the HTML5 implementations of:
 *   [noit o' mnain worb][]
 *   [Super Wumpus Land][]
 
+...and soon to be used in ALPACA and the various cellular automata defined
+therein.
+
 [yoob]: http://catseye.tc/node/yoob.html
 [Gemooy]: http://catseye.tc/node/Gemooy.html
 [Javascript BigInteger]: https://github.com/silentmatt/javascript-biginteger
 [noit o' mnain worb]: http://catseye.tc/node/noit%20o%27%20mnain%20worb.html
 [Super Wumpus Land]: http://catseye.tc/node/Super%20Wumpus%20Land.html
+
+Changelog
+---------
+
+*   version 0.1
+    
+    Initial release.
+    
+*   version 0.2
+    
+    Added `yoob.Controller` class.
+    
+    In `yoob.Playfield`:
+    *   made attributes camelCase
+    *   added support for `transformer` argument to `load`
+    *   added support for default values (`setDefault`)
+    *   added `dump` method
+    *   added `putDirty` and `recalculateBounds` methods
+    *   added `map` method
