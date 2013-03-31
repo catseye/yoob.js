@@ -94,4 +94,23 @@ yoob.Tree = function(type, children) {
     return unifier;
   };
 
+  /*
+   * Returns a new Tree with all the variables in the original
+   * 'this' Tree replaced with their bound values in the unifier.
+   */
+  this.subst = function(unifier) {
+    if (this.variable !== undefined) {
+      var existing = unifier[this.variable];
+      if (existing !== undefined) {
+        return existing;
+      } else {
+        return this;
+      }
+    }
+    var t = new yoob.Tree(this.type).setValue(this.value);
+    for (var i = 0; i < this.children.length; i++) {
+      t.children.push(this.children[i].subst(unifier));
+    }
+    return t;
+  };
 };

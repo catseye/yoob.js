@@ -31,6 +31,11 @@
     (new yoob.Tree('atom')).setValue('cmd'),
     (new yoob.Tree('var')).setVariable('X')
   ]);
+  var equ = new yoob.Tree('list', [
+    (new yoob.Tree('atom')).setValue('eq'),
+    (new yoob.Tree('var')).setVariable('X'),
+    (new yoob.Tree('var')).setVariable('X')
+  ]);
   var ib = new yoob.LineInputBuffer();
   ib.init(canvas, t, function(str) {
     p.init(str);
@@ -39,12 +44,11 @@
       if (ast.equals(quit)) {
         t.write("You can't give up yet!");
       } else {
-        var unifier = pat.match(ast);
+        var unifier = equ.match(ast);
         if (unifier) {
-          t.write("Matched X=[" + unifier.X.toString() + "]")
-        } else {
-          t.write(ast.toString());
+          ast = pat.subst(unifier);
         }
+        t.write(ast.toString());
       }
       t.write("\n");
     } else {
