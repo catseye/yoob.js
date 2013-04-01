@@ -53,6 +53,10 @@ yoob.Sprite = function() {
   };
 
   // override this to detect this event
+  this.onpickup = function() {
+  };
+
+  // override this to detect this event
   this.ondrop = function() {
   };
 
@@ -87,8 +91,9 @@ yoob.SpriteManager = function() {
         if (sprite.containsPoint(self.canvasX, self.canvasY)) {
           self.dragging = sprite;
           self.dragging.selected = true;
-          self.offsetX = sprite.x - self.canvasX;
-          self.offsetY = sprite.y - self.canvasY;
+          self.dragging.onpickup();
+          self.offsetX = sprite.getX() - self.canvasX;
+          self.offsetY = sprite.getY() - self.canvasY;
           canvas.onmousemove = function(e) {
             self.canvasX = e.pageX - canvas.offsetLeft;
             self.canvasY = e.pageY - canvas.offsetTop;
@@ -140,5 +145,24 @@ yoob.SpriteManager = function() {
     }
   };
 
-  // TODO: reorder and delete draggables
+  this.moveToFront = function(sprite) {
+    this.removeSprite(sprite);
+    this.sprites.push(sprite);
+  };
+
+  this.moveToBack = function(sprite) {
+    this.removeSprite(sprite);
+    this.sprites.unshift(sprite);
+  };
+
+  this.getSpriteAt = function(x, y) {
+    for (var i = self.sprites.length-1; i >= 0; i--) {
+      var sprite = self.sprites[i];
+      if (sprite.containsPoint(x, y)) {
+        return sprite;
+      }
+    }
+    return undefined;
+  };
+
 };

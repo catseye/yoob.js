@@ -55,6 +55,9 @@ Your browser doesn't support displaying an HTML5 canvas.
     d.isDraggable = true;
     d.draw = draw;
     d.style = style;
+    d.onpickup = function() {
+      manager.moveToFront(this);
+    };
     d.ondrop = function() {
       //alert("Dropped at (" + this.getX() + ", " + this.getY() + ")");
       if (this.getX() > canvas.width - this.getWidth()) {
