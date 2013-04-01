@@ -4,13 +4,36 @@
  */
 if (window.yoob === undefined) yoob = {};
 
-yoob.Draggable = function() {
+/*
+ * This is really just an interface; duck-typing-wise, you can use any
+ * Javascript object you want as a sprite, so long as it exposes these
+ * methods.
+ */
+yoob.Sprite = function() {
+  this.isDraggable = false;
+
   this.init = function(x, y, w, h) {
     this.x = x;
     this.y = y;
     this.w = w;
     this.h = h;
     this.selected = false;
+  };
+
+  this.getX = function() {
+    return this.x;
+  };
+
+  this.getY = function() {
+    return this.y;
+  };
+
+  this.getWidth = function() {
+    return this.w;
+  };
+
+  this.getHeight = function() {
+    return this.h;
   };
 
   this.moveTo = function(x, y) {
@@ -28,44 +51,48 @@ yoob.Draggable = function() {
     ctx.fillStyle = "green";
     ctx.fillRect(this.x, this.y, this.w, this.h);
   };
+
+  // override this to detect this event
+  this.ondrop = function() {
+  };
+
 };
 
 /*
  * This has lots of shortcomings at the moment.
  */
-yoob.DragManager = function() {
+yoob.SpriteManager = function() {
   this.canvas = undefined;
   this.canvasX = undefined;
   this.canvasY = undefined;
   this.offsetX = undefined;
   this.offsetY = undefined;
   this.dragging = undefined;
-  this.draggables = [];
-  var ctx = undefined;
+  this.sprites = [];
 
   /*
    * Attach this DragManager to a canvas.
    */
   this.init = function(canvas) {
     this.canvas = canvas;
-    ctx = canvas.getContext("2d");
 
     var self = this;
     canvas.onmousedown = function(e) {
       self.canvasX = e.pageX - canvas.offsetLeft;
       self.canvasY = e.pageY - canvas.offsetTop;
 
-      for (var i = self.draggables.length-1; i >= 0; i--) {
-        var draggable = self.draggables[i];
-        if (draggable.containsPoint(self.canvasX, self.canvasY)) {
-          self.dragging = draggable;
+      for (var i = self.sprites.length-1; i >= 0; i--) {
+        var sprite = self.sprites[i];
+        if (!sprite.isDraggable) continue;
+        if (sprite.containsPoint(self.canvasX, self.canvasY)) {
+          self.dragging = sprite;
           self.dragging.selected = true;
-          self.offsetX = draggable.x - self.canvasX;
-          self.offsetY = draggable.y - self.canvasY;
+          self.offsetX = sprite.x - self.canvasX;
+          self.offsetY = sprite.y - self.canvasY;
           canvas.onmousemove = function(e) {
             self.canvasX = e.pageX - canvas.offsetLeft;
             self.canvasY = e.pageY - canvas.offsetTop;
-            
+
             self.dragging.moveTo(self.canvasX + self.offsetX,
                                  self.canvasY + self.offsetY);
           };
@@ -81,21 +108,37 @@ yoob.DragManager = function() {
       self.canvasY = undefined;
       self.offsetX = undefined;
       self.offsetY = undefined;
-      self.dragging.selected = false;
+      if (self.dragging !== undefined) {
+        self.dragging.ondrop();
+        self.dragging.selected = false;
+      }
       self.dragging = undefined;
       canvas.style.cursor = "auto";
     };
   };
 
-  this.draw = function() {
-    for (var i = 0; i < this.draggables.length; i++) {
-      this.draggables[i].draw(ctx);
+  this.draw = function(ctx) {
+    for (var i = 0; i < this.sprites.length; i++) {
+      this.sprites[i].draw(ctx);
     }
   };
 
-  this.addDraggable = function(draggable) {
-    this.draggables.push(draggable);
+  this.addSprite = function(sprite) {
+    this.sprites.push(sprite);
   };
-  
+
+  this.removeSprite = function(sprite) {
+    var index = undefined;
+    for (var i = 0; i < this.sprites.length; i++) {
+      if (this.sprites[i] === sprite) {
+        index = i;
+        break;
+      }
+    }
+    if (index !== undefined) {
+      this.sprites.splice(index, 1);
+    }
+  };
+
   // TODO: reorder and delete draggables
 };

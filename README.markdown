@@ -153,10 +153,10 @@ The classes are currently:
     (such as an esolang program state or a cellular automaton configuration).
     Can be hooked up to DOM elements in the UI (typically buttons.)
     
-*   `yoob.DragManager` and `yoob.Draggable`, in `yoob/drag-manager.js`
+*   `yoob.Sprite` and `yoob.SpriteManager`, in `yoob/sprite-manager.js`
     
-    A set of classes for (crudely) managing things which can be dragged
-    around a canvas.
+    A set of classes for (crudely) managing independent things which can
+    placed, moved, and be dragged around a canvas.
 
 ### Planned ###
 
