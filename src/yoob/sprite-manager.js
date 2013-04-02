@@ -11,6 +11,7 @@ if (window.yoob === undefined) yoob = {};
  */
 yoob.Sprite = function() {
   this.isDraggable = false;
+  this.isClickable = false;
 
   this.init = function(x, y, w, h) {
     this.x = x;
@@ -53,11 +54,19 @@ yoob.Sprite = function() {
   };
 
   // override this to detect this event
-  this.onpickup = function() {
+  this.ongrab = function() {
+  };
+
+  // override this to detect this event
+  this.ondrag = function() {
   };
 
   // override this to detect this event
   this.ondrop = function() {
+  };
+
+  // override this to detect this event
+  this.onclick = function() {
   };
 
 };
@@ -85,25 +94,24 @@ yoob.SpriteManager = function() {
       self.canvasX = e.pageX - canvas.offsetLeft;
       self.canvasY = e.pageY - canvas.offsetTop;
 
-      for (var i = self.sprites.length-1; i >= 0; i--) {
-        var sprite = self.sprites[i];
-        if (!sprite.isDraggable) continue;
-        if (sprite.containsPoint(self.canvasX, self.canvasY)) {
-          self.dragging = sprite;
-          self.dragging.selected = true;
-          self.dragging.onpickup();
-          self.offsetX = sprite.getX() - self.canvasX;
-          self.offsetY = sprite.getY() - self.canvasY;
-          canvas.onmousemove = function(e) {
-            self.canvasX = e.pageX - canvas.offsetLeft;
-            self.canvasY = e.pageY - canvas.offsetTop;
+      var sprite = self.getSpriteAt(self.canvasX, self.canvasY);
+      if (sprite === undefined) return;
+      if (sprite.isDraggable) {
+        self.dragging = sprite;
+        self.dragging.selected = true;
+        self.dragging.ongrab();
+        self.offsetX = sprite.getX() - self.canvasX;
+        self.offsetY = sprite.getY() - self.canvasY;
+        canvas.onmousemove = function(e) {
+          self.canvasX = e.pageX - canvas.offsetLeft;
+          self.canvasY = e.pageY - canvas.offsetTop;
 
-            self.dragging.moveTo(self.canvasX + self.offsetX,
-                                 self.canvasY + self.offsetY);
-          };
-          canvas.style.cursor = "move";
-          break;
-        }
+          self.dragging.moveTo(self.canvasX + self.offsetX,
+                               self.canvasY + self.offsetY);
+        };
+        canvas.style.cursor = "move";
+      } else if (sprite.isClickable) {
+        sprite.onclick(e);
       }
     };
 
@@ -156,8 +164,8 @@ yoob.SpriteManager = function() {
   };
 
   this.getSpriteAt = function(x, y) {
-    for (var i = self.sprites.length-1; i >= 0; i--) {
-      var sprite = self.sprites[i];
+    for (var i = this.sprites.length-1; i >= 0; i--) {
+      var sprite = this.sprites[i];
       if (sprite.containsPoint(x, y)) {
         return sprite;
       }
