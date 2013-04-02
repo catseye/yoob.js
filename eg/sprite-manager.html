@@ -21,7 +21,7 @@ Your browser doesn't support displaying an HTML5 canvas.
   var manager = new yoob.SpriteManager();
   manager.init(c);
 
-  var draw = function(ctx) {
+  var drawDraggable = function(ctx) {
     ctx.shadowOffsetX = 10;
     ctx.shadowOffsetY = 10;
     ctx.shadowBlur = 15;
@@ -49,13 +49,13 @@ Your browser doesn't support displaying an HTML5 canvas.
     ctx.strokeRect(x, y, w, h);
   };
   
-  var add = function(x, y, w, h, style) {
+  var addDraggable = function(x, y, w, h, style) {
     var d = new yoob.Sprite();
     d.init(x, y, w, h);
     d.isDraggable = true;
-    d.draw = draw;
+    d.draw = drawDraggable;
     d.style = style;
-    d.onpickup = function() {
+    d.ongrab = function() {
       manager.moveToFront(this);
     };
     d.ondrop = function() {
@@ -67,9 +67,43 @@ Your browser doesn't support displaying an HTML5 canvas.
     manager.addSprite(d);
   };
 
-  add(100, 100, 60, 60, "green");
-  add(200, 100, 100, 40, "red");
-  add(100, 200, 50, 90, "yellow");
+  var addClickable = function(x, y, w, h, text) {
+    var d = new yoob.Sprite();
+    d.init(x, y, w, h);
+    d.isClickable = true;
+    d.draw = function(ctx) {
+      ctx.fillStyle = "blue";
+      ctx.beginPath();
+      ctx.arc(
+        this.getX() + this.getWidth() / 2,
+        this.getY() + this.getHeight() / 2,
+        this.getWidth() / 2,
+        0, 2 * Math.PI,
+        false
+      );
+      ctx.fill();
+      ctx.strokeStyle = "black";
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    };
+    d.containsPoint = function(x, y) {
+      var r = this.getWidth() / 2;
+      var dx = x - (this.getX() + r);
+      var dy = y - (this.getY() + this.getHeight() / 2);
+      var dist = dx * dx + dy * dy;
+      return dist < r * r;
+    };
+    d.onclick = function() {
+      alert("You clicked " + text);
+    };
+    manager.addSprite(d);
+  };
+
+  addDraggable(100, 100, 60, 60, "green");
+  addDraggable(200, 100, 100, 40, "red");
+  addDraggable(100, 200, 50, 90, "yellow");
+  
+  addClickable(200, 200, 80, 80, "blue circle");
 
   interval_id = setInterval(function() {
     var ctx = canvas.getContext("2d");
