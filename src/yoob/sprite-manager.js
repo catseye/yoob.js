@@ -18,6 +18,8 @@ yoob.Sprite = function() {
     this.y = y;
     this.w = w;
     this.h = h;
+    this.dx = 0;
+    this.dy = 0;
     this.selected = false;
   };
 
@@ -29,6 +31,14 @@ yoob.Sprite = function() {
     return this.y;
   };
 
+  this.getCenterX = function() {
+    return this.x + this.w / 2;
+  };
+
+  this.getCenterY = function() {
+    return this.y + this.h / 2;
+  };
+
   this.getWidth = function() {
     return this.w;
   };
@@ -37,9 +47,42 @@ yoob.Sprite = function() {
     return this.h;
   };
 
+  this.setVelocity = function(dx, dy) {
+    this.dx = dx;
+    this.dy = dy;
+  };
+
+  this.setDestination = function(x, y, ticks) {
+    this.destX = x;
+    this.destY = y;
+    this.dx = (this.destX - this.x) / ticks;
+    this.dy = (this.destY - this.y) / ticks;
+    this.destCounter = ticks;
+  };
+
+  this.move = function(x, y) {
+    this.x += this.dx;
+    this.y += this.dy;
+    this.onmove();
+    if (this.destCounter !== undefined) {
+      this.destCounter--;
+      if (this.destCounter <= 0) {
+        this.destCounter = undefined;
+        this.x = this.destX;
+        this.y = this.destY;
+        this.onreachdestination();
+      }
+    }
+  };
+
   this.moveTo = function(x, y) {
     this.x = x;
     this.y = y;
+  };
+
+  this.moveCenterTo = function(x, y) {
+    this.x = x - this.getWidth() / 2;
+    this.y = y - this.getHeight() / 2;
   };
 
   this.containsPoint = function(x, y) {
@@ -53,20 +96,19 @@ yoob.Sprite = function() {
     ctx.fillRect(this.x, this.y, this.w, this.h);
   };
 
-  // override this to detect this event
+  // event handlers.  override to detect these events.
   this.ongrab = function() {
   };
-
-  // override this to detect this event
   this.ondrag = function() {
   };
-
-  // override this to detect this event
   this.ondrop = function() {
   };
-
-  // override this to detect this event
   this.onclick = function() {
+  };
+  this.onmove = function() {
+  };
+  this.onreachdestination = function() {
+    this.setVelocity(0, 0);
   };
 
 };
@@ -130,6 +172,10 @@ yoob.SpriteManager = function() {
     };
   };
 
+  this.move = function(ctx) {
+    this.foreach(function(sprite) { sprite.move(); });
+  };
+
   this.draw = function(ctx) {
     for (var i = 0; i < this.sprites.length; i++) {
       this.sprites[i].draw(ctx);
@@ -171,6 +217,19 @@ yoob.SpriteManager = function() {
       }
     }
     return undefined;
+  };
+
+  this.foreach = function(fun) {
+    for (var i = this.sprites.length-1; i >= 0; i--) {
+      var sprite = this.sprites[i];
+      var result = fun(sprite);
+      if (result === 'remove') {
+        this.removeSprite(sprite);
+      }
+      if (result === 'return') {
+        return sprite;
+      }
+    }
   };
 
 };
