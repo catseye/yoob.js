@@ -1,0 +1,47 @@
+#!/usr/bin/env python
+# encoding: UTF-8
+
+# usage: embed-sources <dir>
+
+# Reads all of the files in <dir> (assumed to be e.g. example sources
+# for an esolang) and writes out a fragment of HTML that can be used,
+# in conjunction with yoob.js, to allow the user to select any of the
+# example sources from a dropdown.
+
+import os
+import sys
+import re
+
+def escape(s):
+    s = re.sub('\<', '&lt;', s)
+    s = re.sub('\>', '&gt;', s)
+    s = re.sub('\&', '&amp;', s)
+    return s
+
+dirname = sys.argv[1]
+filenames = sorted(os.listdir(dirname))
+
+sys.stdout.write("""
+<span id="select_source_container">
+  <select id="select_source">
+    <option>(select one...)</option>
+""")
+for filename in filenames:
+    (id, ext) = os.path.splitext(filename)
+    sys.stdout.write("    <option>%s</option>\n" % id)
+sys.stdout.write("""\
+  </select>
+</span>
+
+""")
+
+for filename in filenames:
+    (id, ext) = os.path.splitext(filename)
+    full_filename = os.path.join(dirname, filename)
+    with open(full_filename, 'r') as file:
+        sys.stdout.write("""
+<div id="%s" style="display: none;"
+>""" % id)
+        for line in file:
+            sys.stdout.write(escape(line))
+        sys.stdout.write("</div>\n\n")
