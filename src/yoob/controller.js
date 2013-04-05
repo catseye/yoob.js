@@ -22,10 +22,14 @@ yoob.Controller = function() {
     this.speed = undefined;
     this.controls = {};
 
-    var makeOnClick = function(controller, key) {
-        if (controller['click_' + key] !== undefined)
+    this.makeEventHandler = function(control, key) {
+        if (this['click_' + key] !== undefined) {
             key = 'click_' + key;
-        return function(e) { controller[key](); }
+        }
+        var self = this;
+        return function(e) {
+          self[key](control); 
+        };
     };
 
     /*
@@ -36,7 +40,7 @@ yoob.Controller = function() {
      */
     this.connect = function(dict) {
         var self = this;
-        var keys = ["start", "stop", "step", "load", "edit"];
+        var keys = ["start", "stop", "step", "load", "edit", "select"];
         for (var i in keys) {
             var key = keys[i];
             var value = dict[key];
@@ -44,7 +48,11 @@ yoob.Controller = function() {
                 value = document.getElementById(value);
             }
             if (value !== undefined) {
-                value.onclick = makeOnClick(this, key);
+                if (key === 'select') {
+                    value.onchange = this.makeEventHandler(value, key);
+                } else {
+                    value.onclick = this.makeEventHandler(value, key);
+                }
                 this.controls[key] = value;
             }
         }
@@ -112,6 +120,19 @@ yoob.Controller = function() {
         if (this.controls.stop) this.controls.stop.disabled = true;
         if (this.display) this.display.style.display = "none";
         if (this.source) this.source.style.display = "block";
+    };
+
+    this.click_select = function(control) {
+        this.stop();
+        var source = document.getElementById(
+          control.options[control.selectedIndex].value
+        );
+        var text = source.innerHTML;
+        text = text.replace(/\&lt;/g, '<');
+        text = text.replace(/\&gt;/g, '>');
+        text = text.replace(/\&amp;/g, '&');
+        if (this.source) this.source.value = text;
+        this.load(text);
     };
 
     this.start = function() {
