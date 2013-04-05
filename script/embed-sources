@@ -13,9 +13,9 @@ import sys
 import re
 
 def escape(s):
+    s = re.sub('\&', '&amp;', s)
     s = re.sub('\<', '&lt;', s)
     s = re.sub('\>', '&gt;', s)
-    s = re.sub('\&', '&amp;', s)
     return s
 
 dirname = sys.argv[1]
