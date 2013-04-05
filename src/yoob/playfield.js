@@ -232,6 +232,7 @@ yoob.Playfield = function() {
     /*
      * Draws the Playfield in a drawing context.
      * cellWidth and cellHeight are canvas units of measure for each cell.
+     * offsetX and offsetY are canvas units of measure for the playfield.
      */
     this.drawContext = function(ctx, offsetX, offsetY, cellWidth, cellHeight) {
         var me = this;
@@ -240,6 +241,11 @@ yoob.Playfield = function() {
                            cellWidth, cellHeight, elem);
         });
     };
+
+    this.getMinX = function() { return this.minX; }
+    this.getMaxX = function() { return this.maxX; }
+    this.getMinY = function() { return this.minY; }
+    this.getMaxY = function() { return this.maxY; }
 
     this.getExtentX = function() {
         if (this.maxX === undefined || this.minX === undefined) {
@@ -288,7 +294,8 @@ yoob.Playfield = function() {
         for (var i = 0; i < cursors.length; i++) {
             cursors[i].drawContext(
               ctx,
-              cursors[i].x * cellWidth, cursors[i].y * cellHeight,
+              offsetX + cursors[i].x * cellWidth,
+              offsetY + cursors[i].y * cellHeight,
               cellWidth, cellHeight
             );
         }
