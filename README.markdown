@@ -1,7 +1,7 @@
 yoob.js
 =======
 
-*Version 0.3-PRE.  Everything subject to change.*
+*Version 0.3.  Everything subject to change.*
 
 yoob.js is the HTML5 counterpart to [yoob][].
 
@@ -155,8 +155,8 @@ The classes are currently:
     
 *   `yoob.Sprite` and `yoob.SpriteManager`, in `yoob/sprite-manager.js`
     
-    A set of classes for (crudely) managing independent things which can
-    placed, moved, and be dragged around a canvas.
+    A set of classes for (somewhat crudely) managing independent things which
+    can be placed, moved, be clicked, and be dragged around a canvas.
 
 ### Planned ###
 
@@ -167,13 +167,36 @@ The classes are currently:
 
 *   `yoob.Turtle`
     
-    For Turtle Graphics.
+    For Turtle Graphics.  This should probably be a "model" and there
+    should be a separate `yoob.TurtleView` which concerns itself with
+    rendering the turtle (and its path) on a canvas.
 
 *   `yoob.Error`
     
     For error handling.  Scanning and Parsing should accumulate a
     list of these objects before choking and dying.  They should be
     displayable nicely somehow.
+
+*   `yoob.HTMLTextConsole`
+    
+    A crude simulation of a text-based addressable console in something
+    other than a `<canvas>`, but continuing to provide a sort of retro
+    feel.  Possibly implemented with a `<pre>` element or a `<div>` with
+    a fixed-size font and significant whitespace set using CSS3.
+    This will allow text to be rendered more nicely, and selected for
+    copying/pasting in the browser, and so forth.
+
+*   `yoob.TextTerminalAdapter`
+    
+    Like `yoob.TextTerminal`, but instead of being a subclass of
+    `yoob.TextConsole`, it should be an adapter which can be used with
+    either that class or `yoob.HTMLTextConsole`.
+
+*   `yoob.PlayfieldView`
+    
+    `yoob.Playfield` should be a "model" only, and not contain any code
+    concerned with rendering.  This class should concern itself with
+    rendering.
 
 *   unbounded integer support
     
@@ -220,3 +243,17 @@ Changelog
     *   added `dump` method
     *   added `putDirty` and `recalculateBounds` methods
     *   added `map` method
+
+*   version 0.3
+    
+    Added `embed-sources` tool.
+    
+    Added `yoob.SpriteManager` and `yoob.Sprite` classes.
+    
+    Moved `yoob.AST` to `yoob.Tree`, and added `equals`, `setValue`,
+    `setVariable`, `match`, and `subst` methods to it.
+    
+    Added support for `edit` and `select` controls in `yoob.Controller`.
+    
+    Added `get(Max|Min)(X|Y)` methods to `yoob.Playfield`, and fixed
+    issue with drawing cursors at wrong offsets.
