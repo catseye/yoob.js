@@ -1,7 +1,7 @@
 yoob.js
 =======
 
-*Version 0.3.  Everything subject to change.*
+*Version 0.4-PRE.  Everything subject to change.*
 
 yoob.js is the HTML5 counterpart to [yoob][].
 
@@ -74,10 +74,8 @@ The classes are currently:
 *   `yoob.Playfield`, in `yoob/playfield.js`
     
     A two-dimensional Cartesian grid of values which dynamically expands as
-    needed.  It can be associated with a `<canvas>` element, on which it will
-    be depicted, which will also dynamically expand as needed.  Objects of
-    this class should be suitable for representing programs in two-dimensional
-    esolangs such as Befunge, as well as cellular automata.
+    needed.  Objects of this class are suitable for representing programs in
+    two-dimensional esolangs such as Befunge, as well as cellular automata.
 
 *   `yoob.Cursor`, in `yoob/cursor.js`
     
@@ -85,6 +83,12 @@ The classes are currently:
     (typically a `yoob.Playfield`) which also has a _delta_ (direction
     vector) which need not necessarily be used.
 
+*   `yoob.PlayfieldCanvasView`, in `yoob/playfield-canvas-view.js`
+    
+    A view (in the MVC sense) which associates a `yoob.Playfield` with a
+    `<canvas>` element in the DOM.  The playfield will be depicted on the
+    canvas, which can also dynamically expand as needed.
+    
 *   `yoob.TextConsole`, in `yoob/text-console.js`
     
     A crude simulation of a text-based addressable console on a `<canvas>`
@@ -191,12 +195,6 @@ The classes are currently:
     Like `yoob.TextTerminal`, but instead of being a subclass of
     `yoob.TextConsole`, it should be an adapter which can be used with
     either that class or `yoob.HTMLTextConsole`.
-
-*   `yoob.PlayfieldView`
-    
-    `yoob.Playfield` should be a "model" only, and not contain any code
-    concerned with rendering.  This class should concern itself with
-    rendering.
 
 *   unbounded integer support
     
