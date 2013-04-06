@@ -88,7 +88,13 @@ The classes are currently:
     A view (in the MVC sense) which associates a `yoob.Playfield` with a
     `<canvas>` element in the DOM.  The playfield will be depicted on the
     canvas, which can also dynamically expand as needed.
+
+*   `yoob.PlayfieldHTMLView`, in `yoob/playfield-html-view.js`
     
+    A view (in the MVC sense) which associates a `yoob.Playfield` with any
+    element which supports `innerHTML`, although typically a `<pre>` element.
+    This will eventually take over most of what `yoob.TextConsole` does now.
+
 *   `yoob.TextConsole`, in `yoob/text-console.js`
     
     A crude simulation of a text-based addressable console on a `<canvas>`
