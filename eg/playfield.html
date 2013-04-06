@@ -35,8 +35,7 @@ Your browser doesn't support displaying an HTML5 canvas.
   var pf = new yoob.Playfield();
   var ip = new yoob.Cursor();
   var view = new yoob.PlayfieldCanvasView();
-  view.init(pf, canvas);
-  var height = 20;
+  view.init(pf, canvas).setCursors([ip]).setCellDimensions(undefined, 20);
 
   var textarea = document.getElementById('program');
   document.getElementById('load').onclick = function(e) {
@@ -54,11 +53,11 @@ Your browser doesn't support displaying an HTML5 canvas.
     });
     ip.dx = 1;
     ip.dy = 0;
-    view.drawCanvas(canvas, undefined, height, [ip]);
+    view.draw();
   };
 
   document.getElementById('step').onclick = function(e) {
     ip.advance();
-    view.drawCanvas(canvas, undefined, height, [ip]);
+    view.draw();
   };
 </script>
