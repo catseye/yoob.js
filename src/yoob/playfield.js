@@ -23,6 +23,7 @@ yoob.Playfield = function() {
      */
     this.setDefault = function(v) {
         this._default = v;
+        return this;
     };
 
     /*
