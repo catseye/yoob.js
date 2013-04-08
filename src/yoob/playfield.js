@@ -105,6 +105,28 @@ yoob.Playfield = function() {
     };
 
     /*
+     * Scroll a rectangular subrectangle of this Playfield, up.
+     * TODO: support other directions.
+     */
+    this.scrollRectangleY = function(dy, minX, minY, maxX, maxY) {
+        for (var y = minY; y <= (maxY - dy); y++) {
+            for (var x = minX; x <= maxX; x++) {
+                this.put(x, y, this.get(x, y + dy));
+            }
+        }
+    };
+
+    this.clearRectangle = function(minX, minY, maxX, maxY) {
+        // Could also do this with a foreach that checks
+        // each position.  Would be faster on sparser playfields.
+        for (var y = minY; y <= maxY; y++) {
+            for (var x = minX; x <= maxX; x++) {
+                this.put(x, y, undefined);
+            }
+        }
+    };
+
+    /*
      * Load a string into this Playfield.
      * The string may be multiline, with newline (ASCII 10)
      * characters delimiting lines.  ASCII 13 is ignored.
