@@ -31,6 +31,7 @@ if (window.yoob === undefined) yoob = {};
 yoob.TextTerminal = function() {
     
     // Inner Class
+    var upper = this;
     var ConsoleCell = function() {        
         this.init = function(c, tc, bc) {
             this.character = c;
@@ -39,24 +40,17 @@ yoob.TextTerminal = function() {
             return this;
         };
         
-        this.draw = function(ctx, x, y, cellWidth, cellHeight) {
-            ctx.fillStyle = this.backgroundColor;
-            ctx.fillRect(x, y, cellWidth, cellHeight);
-            ctx.fillStyle = this.textColor;
-            if (this.character !== ' ') {
-                ctx.fillText(this.character, x, y);
+        this.draw = function(ctx, pfX, pfY, canvasX, canvasY,
+                             cellWidth, cellHeight) {
+            // only draw the background if the cursor is not here
+            if (upper.cursor.x !== pfX || upper.cursor.y !== pfY) {
+                ctx.fillStyle = this.backgroundColor;
+                ctx.fillRect(canvasX, canvasY, cellWidth, cellHeight);
             }
+            ctx.fillStyle = this.textColor;
+            ctx.fillText(this.character, canvasX, canvasY);
         };
     };
-
-    this.pf = undefined;
-    this.rows = undefined;
-    this.cols = undefined;
-    this.cursor = undefined;
-    this.row = undefined;
-    this.col = undefined;
-    this.textColor = undefined;
-    this.backgroundColor = undefined;
 
     this.init = function(cols, rows) {
         this.pf = new yoob.Playfield();

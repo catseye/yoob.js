@@ -4,8 +4,7 @@
   <title>yoob.TextTerminal Demo</title>
   <style>
 #terminal {
-  background: black;
-  color: green;
+    background: black;
 }
   </style>
 </head>
@@ -40,7 +39,8 @@
 
     t.write("Click me!\n");
     
-    t.setCharAt(30, 30, '?');  // why no work?
+    t.setCharAt(30, 10, 'Z');
+    t.setCharAt(30, 10, '?');
 
     var z = 0;
     element.onclick = function(e) {
@@ -62,6 +62,7 @@
     view.draw();
     var ib = new yoob.LineInputBuffer().init(element, t);
     ib.onupdate = function(str) {
+        //alert("'" + str + "'");
         view.draw();
     };
     ib.onenter = function(str) {
