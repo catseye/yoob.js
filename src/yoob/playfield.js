@@ -109,11 +109,13 @@ yoob.Playfield = function() {
      * TODO: support other directions.
      */
     this.scrollRectangleY = function(dy, minX, minY, maxX, maxY) {
-        for (var y = minY; y <= (maxY - dy); y++) {
-            for (var x = minX; x <= maxX; x++) {
-                this.put(x, y, this.get(x, y + dy));
+        if (dy < 1) {
+            for (var y = minY; y <= (maxY + dy); y++) {
+                for (var x = minX; x <= maxX; x++) {
+                    this.put(x, y, this.get(x, y - dy));
+                }
             }
-        }
+        } else { alert("scrollRectangleY(" + dy + ") notImplemented"); }
     };
 
     this.clearRectangle = function(minX, minY, maxX, maxY) {
