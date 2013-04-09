@@ -73,22 +73,22 @@ yoob.PlayfieldCanvasView = function() {
     };
 
     /*
-     * Draws elements of the Playfield in a drawing context.
-     * x and y are canvas coordinates, and width and height
-     * are canvas units of measure.
+     * Draws cells of the Playfield in a drawing context.
+     * cellWidth and cellHeight are canvas units of measure.
      *
-     * The default implementation tries to call a .draw() method
-     * on the element, if one exists, and just renders it as text,
-     * in black, if not.
+     * The default implementation tries to call a .draw() method on the cell's
+     * value, if one exists, and just renders it as text, in black, if not.
      *
      * Override if you wish to draw elements in some other way.
      */
-    this.drawElement = function(ctx, x, y, cellWidth, cellHeight, elem) {
-        if (elem.draw !== undefined) {
-            elem.draw(ctx, x, y, cellWidth, cellHeight);
+    this.drawCell = function(ctx, value, playfieldX, playfieldY,
+                             canvasX, canvasY, cellWidth, cellHeight) {
+        if (value.draw !== undefined) {
+            value.draw(ctx, playfieldX, playfieldY, canvasX, canvasY,
+                       cellWidth, cellHeight);
         } else {
             ctx.fillStyle = "black";
-            ctx.fillText(elem.toString(), x, y);
+            ctx.fillText(value.toString(), canvasX, canvasY);
         }
     };
 
@@ -99,9 +99,10 @@ yoob.PlayfieldCanvasView = function() {
      */
     this.drawContext = function(ctx, offsetX, offsetY, cellWidth, cellHeight) {
         var self = this;
-        this.pf.foreach(function (x, y, elem) {
-            self.drawElement(ctx, offsetX + x * cellWidth, offsetY + y * cellHeight,
-                           cellWidth, cellHeight, elem);
+        this.pf.foreach(function (x, y, value) {
+            self.drawCell(ctx, value, x, y,
+                          offsetX + x * cellWidth, offsetY + y * cellHeight,
+                          cellWidth, cellHeight);
         });
     };
 
