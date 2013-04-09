@@ -72,7 +72,6 @@ yoob.PlayfieldCanvasView = function() {
         }
     };
 
-
     /*
      * Draws elements of the Playfield in a drawing context.
      * x and y are canvas coordinates, and width and height
@@ -83,8 +82,6 @@ yoob.PlayfieldCanvasView = function() {
      * in black, if not.
      *
      * Override if you wish to draw elements in some other way.
-     *
-     * TODO: this needs to take playfield x and y too?
      */
     this.drawElement = function(ctx, x, y, cellWidth, cellHeight, elem) {
         if (elem.draw !== undefined) {
