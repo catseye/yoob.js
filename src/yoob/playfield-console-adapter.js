@@ -5,6 +5,19 @@
  */
 if (window.yoob === undefined) yoob = {};
 
+yoob.ConsoleCell = function() {
+    this.character = ' ';
+    this.textColor = "green";
+    this.backgroundColor = "black";
+    
+    this.draw = function(ctx, x, y, cellWidth, cellHeight) {
+        ctx.fillStyle = this.backgroundColor;
+        ctx.fillRect(x, y, cellWidth, cellHeight);
+        ctx.fillStyle = this.textColor;
+        ctx.fillText(this.character.toString(), x, y);
+    };
+};
+
 /*
  * A temporary class, supporting the interface of yoob.TextConsole,
  * but based on a yoob.Playfield and yoob.Cursor, and no concern of
@@ -17,23 +30,27 @@ yoob.PlayfieldConsoleAdapter = function() {
     this.pf = undefined;
     this.rows = undefined;
     this.cols = undefined;
-    this.cursor = new yoob.Cursor(0, 0, 1, 0);
+    this.cursor = undefined;
     this.row = undefined;
     this.col = undefined;
     this.textColor = undefined;
     this.backgroundColor = undefined;
-    this.textColorPf = new yoob.Playfield();
-    this.textColorPf.setDefault("green");
-    this.bgColorPf = new yoob.Playfield();
-    this.bgColorPf.setDefault("black");
 
-    this.init = function(pf, cols, rows) {
-        this.pf = pf;
+    this.init = function(cols, rows) {
+        this.pf = new yoob.Playfield();
+        this.defaultCell = new yoob.ConsoleCell();
+        this.pf.setDefault(this.defaultCell);
+        this.cursor = new yoob.Cursor(0, 0, 1, 0);
         this.rows = rows;
         this.cols = cols;        
         this.textColor = "green";
         this.backgroundColor = "black";
         this.reset();
+        return this;
+    };
+
+    this.getPlayfield = function() {
+        return this.pf;
     };
 
     this.setTextColor = function(textColor, backgroundColor) {
@@ -46,29 +63,19 @@ yoob.PlayfieldConsoleAdapter = function() {
     };
 
     this.getTextColorAt = function(x, y) {
-        return this.textColorPf.get(x, y);
+        return this.pf.get(x, y).textColor;
     };
 
     this.getBackgroundColorAt = function(x, y) {
-        return this.bgColorPf.get(x, y);
+        return this.pf.get(x, y).backgroundColor;
     };
 
     this.setTextColorAt = function(x, y, style) {
-        this.textColorPf.put(x, y, style);
+        this.pf.get(x, y).textColor = style;
     };
 
     this.setBackgroundColorAt = function(x, y, style) {
-        this.bgColorPf.put(x, y, style);
-    };
-
-    /*
-     * Set your PlayfieldCanvasView's drawElement method to this.
-     */
-    this.drawElement = function(ctx, x, y, cellWidth, cellHeight, elem) {
-        ctx.fillStyle = this.getBackgroundColorAt(x, y);
-        ctx.fillRect(x, y, cellWidth, cellHeight);
-        ctx.fillStyle = this.getTextColorAt(x, y);
-        ctx.fillText(elem.toString(), x, y);
+        this.pf.get(x, y).backgroundColor = style;
     };
 
     /*
@@ -125,9 +132,11 @@ yoob.PlayfieldConsoleAdapter = function() {
     this.writeChar = function(c) {
         if (this.onWriteChar(c))
             return;
-        this.pf.put(this.cursor.x, this.cursor.y, c);
-        this.textColorPf.put(this.cursor.x, this.cursor.y, this.textColor);
-        this.bgColorPf.put(this.cursor.x, this.cursor.y, this.backgroundColor);
+        var cc = new yoob.ConsoleCell();
+        cc.character = c;
+        cc.textColor = this.textColor;
+        cc.backgroundColor = this.backgroundColor;
+        this.pf.put(this.cursor.x, this.cursor.y, cc);
         this.advanceCol();
     };
 

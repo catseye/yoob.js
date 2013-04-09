@@ -28,12 +28,10 @@
 <script src="../src/yoob/playfield-canvas-view.js"></script>
 <script src="../src/yoob/playfield-console-adapter.js"></script>
 <script>
-    var pf = new yoob.Playfield();
-    pf.setDefault(' ');
     var element = document.getElementById('console');
 
     var console = new yoob.PlayfieldConsoleAdapter();
-    console.init(pf, 80, 25);
+    console.init(80, 25);
 
     /*
     var view = new yoob.PlayfieldHTMLView();
@@ -41,12 +39,9 @@
     */
 
     var view = new yoob.PlayfieldCanvasView();
-    view.init(pf, element);
+    view.init(console.getPlayfield(), element);
     view.setCursors([console.cursor]);
     view.setCellDimensions(12, 18);
-    view.drawElement = function(ctx, x, y, w, h, elem) {
-        console.drawElement(ctx, x, y, w, h, elem);
-    };
     view.getLowerX = function() { return 0; };
     view.getLowerY = function() { return 0; };
     view.getUpperX = function() { return 79; };
