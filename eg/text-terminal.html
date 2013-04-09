@@ -39,6 +39,9 @@
     */
 
     t.write("Click me!\n");
+    
+    t.setCharAt(30, 30, '?');  // why no work?
+
     var z = 0;
     element.onclick = function(e) {
         t.writeRaw("Hello, world! (" + z + ")  ");
@@ -63,6 +66,7 @@
     };
     ib.onenter = function(str) {
         t.write("You typed '" + str + "'\n");
+        t.write("And now I\bU see\n");
         view.draw();
     };
 
