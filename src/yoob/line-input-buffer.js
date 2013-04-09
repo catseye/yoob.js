@@ -27,10 +27,10 @@ yoob.LineInputBuffer = function() {
             //alert('keyup:' + e.keyCode);
             switch (e.keyCode) {
               case 8:   /* Backspace */
-                if (me.terminal !== undefined) {
-                    me.terminal.write('\b \b');
-                }
                 if (me.text.length > 0) {
+                    if (me.terminal !== undefined) {
+                        me.terminal.write('\b \b');
+                    }
                     me.text = me.text.substring(0, me.text.length-1);
                     if (me.onupdate !== undefined) {
                       me.onupdate(me.text);
