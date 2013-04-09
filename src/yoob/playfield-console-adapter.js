@@ -11,6 +11,7 @@ if (window.yoob === undefined) yoob = {};
  * display (use a yoob.Playfield(Canvas|HTML)View for that.)
  *
  * Requires yoob.Cursor.
+ * Requires yoob.Playfield.
  */
 yoob.PlayfieldConsoleAdapter = function() {
     this.pf = undefined;
@@ -21,6 +22,10 @@ yoob.PlayfieldConsoleAdapter = function() {
     this.col = undefined;
     this.textColor = undefined;
     this.backgroundColor = undefined;
+    this.textColorPf = new yoob.Playfield();
+    this.textColorPf.setDefault("green");
+    this.bgColorPf = new yoob.Playfield();
+    this.bgColorPf.setDefault("black");
 
     this.init = function(pf, cols, rows) {
         this.pf = pf;
@@ -29,6 +34,41 @@ yoob.PlayfieldConsoleAdapter = function() {
         this.textColor = "green";
         this.backgroundColor = "black";
         this.reset();
+    };
+
+    this.setTextColor = function(textColor, backgroundColor) {
+        if (textColor !== undefined) {
+            this.textColor = textColor;
+        }
+        if (backgroundColor !== undefined) {
+            this.backgroundColor = backgroundColor;
+        }
+    };
+
+    this.getTextColorAt = function(x, y) {
+        return this.textColorPf.get(x, y);
+    };
+
+    this.getBackgroundColorAt = function(x, y) {
+        return this.bgColorPf.get(x, y);
+    };
+
+    this.setTextColorAt = function(x, y, style) {
+        this.textColorPf.put(x, y, style);
+    };
+
+    this.setBackgroundColorAt = function(x, y, style) {
+        this.bgColorPf.put(x, y, style);
+    };
+
+    /*
+     * Set your PlayfieldCanvasView's drawElement method to this.
+     */
+    this.drawElement = function(ctx, x, y, cellWidth, cellHeight, elem) {
+        ctx.fillStyle = this.getBackgroundColorAt(x, y);
+        ctx.fillRect(x, y, cellWidth, cellHeight);
+        ctx.fillStyle = this.getTextColorAt(x, y);
+        ctx.fillText(elem.toString(), x, y);
     };
 
     /*
@@ -85,7 +125,9 @@ yoob.PlayfieldConsoleAdapter = function() {
     this.writeChar = function(c) {
         if (this.onWriteChar(c))
             return;
-        pf.put(this.cursor.x, this.cursor.y, c);
+        this.pf.put(this.cursor.x, this.cursor.y, c);
+        this.textColorPf.put(this.cursor.x, this.cursor.y, this.textColor);
+        this.bgColorPf.put(this.cursor.x, this.cursor.y, this.backgroundColor);
         this.advanceCol();
     };
 
