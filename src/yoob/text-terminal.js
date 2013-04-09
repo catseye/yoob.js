@@ -76,6 +76,7 @@ yoob.TextTerminal = function() {
         view.getLowerY = function() { return 0; };
         view.getUpperX = function() { return self.cols - 1; };
         view.getUpperY = function() { return self.rows - 1; };
+        view.fixedPosition = true;
         return view;
     };
 

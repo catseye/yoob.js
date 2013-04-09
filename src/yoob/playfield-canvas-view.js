@@ -136,6 +136,11 @@ yoob.PlayfieldCanvasView = function() {
         var offsetX = this.pf.getMinX() * cellWidth * -1;
         var offsetY = this.pf.getMinY() * cellHeight * -1;
 
+        if (this.fixedPosition) {
+            offsetX = 0;
+            offsetY = 0;
+        }
+
         for (var i = 0; i < cursors.length; i++) {
             cursors[i].drawContext(
               ctx,
