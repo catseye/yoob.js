@@ -10,13 +10,13 @@ if (window.yoob === undefined) yoob = {};
  * but based on a yoob.Playfield and yoob.Cursor, and no concern of
  * display (use a yoob.Playfield(Canvas|HTML)View for that.)
  *
- * TODO: use a yoob.Cursor instead of row, col
+ * Requires yoob.Cursor.
  */
 yoob.PlayfieldConsoleAdapter = function() {
     this.pf = undefined;
     this.rows = undefined;
     this.cols = undefined;
-    //this.cursor = new yoob.Cursor();
+    this.cursor = new yoob.Cursor(0, 0, 1, 0);
     this.row = undefined;
     this.col = undefined;
     this.textColor = undefined;
@@ -31,18 +31,14 @@ yoob.PlayfieldConsoleAdapter = function() {
         this.reset();
     };
 
-    this.drawCursor = function(sty) {
-        // no longer implemented
-    };
-
     /*
      * Clear the TextConsole to the current backgroundColor, turn off
      * overstrike mode, make the cursor visible, and home it.
      */
     this.reset = function() {
         this.overStrike = false;
-        this.row = 0;
-        this.col = 0;
+        this.cursor.x = 0;
+        this.cursor.y = 0;
         this.pf.clear();
     };
 
@@ -51,12 +47,12 @@ yoob.PlayfieldConsoleAdapter = function() {
      * TextConsole display if necessary.
      */
     this.advanceRow = function() {
-        this.col = 0;
-        this.row += 1;
-        while (this.row >= this.rows) {
+        this.cursor.x = 0;
+        this.cursor.y += 1;
+        while (this.cursor.y >= this.rows) {
             this.pf.scrollRectangleY(-1, 0, 0, this.cols-1, this.rows-1);
             this.pf.clearRectangle(0, this.rows-1, this.cols-1, this.rows-1);
-            this.row -= 1;
+            this.cursor.y -= 1;
         }
     };
 
@@ -65,9 +61,9 @@ yoob.PlayfieldConsoleAdapter = function() {
      * next row if necessary.
      */
     this.advanceCol = function() {
-        this.col += 1;
-        if (this.col >= this.cols) {
-          this.advanceRow();
+        this.cursor.x += 1;
+        if (this.cursor.x >= this.cols) {
+            this.advanceRow();
         }
     };
 
@@ -89,7 +85,7 @@ yoob.PlayfieldConsoleAdapter = function() {
     this.writeChar = function(c) {
         if (this.onWriteChar(c))
             return;
-        pf.put(this.col, this.row, c);
+        pf.put(this.cursor.x, this.cursor.y, c);
         this.advanceCol();
     };
 
@@ -107,8 +103,8 @@ yoob.PlayfieldConsoleAdapter = function() {
      * (0-based) and y is the row number (also 0-based.)
      */
     this.gotoxy = function(x, y) {
-        this.col = x;
-        this.row = y;
+        this.cursor.x = x;
+        this.cursor.y = y;
     };
 
     /*
