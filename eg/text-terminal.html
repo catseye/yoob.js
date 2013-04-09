@@ -2,28 +2,39 @@
 <head>
   <meta charset="utf-8">
   <title>yoob.TextTerminal Demo</title>
-  <script src="../src/yoob/text-console.js"></script>
-  <script src="../src/yoob/text-terminal.js"></script>
-  <script src="../src/yoob/line-input-buffer.js"></script>
+  <style>
+#console {
+  background: black;
+  color: green;
+}
+  </style>
 </head>
 <body>
 
 <h1>yoob.TextTerminal Demo</h1>
 
-<canvas id="canvas" width="400" height="400" tabindex="0">
+<canvas id="console" width="400" height="400" tabindex="0">
   Your browser doesn't support displaying an HTML5 canvas.
 </canvas>
 
 </body>
+<script src="../src/yoob/playfield.js"></script>
+<script src="../src/yoob/cursor.js"></script>
+<script src="../src/yoob/playfield-canvas-view.js"></script>
+<script src="../src/yoob/text-console.js"></script>
+<script src="../src/yoob/text-terminal.js"></script>
+<script src="../src/yoob/line-input-buffer.js"></script>
 <script>
-  var canvas = document.getElementById('canvas');
-  var t = new yoob.TextTerminal();
-  var z = 0;
-  t.init(canvas, 20, 80, 25);
+  var canvas = document.getElementById('console');
+  var t = new yoob.TextTerminal().init(80, 25);
+  var view = t.createPlayfieldCanvasView(canvas, 12, 18);
   t.write("Focus me and\ntype something.  Try backspacing.\n\n");
-  var ib = new yoob.LineInputBuffer();
-  ib.init(canvas, t, function(str) {
+  view.draw();
+  var ib = new yoob.LineInputBuffer().init(canvas, t);
+  ib.onupdate = function(str) { view.draw(); }
+  ib.onenter = function(str) {
     alert(str);
-  });
+    view.draw();
+  };
   canvas.focus();
 </script>

@@ -22,7 +22,7 @@ if (window.yoob === undefined) yoob = {};
  *
  * Note there is no overStrike mode anymore.  But also, because the TextConsole
  * is backed by a Playfield, you can read characters and colors at any position
- * on the console.
+ * on the console.  Also, cursor doesn't blink anymore; will be addressed.
  *
  * Note, this console is completely "dumb": it does not understand any
  * control codes whatsoever, not even newline.  For a subclass of this
@@ -67,6 +67,20 @@ yoob.TextConsole = function() {
         this.backgroundColor = "black";
         this.reset();
         return this;
+    };
+
+    // convenience function
+    this.createPlayfieldCanvasView = function(element, cellWidth, cellHeight) {
+        var view = new yoob.PlayfieldCanvasView();
+        view.init(this.getPlayfield(), element);
+        view.setCursors([this.getCursor()]);
+        view.setCellDimensions(cellWidth, cellHeight);
+        var self = this;
+        view.getLowerX = function() { return 0; };
+        view.getLowerY = function() { return 0; };
+        view.getUpperX = function() { return self.cols - 1; };
+        view.getUpperY = function() { return self.rows - 1; };
+        return view;
     };
 
     this.getPlayfield = function() {
@@ -169,7 +183,7 @@ yoob.TextConsole = function() {
             return;
         this.pf.put(
             this.cursor.x, this.cursor.y,
-            new ConsoleCell().init(c, this.textColor, this.backgroundColor)
+            new ConsoleCell().in it(c, this.textColor, this.backgroundColor)
         );
         this.advanceCol();
     };
