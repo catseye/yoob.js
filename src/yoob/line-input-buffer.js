@@ -1,5 +1,5 @@
 /*
- * This file is part of yoob.js version 0.3
+ * This file is part of yoob.js version 0.4-PRE
  * Available from https://github.com/catseye/yoob.js/
  * This file is in the public domain.  See http://unlicense.org/ for details.
  */
@@ -7,9 +7,7 @@ if (window.yoob === undefined) yoob = {};
 
 /*
  * Object that captures keystrokes and accumulates a string from them.
- * Optionally also updates a TextTerminal (not a TextConsole as it sends
- * control codes such as backspace which TextConsole does not understand.)
- * Mostly for demonstration purposes so far.
+ * Optionally also updates a TextTerminal.
  */
 yoob.LineInputBuffer = function() {
     this.listenObject = undefined;
@@ -30,7 +28,7 @@ yoob.LineInputBuffer = function() {
           switch (e.keyCode) {
             case 8:   /* Backspace */
               if (me.terminal !== undefined) {
-                me.terminal.write('\b \b');
+                me.terminal.write('\b');
               }
               if (me.text.length > 0) {
                 me.text = me.text.substring(0, me.text.length-2);

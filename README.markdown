@@ -93,23 +93,25 @@ The classes are currently:
     
     A view (in the MVC sense) which associates a `yoob.Playfield` with any
     element which supports `innerHTML`, although typically a `<pre>` element.
-    This will eventually take over most of what `yoob.TextConsole` does now.
+    This will eventually take over most of what `yoob.TextTerminal` does now.
 
-*   `yoob.TextConsole`, in `yoob/text-console.js`
-    
-    A crude simulation of a text-based addressable console on a `<canvas>`
-    element.  Not recommended for serious use; mainly intended to provide a
-    sort of retro feel to input and ouput.
+    (A crude simulation of a text-based addressable console in something
+    other than a `<canvas>`, but continuing to provide a sort of retro
+    feel.  Possibly implemented with a `<pre>` element or a `<div>` with
+    a fixed-size font and significant whitespace set using CSS3.
+    This will allow text to be rendered more nicely, and selected for
+    copying/pasting in the browser, and so forth.)
 
 *   `yoob.TextTerminal`, in `yoob/text-terminal.js`
-    
-    A subclass of `yoob.TextConsole` which understands some terminal control
-    codes such as newline and backspace.
+
+    A crude simulation of a text-based addressable console, including some
+    functions (which need not be used) which understand simple terminal
+    control sequences, such as LF and backspace.
 
 *   `yoob.LineInputBuffer`, in `yoob/line-input-buffer.js`
     
     A crude simulation of a buffer into which the user can type a line of
-    text.  Typically it is associated with a `yoob.TextConsole` object, on
+    text.  Typically it is associated with a `yoob.TextTerminal` object, on
     which the text is displayed as the user types it.
 
 *   `yoob.Tape`, in `yoob/tape.js`
@@ -186,21 +188,6 @@ The classes are currently:
     For error handling.  Scanning and Parsing should accumulate a
     list of these objects before choking and dying.  They should be
     displayable nicely somehow.
-
-*   `yoob.HTMLTextConsole`
-    
-    A crude simulation of a text-based addressable console in something
-    other than a `<canvas>`, but continuing to provide a sort of retro
-    feel.  Possibly implemented with a `<pre>` element or a `<div>` with
-    a fixed-size font and significant whitespace set using CSS3.
-    This will allow text to be rendered more nicely, and selected for
-    copying/pasting in the browser, and so forth.
-
-*   `yoob.TextTerminalAdapter`
-    
-    Like `yoob.TextTerminal`, but instead of being a subclass of
-    `yoob.TextConsole`, it should be an adapter which can be used with
-    either that class or `yoob.HTMLTextConsole`.
 
 *   unbounded integer support
     
