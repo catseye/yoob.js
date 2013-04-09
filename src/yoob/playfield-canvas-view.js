@@ -51,6 +51,29 @@ yoob.PlayfieldCanvasView = function() {
     };
 
     /*
+     * Returns the number of visible cells in the x direction.
+     */
+    this.getExtentX = function() {
+        if (this.getLowerX() === undefined || this.getUpperX() === undefined) {
+            return 0;
+        } else {
+            return this.getUpperX() - this.getLowerX() + 1;
+        }
+    };
+
+    /*
+     * Returns the number of occupied cells in the y direction.
+     */
+    this.getExtentY = function() {
+        if (this.getLowerY() === undefined || this.getUpperY() === undefined) {
+            return 0;
+        } else {
+            return this.getUpperY() - this.getLowerY() + 1;
+        }
+    };
+
+
+    /*
      * Draws elements of the Playfield in a drawing context.
      * x and y are canvas coordinates, and width and height
      * are canvas units of measure.
@@ -93,8 +116,8 @@ yoob.PlayfieldCanvasView = function() {
     this.drawCanvas = function(canvas, cellWidth, cellHeight, cursors) {
         var ctx = canvas.getContext('2d');
       
-        var width = this.pf.getExtentX();
-        var height = this.pf.getExtentY();
+        var width = this.getExtentX();
+        var height = this.getExtentY();
 
         if (cellWidth === undefined) {
             ctx.textBaseline = "top";

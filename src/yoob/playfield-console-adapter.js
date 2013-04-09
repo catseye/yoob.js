@@ -54,8 +54,8 @@ yoob.PlayfieldConsoleAdapter = function() {
         this.col = 0;
         this.row += 1;
         while (this.row >= this.rows) {
-            this.pf.scrollRectangleY(-1, 0, 1, this.cols-1, this.rows-1);
-            this.pf.clearRectangle(0, this.rows-2, this.cols-1, this.rows-1);
+            this.pf.scrollRectangleY(-1, 0, 0, this.cols-1, this.rows-1);
+            this.pf.clearRectangle(0, this.rows-1, this.cols-1, this.rows-1);
             this.row -= 1;
         }
     };

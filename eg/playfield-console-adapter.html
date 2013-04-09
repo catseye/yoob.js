@@ -3,7 +3,7 @@
   <meta charset="utf-8">
   <title>yoob.PlayfieldConsoleAdapter Demo</title>
   <style>
-#terminal {
+#console {
   background: black;
   color: green;
 }
@@ -30,12 +30,19 @@
     var pf = new yoob.Playfield();
     pf.setDefault(' ');
     var element = document.getElementById('console');
+
+    /*
     var view = new yoob.PlayfieldHTMLView();
     view.init(pf, element);
-    /*
-    var view = new yoob.PlayfieldCanvasView();
-    view.init(pf, element).setCursors([]).setCellDimensions(8, 8);
     */
+
+    var view = new yoob.PlayfieldCanvasView();
+    view.init(pf, element).setCursors([]).setCellDimensions(12, 18);
+    view.drawElement = function(ctx, x, y, cellWidth, cellHeight, elem) {
+        ctx.fillStyle = "green";
+        ctx.fillText(elem.toString(), x, y);
+    };
+
     view.getLowerX = function() { return 0; };
     view.getLowerY = function() { return 0; };
     view.getUpperX = function() { return 79; };
