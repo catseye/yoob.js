@@ -3,7 +3,7 @@
   <meta charset="utf-8">
   <title>yoob.TextTerminal Demo</title>
   <style>
-#console {
+#terminal {
   background: black;
   color: green;
 }
@@ -13,28 +13,58 @@
 
 <h1>yoob.TextTerminal Demo</h1>
 
-<canvas id="console" width="400" height="400" tabindex="0">
+<!--
+<pre id="terminal" tabindex="0"></pre>
+-->
+
+<canvas id="terminal" width="600" height="400" tabindex="0">
   Your browser doesn't support displaying an HTML5 canvas.
 </canvas>
 
 </body>
 <script src="../src/yoob/playfield.js"></script>
 <script src="../src/yoob/cursor.js"></script>
+<script src="../src/yoob/playfield-html-view.js"></script>
 <script src="../src/yoob/playfield-canvas-view.js"></script>
-<script src="../src/yoob/text-console.js"></script>
+<script src="../src/yoob/text-t.js"></script>
 <script src="../src/yoob/text-terminal.js"></script>
 <script src="../src/yoob/line-input-buffer.js"></script>
 <script>
-  var canvas = document.getElementById('console');
-  var t = new yoob.TextTerminal().init(80, 25);
-  var view = t.createPlayfieldCanvasView(canvas, 12, 18);
-  t.write("Focus me and\ntype something.  Try backspacing.\n\n");
-  view.draw();
-  var ib = new yoob.LineInputBuffer().init(canvas, t);
-  ib.onupdate = function(str) { view.draw(); }
-  ib.onenter = function(str) {
-    alert(str);
+    var element = document.getElementById('terminal');
+    var t = new yoob.TextTerminal().init(80, 25);
+    var view = t.createPlayfieldCanvasView(element, 12, 18);
+    /*
+    var view = new yoob.PlayfieldHTMLView();
+    view.init(pf, element);
+    */
+
+    t.write("Click me!\n");
+    var z = 0;
+    element.onclick = function(e) {
+        t.writeRaw("Hello, world! (" + z + ")  ");
+        t.setColors("white", undefined);
+        t.writeRaw("How's by you? ");
+        t.setColors("yellow", "purple");
+        t.writeRaw("That's nice.");
+        t.setColors("green", "black");
+        t.writeRaw(" Supercalifragilisticexpialadociousness!!!!!");
+        t.advanceRow();
+        t.writeRaw("What??");
+        t.advanceRow();
+        view.draw();
+        z++;
+    };
+
+    t.write("Or focus me and\ntype something.  Try backspacing.\n\n");
     view.draw();
-  };
-  canvas.focus();
+    var ib = new yoob.LineInputBuffer().init(element, t);
+    ib.onupdate = function(str) {
+        view.draw();
+    };
+    ib.onenter = function(str) {
+        t.write("You typed '" + str + "'\n");
+        view.draw();
+    };
+
+    element.focus();
 </script>
