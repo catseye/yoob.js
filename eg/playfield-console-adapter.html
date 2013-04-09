@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <title>yoob.PlayfieldConsoleAdapter Demo</title>
+  <style>
+#terminal {
+  background: black;
+  color: green;
+}
+  </style>
+</head>
+<body>
+
+<h1>yoob.PlayfieldConsoleAdapter Demo</h1>
+
+<!--
+<pre id="console" tabindex="0"></pre>
+-->
+
+<canvas id="console" width="600" height="400" tabindex="0">
+  Your browser doesn't support displaying an HTML5 canvas.
+</canvas>
+
+</body>
+<script src="../src/yoob/playfield.js"></script>
+<script src="../src/yoob/playfield-html-view.js"></script>
+<script src="../src/yoob/playfield-canvas-view.js"></script>
+<script src="../src/yoob/playfield-console-adapter.js"></script>
+<script>
+    var pf = new yoob.Playfield();
+    pf.setDefault(' ');
+    var element = document.getElementById('console');
+    var view = new yoob.PlayfieldHTMLView();
+    view.init(pf, element);
+    /*
+    var view = new yoob.PlayfieldCanvasView();
+    view.init(pf, element).setCursors([]).setCellDimensions(8, 8);
+    */
+    view.getLowerX = function() { return 0; };
+    view.getLowerY = function() { return 0; };
+    view.getUpperX = function() { return 79; };
+    view.getUpperY = function() { return 24; };
+    var console = new yoob.PlayfieldConsoleAdapter();
+    console.init(pf, 80, 25);
+    console.write("Click me!\n");
+    var z = 0;
+    view.draw();
+    element.onclick = function(e) {
+        console.write("Hello, world! (" + z + ")  ");
+        console.textColor = "white";
+        console.write("How's by you? ");
+        console.textColor = "yellow";
+        console.backgroundColor = "purple";
+        console.write("That's nice.");
+        console.textColor = "green";
+        console.backgroundColor = "black";
+        console.write(" Supercalifragilisticexpialadociousness!!!!!");
+        console.advanceRow();
+        console.write("What??");
+        console.advanceRow();
+        view.draw();
+        z++;
+    };
+    element.focus();
+</script>
