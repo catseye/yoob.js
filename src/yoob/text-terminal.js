@@ -25,9 +25,8 @@ if (window.yoob === undefined) yoob = {};
  * is backed by a Playfield, you can read characters and colors at any position
  * on the console.  Also, cursor doesn't blink anymore; will be addressed.
  *
- * Note, this console is completely "dumb": it does not understand any
- * control codes whatsoever, not even newline.  For a subclass of this
- * which does understand (some) control codes, use text-terminal.js.
+ * Note that this is not a completely "dumb" or "raw" console.  Some methods do
+ * understand terminal control codes.  But you don't have to use them.
  */
 yoob.TextTerminal = function() {
     
@@ -44,7 +43,9 @@ yoob.TextTerminal = function() {
             ctx.fillStyle = this.backgroundColor;
             ctx.fillRect(x, y, cellWidth, cellHeight);
             ctx.fillStyle = this.textColor;
-            ctx.fillText(this.character.toString(), x, y);
+            if (this.character !== ' ') {
+                ctx.fillText(this.character, x, y);
+            }
         };
     };
 
@@ -73,8 +74,8 @@ yoob.TextTerminal = function() {
     // convenience function
     this.createPlayfieldCanvasView = function(element, cellWidth, cellHeight) {
         var view = new yoob.PlayfieldCanvasView();
-        view.init(this.getPlayfield(), element);
-        view.setCursors([this.getCursor()]);
+        view.init(this.pf, element);
+        view.setCursors([this.cursor]);
         view.setCellDimensions(cellWidth, cellHeight);
         var self = this;
         view.getLowerX = function() { return 0; };
@@ -82,14 +83,6 @@ yoob.TextTerminal = function() {
         view.getUpperX = function() { return self.cols - 1; };
         view.getUpperY = function() { return self.rows - 1; };
         return view;
-    };
-
-    this.getPlayfield = function() {
-        return this.pf;
-    };
-
-    this.getCursor = function() {
-        return this.cursor;
     };
 
     this.setColors = function(textColor, backgroundColor) {
@@ -115,16 +108,31 @@ yoob.TextTerminal = function() {
     };
 
     this.setCharAt = function(x, y, c) {
-        this.pf.get(x, y).character = c;
+        var cell = this.pf.get(x, y);
+        if (cell === this.defaultCell) {
+            cell = new ConsoleCell().init(' ', 'green', 'black');
+            this.pf.put(x, y, cell);
+        }
+        cell.character = c;
         return this;
     };
 
     this.setTextColorAt = function(x, y, style) {
+        var cell = this.pf.get(x, y);
+        if (cell === this.defaultCell) {
+            cell = new ConsoleCell().init(' ', 'green', 'black');
+            this.pf.put(x, y, cell);
+        }
         this.pf.get(x, y).textColor = style;
         return this;
     };
 
     this.setBackgroundColorAt = function(x, y, style) {
+        var cell = this.pf.get(x, y);
+        if (cell === this.defaultCell) {
+            cell = new ConsoleCell().init(' ', 'green', 'black');
+            this.pf.put(x, y, cell);
+        }
         this.pf.get(x, y).backgroundColor = style;
         return this;
     };
@@ -196,8 +204,10 @@ yoob.TextTerminal = function() {
             var c = string.charAt(i);
             if (c === '\n') {
                 this.advanceRow();
-            } else if (c === '\b' && this.getCursor().x > 0) {
-                this.getCursor().x--;
+            } else if (c === '\b') {
+                if (this.cursor.x > 0) {
+                    this.cursor.x--;
+                }
             } else {
                 this.writeChar(c);
             }
