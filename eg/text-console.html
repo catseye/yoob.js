@@ -2,37 +2,66 @@
 <head>
   <meta charset="utf-8">
   <title>yoob.TextConsole Demo</title>
-  <script src="../src/yoob/text-console.js"></script>
+  <style>
+#console {
+  background: black;
+  color: green;
+}
+  </style>
 </head>
 <body>
 
 <h1>yoob.TextConsole Demo</h1>
 
-<canvas id="canvas" width="400" height="400" tabindex="0">
+<!--
+<pre id="console" tabindex="0"></pre>
+-->
+
+<canvas id="console" width="600" height="400" tabindex="0">
   Your browser doesn't support displaying an HTML5 canvas.
 </canvas>
 
 </body>
+<script src="../src/yoob/playfield.js"></script>
+<script src="../src/yoob/cursor.js"></script>
+<script src="../src/yoob/playfield-html-view.js"></script>
+<script src="../src/yoob/playfield-canvas-view.js"></script>
+<script src="../src/yoob/text-console.js"></script>
 <script>
-  var canvas = document.getElementById('canvas');
-  var t = new yoob.TextConsole();
-  var z = 0;
-  t.init(canvas, 20, 80, 25);
-  t.write("Click me!\n");
-  canvas.onclick = function(e) {
-    t.write("Hello, world! (" + z + ")  ");
-    t.textColor = "white";
-    t.write("How's by you? ");
-    t.textColor = "yellow";
-    t.backgroundColor = "purple";
-    t.write("That's nice.");
-    t.textColor = "green";
-    t.backgroundColor = "black";
-    t.write(" Supercalifragilisticexpialadociousness!!!!!");
-    t.advanceRow();
-    t.write("What??");
-    t.advanceRow();
-    z++;
-  };
-  canvas.focus();
+    var element = document.getElementById('console');
+
+    var console = new yoob.TextConsole().init(80, 25);
+
+    /*
+    var view = new yoob.PlayfieldHTMLView();
+    view.init(pf, element);
+    */
+
+    var view = new yoob.PlayfieldCanvasView();
+    view.init(console.getPlayfield(), element);
+    view.setCursors([console.getCursor()]);
+    view.setCellDimensions(12, 18);
+    view.getLowerX = function() { return 0; };
+    view.getLowerY = function() { return 0; };
+    view.getUpperX = function() { return 79; };
+    view.getUpperY = function() { return 24; };
+
+    console.write("Click me!\n");
+    var z = 0;
+    view.draw();
+    element.onclick = function(e) {
+        console.write("Hello, world! (" + z + ")  ");
+        console.setColors("white", undefined);
+        console.write("How's by you? ");
+        console.setColors("yellow", "purple");
+        console.write("That's nice.");
+        console.setColors("green", "black");
+        console.write(" Supercalifragilisticexpialadociousness!!!!!");
+        console.advanceRow();
+        console.write("What??");
+        console.advanceRow();
+        view.draw();
+        z++;
+    };
+    element.focus();
 </script>
