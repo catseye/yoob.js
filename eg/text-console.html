@@ -37,14 +37,7 @@
     view.init(pf, element);
     */
 
-    var view = new yoob.PlayfieldCanvasView();
-    view.init(console.getPlayfield(), element);
-    view.setCursors([console.getCursor()]);
-    view.setCellDimensions(12, 18);
-    view.getLowerX = function() { return 0; };
-    view.getLowerY = function() { return 0; };
-    view.getUpperX = function() { return 79; };
-    view.getUpperY = function() { return 24; };
+    var view = console.createPlayfieldCanvasView(element, 12, 18);
 
     console.write("Click me!\n");
     var z = 0;

@@ -1,5 +1,5 @@
 /*
- * This file is part of yoob.js version 0.3
+ * This file is part of yoob.js version 0.4-PRE
  * Available from https://github.com/catseye/yoob.js/
  * This file is in the public domain.  See http://unlicense.org/ for details.
  */
@@ -15,8 +15,8 @@ yoob.TextTerminal = function() {
     if (c === '\n') {
       this.advanceRow();
       return true;
-    } else if (c === '\b' && this.col > 0) {
-      this.col--;
+    } else if (c === '\b' && this.getCursor().x > 0) {
+      this.getCursor().x--;
       return true;
     }
     return false;
