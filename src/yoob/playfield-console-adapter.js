@@ -5,19 +5,6 @@
  */
 if (window.yoob === undefined) yoob = {};
 
-yoob.ConsoleCell = function() {
-    this.character = ' ';
-    this.textColor = "green";
-    this.backgroundColor = "black";
-    
-    this.draw = function(ctx, x, y, cellWidth, cellHeight) {
-        ctx.fillStyle = this.backgroundColor;
-        ctx.fillRect(x, y, cellWidth, cellHeight);
-        ctx.fillStyle = this.textColor;
-        ctx.fillText(this.character.toString(), x, y);
-    };
-};
-
 /*
  * A temporary class, supporting the interface of yoob.TextConsole,
  * but based on a yoob.Playfield and yoob.Cursor, and no concern of
@@ -27,6 +14,24 @@ yoob.ConsoleCell = function() {
  * Requires yoob.Playfield.
  */
 yoob.PlayfieldConsoleAdapter = function() {
+    
+    // Inner Class
+    var ConsoleCell = function() {        
+        this.init = function(c, tc, bc) {
+            this.character = c;
+            this.textColor = tc;
+            this.backgroundColor = bc;
+            return this;
+        };
+        
+        this.draw = function(ctx, x, y, cellWidth, cellHeight) {
+            ctx.fillStyle = this.backgroundColor;
+            ctx.fillRect(x, y, cellWidth, cellHeight);
+            ctx.fillStyle = this.textColor;
+            ctx.fillText(this.character.toString(), x, y);
+        };
+    };
+
     this.pf = undefined;
     this.rows = undefined;
     this.cols = undefined;
@@ -38,11 +43,11 @@ yoob.PlayfieldConsoleAdapter = function() {
 
     this.init = function(cols, rows) {
         this.pf = new yoob.Playfield();
-        this.defaultCell = new yoob.ConsoleCell();
+        this.defaultCell = new ConsoleCell().init(' ', 'green', 'black');
         this.pf.setDefault(this.defaultCell);
         this.cursor = new yoob.Cursor(0, 0, 1, 0);
         this.rows = rows;
-        this.cols = cols;        
+        this.cols = cols;
         this.textColor = "green";
         this.backgroundColor = "black";
         this.reset();
@@ -53,6 +58,10 @@ yoob.PlayfieldConsoleAdapter = function() {
         return this.pf;
     };
 
+    this.getCursor = function() {
+        return this.cursor;
+    };
+
     this.setTextColor = function(textColor, backgroundColor) {
         if (textColor !== undefined) {
             this.textColor = textColor;
@@ -60,6 +69,11 @@ yoob.PlayfieldConsoleAdapter = function() {
         if (backgroundColor !== undefined) {
             this.backgroundColor = backgroundColor;
         }
+        return this;
+    };
+
+    this.getCharAt = function(x, y) {
+        return this.pf.get(x, y).character;
     };
 
     this.getTextColorAt = function(x, y) {
@@ -70,20 +84,26 @@ yoob.PlayfieldConsoleAdapter = function() {
         return this.pf.get(x, y).backgroundColor;
     };
 
+    this.setCharAt = function(x, y, c) {
+        this.pf.get(x, y).character = c;
+        return this;
+    };
+
     this.setTextColorAt = function(x, y, style) {
         this.pf.get(x, y).textColor = style;
+        return this;
     };
 
     this.setBackgroundColorAt = function(x, y, style) {
         this.pf.get(x, y).backgroundColor = style;
+        return this;
     };
 
     /*
-     * Clear the TextConsole to the current backgroundColor, turn off
-     * overstrike mode, make the cursor visible, and home it.
+     * Clear the TextConsole to the current backgroundColor,
+     * make the cursor visible(?), and home it.
      */
     this.reset = function() {
-        this.overStrike = false;
         this.cursor.x = 0;
         this.cursor.y = 0;
         this.pf.clear();
@@ -132,11 +152,10 @@ yoob.PlayfieldConsoleAdapter = function() {
     this.writeChar = function(c) {
         if (this.onWriteChar(c))
             return;
-        var cc = new yoob.ConsoleCell();
-        cc.character = c;
-        cc.textColor = this.textColor;
-        cc.backgroundColor = this.backgroundColor;
-        this.pf.put(this.cursor.x, this.cursor.y, cc);
+        this.pf.put(
+            this.cursor.x, this.cursor.y,
+            new ConsoleCell().init(c, this.textColor, this.backgroundColor)
+        );
         this.advanceCol();
     };
 
