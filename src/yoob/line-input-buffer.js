@@ -23,9 +23,10 @@ yoob.LineInputBuffer = function() {
         this.text = "";
 
         var me = this;
-        listenObject.addEventListener('keyup', function(e) {
-            //alert('keyup:' + e.keyCode);
-            switch (e.keyCode) {
+        listenObject.addEventListener('keydown', function(e) {
+            var keyCode = e.keyCode ? e.keyCode : e.which;
+            //alert('keydown:' + keyCode);
+            switch (keyCode) {
               case 8:   /* Backspace */
                 if (me.text.length > 0) {
                     if (me.terminal !== undefined) {
@@ -62,7 +63,7 @@ yoob.LineInputBuffer = function() {
             }
         }, true);
 
-        /* TODO support on more browsers, with keyup */
+        /* TODO support on more browsers, with keydown */
         listenObject.addEventListener('keypress', function(e) {
             if (e.charCode === 0 || e.charCode === 13 || e.charCode === 8) {
                 return;
