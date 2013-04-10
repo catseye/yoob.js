@@ -1,5 +1,5 @@
 /*
- * This file is part of yoob.js version 0.4-PRE
+ * This file is part of yoob.js version 0.4
  * Available from https://github.com/catseye/yoob.js/
  * This file is in the public domain.  See http://unlicense.org/ for details.
  */
@@ -8,6 +8,8 @@ if (window.yoob === undefined) yoob = {};
 /*
  * A view (in the MVC sense) for depicting a yoob.Playfield (-compatible)
  * object onto any HTML element that supports innerHTML.
+ *
+ * TODO: *** THIS DOES NOT WORK *** please do not use it yet
  */
 yoob.PlayfieldHTMLView = function() {
     this.pf = undefined;

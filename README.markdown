@@ -1,7 +1,7 @@
 yoob.js
 =======
 
-*Version 0.4-PRE.  Everything subject to change.*
+*Version 0.4.  Everything subject to change.*
 
 yoob.js is the HTML5 counterpart to [yoob][].
 
@@ -30,7 +30,7 @@ Unlike yoob, yoob.js:
 *   does not support unbounded integer values (yet; see "Planned", below).
 *   provides components which are meant to be used as starting points for
     further modification.  (It's all public domain, so build on it!)  For
-    example, `yoob.sexpParser` is meant to be used as an example or basis for
+    example, `yoob.SexpParser` is meant to be used as an example or basis for
     a specific grammar of your choice.
 
 yoob.js will eventually:
@@ -75,7 +75,8 @@ The classes are currently:
     
     A two-dimensional Cartesian grid of values which dynamically expands as
     needed.  Objects of this class are suitable for representing programs in
-    two-dimensional esolangs such as Befunge, as well as cellular automata.
+    two-dimensional esolangs such as Befunge, as well as cellular automata,
+    and suitable for use as a backing store for a text-terminal simulator.
 
 *   `yoob.Cursor`, in `yoob/cursor.js`
     
@@ -93,21 +94,19 @@ The classes are currently:
     
     A view (in the MVC sense) which associates a `yoob.Playfield` with any
     element which supports `innerHTML`, although typically a `<pre>` element.
-    This will eventually take over most of what `yoob.TextTerminal` does now.
-
-    (A crude simulation of a text-based addressable console in something
-    other than a `<canvas>`, but continuing to provide a sort of retro
-    feel.  Possibly implemented with a `<pre>` element or a `<div>` with
-    a fixed-size font and significant whitespace set using CSS3.
-    This will allow text to be rendered more nicely, and selected for
-    copying/pasting in the browser, and so forth.)
+    Compared to the canvas view, this view will allow text to be rendered
+    more nicely in some browsers, be selected for copying/pasting in the
+    browser, and so forth.  *As of 0.4, this is not yet complete.*
 
 *   `yoob.TextTerminal`, in `yoob/text-terminal.js`
 
     A crude simulation of a text-based addressable console, including some
     functions (which need not be used) which understand simple terminal
-    control sequences, such as LF and backspace.
-
+    control sequences, such as LF and backspace.  Requires `yoob.Playfield`
+    and `yoob.Cursor` and, if you actually want to render the terminal in
+    a browser DOM, `yoob.PlayfieldCanvasView` or a compatible playfield
+    view class.
+    
 *   `yoob.LineInputBuffer`, in `yoob/line-input-buffer.js`
     
     A crude simulation of a buffer into which the user can type a line of
@@ -206,6 +205,10 @@ yoob.js is currently used in the HTML5 implementations of:
 *   [Gemooy][]
 *   [noit o' mnain worb][]
 *   [Super Wumpus Land][]
+*   [REDGREEN][]
+*   [Circute][]
+*   [Braktif][]
+*   [Jaccia][] and Jacciata
 
 ...and soon to be used in ALPACA and the various cellular automata defined
 therein.
@@ -215,6 +218,10 @@ therein.
 [Javascript BigInteger]: https://github.com/silentmatt/javascript-biginteger
 [noit o' mnain worb]: http://catseye.tc/node/noit%20o%27%20mnain%20worb.html
 [Super Wumpus Land]: http://catseye.tc/node/Super%20Wumpus%20Land.html
+[REDGREEN]: http://catseye.tc/node/REDGREEN.html
+[Circute]: http://catseye.tc/node/Circute.html
+[Braktif]: http://catseye.tc/node/Braktif.html
+[Jaccia]: http://catseye.tc/node/Jaccia.html
 
 Changelog
 ---------
@@ -248,3 +255,32 @@ Changelog
     
     Added `get(Max|Min)(X|Y)` methods to `yoob.Playfield`, and fixed
     issue with drawing cursors at wrong offsets.
+
+*   version 0.4
+    
+    Moved all-display related code from `yoob.Playfield` into a new class,
+    `yoob.PlayfieldConsoleView`; in MVC parlance, `yoob.Playfield` is now
+    a "model", and to actually display it in a browser, you will need a
+    "view".
+    
+    `yoob.PlayfieldConsoleView` has a `drawCell` method instead of the
+    old `drawElement` which will try to call `draw` on the value in the
+    cell, if it has such a method, and will also takes (and will pass) the
+    x and y co-ordinates of the cell in the playfield being drawn.
+    
+    Removed `yoob.TextConsole`; use `yoob.TextTerminal` and don't call
+    `write()`, just call `writeRaw()`, if you want a console that doesn't
+    understand terminal control codes.
+    
+    Refactored `yoob.TextTerminal` to be a facade over a `yoob.Playfield`
+    and a `yoob.Cursor`.  Thus, you can now read characters from any
+    position in the terminal — however it has lost the ability to overstrike
+    characters.  Again, since `yoob.Playfield` is now a "model",
+    `yoob.TextTerminal` itself does not concern itself with displaying the
+    terminal (although there is a helper method to create a canvas view.)
+    
+    `yoob.LineInputBuffer` generally improved; it listens to `keydown`
+    instead of `keyup` for special keys, prevents the default action for
+    them, and has been tested in Firefox, Chrome, and Internet Explorer
+    (recent versions.)
+
