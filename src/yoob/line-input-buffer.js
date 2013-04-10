@@ -37,6 +37,7 @@ yoob.LineInputBuffer = function() {
                     }
                 }
                 e.cancelBubble = true;
+                e.preventDefault();
                 break;
               case 13:  /* Enter */
                 if (me.terminal !== undefined) {
@@ -48,6 +49,7 @@ yoob.LineInputBuffer = function() {
                 }
                 me.text = "";
                 e.cancelBubble = true;
+                e.preventDefault();
                 break;
               case 38:  /* Up arrow */
                 break;
@@ -62,7 +64,9 @@ yoob.LineInputBuffer = function() {
 
         /* TODO support on more browsers, with keyup */
         listenObject.addEventListener('keypress', function(e) {
-            if (e.charCode === 0) return;
+            if (e.charCode === 0 || e.charCode === 13 || e.charCode === 8) {
+                return;
+            }
             //alert('keypress:' + e.charCode);
             if (e.altKey) {
                 //alert(e.charCode);
@@ -77,6 +81,7 @@ yoob.LineInputBuffer = function() {
                 me.onupdate(me.text);
             }
             e.cancelBubble = true;
+            e.preventDefault();
         }, true);
 
         return this;
