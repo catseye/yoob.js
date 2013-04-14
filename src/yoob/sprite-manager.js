@@ -1,5 +1,5 @@
 /*
- * This file is part of yoob.js version 0.3
+ * This file is part of yoob.js version 0.5-PRE
  * Available from https://github.com/catseye/yoob.js/
  * This file is in the public domain.  See http://unlicense.org/ for details.
  */
@@ -115,7 +115,7 @@ yoob.Sprite = function() {
 };
 
 /*
- * This has lots of shortcomings at the moment.
+ * This still has a few shortcomings at the moment.
  */
 yoob.SpriteManager = function() {
   this.canvas = undefined;
@@ -127,50 +127,80 @@ yoob.SpriteManager = function() {
   this.sprites = [];
 
   /*
-   * Attach this DragManager to a canvas.
+   * Common handling of mouse and touch events
+   */
+  this.onmousedown = function(e, touch) {
+    e.preventDefault();
+    this.canvasX = touch.pageX - this.canvas.offsetLeft;
+    this.canvasY = touch.pageY - this.canvas.offsetTop;
+
+    var sprite = this.getSpriteAt(this.canvasX, this.canvasY);
+    if (sprite === undefined) return;
+    if (sprite.isDraggable) {
+      this.dragging = sprite;
+      this.dragging.selected = true;
+      this.dragging.ongrab();
+      this.offsetX = sprite.getX() - this.canvasX;
+      this.offsetY = sprite.getY() - this.canvasY;
+      this.canvas.style.cursor = "move";
+    } else if (sprite.isClickable) {
+      sprite.onclick(e);
+    }
+  };
+
+  this.onmousemove = function(e, touch) {
+    e.preventDefault();
+    if (!this.dragging) return;
+
+    this.canvasX = touch.pageX - this.canvas.offsetLeft;
+    this.canvasY = touch.pageY - this.canvas.offsetTop;
+
+    this.dragging.moveTo(this.canvasX + this.offsetX,
+                         this.canvasY + this.offsetY);
+  };
+
+  this.onmouseup = function(e, touch) {
+    e.preventDefault();
+    this.canvas.onmousemove = null;
+    this.canvasX = undefined;
+    this.canvasY = undefined;
+    this.offsetX = undefined;
+    this.offsetY = undefined;
+    if (this.dragging !== undefined) {
+      this.dragging.ondrop();
+      this.dragging.selected = false;
+    }
+    this.dragging = undefined;
+    this.canvas.style.cursor = "auto";
+  };
+
+  /*
+   * Attach this SpriteManager to a canvas.
    */
   this.init = function(canvas) {
     this.canvas = canvas;
 
     var self = this;
-    canvas.onmousedown = function(e) {
-      self.canvasX = e.pageX - canvas.offsetLeft;
-      self.canvasY = e.pageY - canvas.offsetTop;
+    this.canvas.addEventListener('mousedown', function(e) {
+      return self.onmousedown(e, e);
+    });
+    this.canvas.addEventListener('touchstart', function(e) {
+      return self.onmousedown(e, e.touches[0]);
+    });
 
-      var sprite = self.getSpriteAt(self.canvasX, self.canvasY);
-      if (sprite === undefined) return;
-      if (sprite.isDraggable) {
-        self.dragging = sprite;
-        self.dragging.selected = true;
-        self.dragging.ongrab();
-        self.offsetX = sprite.getX() - self.canvasX;
-        self.offsetY = sprite.getY() - self.canvasY;
-        canvas.onmousemove = function(e) {
-          self.canvasX = e.pageX - canvas.offsetLeft;
-          self.canvasY = e.pageY - canvas.offsetTop;
+    this.canvas.addEventListener('mousemove', function(e) {
+      return self.onmousemove(e, e);
+    });
+    this.canvas.addEventListener('touchmove', function(e) {
+      return self.onmousemove(e, e.touches[0]);
+    });
 
-          self.dragging.moveTo(self.canvasX + self.offsetX,
-                               self.canvasY + self.offsetY);
-        };
-        canvas.style.cursor = "move";
-      } else if (sprite.isClickable) {
-        sprite.onclick(e);
-      }
-    };
-
-    canvas.onmouseup = function() {
-      canvas.onmousemove = null;
-      self.canvasX = undefined;
-      self.canvasY = undefined;
-      self.offsetX = undefined;
-      self.offsetY = undefined;
-      if (self.dragging !== undefined) {
-        self.dragging.ondrop();
-        self.dragging.selected = false;
-      }
-      self.dragging = undefined;
-      canvas.style.cursor = "auto";
-    };
+    this.canvas.addEventListener('mouseup', function(e) {
+      return self.onmouseup(e, e);
+    });
+    this.canvas.addEventListener('touchend', function(e) {
+      return self.onmouseup(e, e.touches[0]);
+    });
   };
 
   this.move = function(ctx) {

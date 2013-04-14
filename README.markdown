@@ -1,7 +1,7 @@
 yoob.js
 =======
 
-*Version 0.4.  Everything subject to change.*
+*Version 0.5-PRE.  Everything subject to change.*
 
 yoob.js is the HTML5 counterpart to [yoob][].
 
