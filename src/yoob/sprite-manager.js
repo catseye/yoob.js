@@ -203,11 +203,14 @@ yoob.SpriteManager = function() {
     });
   };
 
-  this.move = function(ctx) {
+  this.move = function() {
     this.foreach(function(sprite) { sprite.move(); });
   };
 
   this.draw = function(ctx) {
+    if (ctx === undefined) {
+      ctx = this.canvas.getContext('2d');
+    }
     for (var i = 0; i < this.sprites.length; i++) {
       this.sprites[i].draw(ctx);
     }

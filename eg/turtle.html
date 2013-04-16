@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <title>yoob REPL Demo</title>
+  <style>
+#terminal {
+    background: black;
+}
+#floor {
+    background: #ffffdd;
+    border: 1px solid red;
+}
+  </style>
+</head>
+<body>
+
+<h1>Turtle REPL Demo</h1>
+
+<canvas id="floor" width="400" height="400" tabindex="0">
+  Your browser doesn't support displaying an HTML5 canvas.
+</canvas>
+
+<canvas id="terminal" width="400" height="400" tabindex="0">
+  Your browser doesn't support displaying an HTML5 canvas.
+</canvas>
+
+</body>
+<script src="../src/yoob/sprite-manager.js"></script>
+<script src="../src/yoob/turtle.js"></script>
+<script src="../src/yoob/playfield.js"></script>
+<script src="../src/yoob/cursor.js"></script>
+<script src="../src/yoob/playfield-canvas-view.js"></script>
+<script src="../src/yoob/text-terminal.js"></script>
+<script src="../src/yoob/line-input-buffer.js"></script>
+<script src="../src/yoob/tree.js"></script>
+<script src="../src/yoob/scanner.js"></script>
+<script src="../src/yoob/sexp-parser.js"></script>
+<script>
+  var element = document.getElementById('terminal');
+  var floor = document.getElementById('floor');
+  var ctx = floor.getContext('2d');
+  var t = new yoob.TextTerminal().init(80, 8);
+  var view = t.createPlayfieldCanvasView(element, 12, 18);
+  var manager = new yoob.SpriteManager();
+  manager.init(floor);
+  var deg2rad = function(d) { return (d / 360) * Math.PI * 2; }
+  var turtle = new yoob.Turtle();
+  turtle.init(200, 200, 20, 20);
+  turtle.setTheta(deg2rad(270));
+  manager.addSprite(turtle);
+
+  t.write("yoob turtle REPL\n");
+  var p = new yoob.SexpParser();
+  var ast = null;
+  var ib = new yoob.LineInputBuffer().init(element, t);
+  ib.onupdate = function(str) { view.draw(); };
+  ib.onenter = function(str) {
+    var cmd = str.substr(0, 2);
+    var arg = parseInt(str.substr(3), 10);
+
+    if (cmd === 'fd') {
+        turtle.moveBy(arg);
+    } else if (cmd === 'bk') {
+        turtle.moveBy(-1 * arg);
+    } else if (cmd === 'rt') {
+        turtle.rotateBy(deg2rad(arg));
+    } else if (cmd === 'lt') {
+        turtle.rotateBy(-1 * deg2rad(arg));
+    }
+    ctx.clearRect(0, 0, floor.width, floor.height);
+    manager.draw();
+    view.draw();
+  };
+  manager.draw();
+  view.draw();
+  element.focus();
+</script>
