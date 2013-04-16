@@ -14,7 +14,23 @@ if (window.yoob === undefined) yoob = {};
  */
 
 yoob.Turtle = function() {
-    this.theta = 0;
+
+    this.init = function(x, y, w, h) {
+        this.x = x;
+        this.y = y;
+        this.w = w;
+        this.h = h;
+        this.dx = 0;
+        this.dy = 0;
+        this.selected = false;
+        this.theta = 0;
+        this.trail = [this.getCenterX(), this.getCenterY()];
+        this.penDown = true;
+    };
+
+    this.setPenDown = function(penDown) {
+        this.penDown = !!penDown;
+    };
 
     /* theta is in radians */
     this.setTheta = function(theta) {
@@ -31,6 +47,8 @@ yoob.Turtle = function() {
     this.moveBy = function(units) {
         this.x += this.dx * units;
         this.y += this.dy * units;
+        this.trail.push(this.getCenterX());
+        this.trail.push(this.getCenterY());
     };
 
     this.draw = function(ctx) {
@@ -48,6 +66,18 @@ yoob.Turtle = function() {
         ctx.strokeStyle = "white";
         ctx.moveTo(x, y);
         ctx.lineTo(x + this.dx * r, y + this.dy * r);
+        ctx.stroke();
+    };
+
+    this.drawTrail = function(ctx) {
+        if (this.trail.length < 2) return;
+        ctx.strokeStyle = "black";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(this.trail[0], this.trail[1]);
+        for (var i = 2; i < this.trail.length; i += 2) {
+            ctx.lineTo(this.trail[i], this.trail[i + 1]);
+        }
         ctx.stroke();
     };
 };

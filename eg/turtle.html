@@ -68,6 +68,7 @@
         turtle.rotateBy(-1 * deg2rad(arg));
     }
     ctx.clearRect(0, 0, floor.width, floor.height);
+    turtle.drawTrail(ctx);
     manager.draw();
     view.draw();
   };
