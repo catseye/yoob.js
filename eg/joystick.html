@@ -19,6 +19,10 @@
 
 <div id="thing"></div>
 
+<p>Use arrow keys to move the black square, and the Control key to fire.</p>
+
+<p id='status'></p>
+
 </body>
 <script src="../src/yoob/joystick.js"></script>
 <script>
@@ -32,6 +36,10 @@
       y += j.dy;
       thing.style.left = x + "px";
       thing.style.top = y + "px";
-      thing.style.background = j.button ? "red" : "black";
+      thing.style.background = j.buttonPressed ? "red" : "black";
   }, 1000/60);
+  j.onchange = function() {
+    document.getElementById('status').innerHTML =
+      '<p>' + j.dx + ',' + j.dy + ',' + j.buttonPressed + '</p>';
+  };
 </script>
