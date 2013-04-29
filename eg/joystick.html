@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <title>yoob.Joystick Demo</title>
+  <style>
+#thing {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 20px;
+    height: 20px;
+    background: black;
+}
+  </style>
+</head>
+<body>
+
+<h1>yoob.Joystick Demo</h1>
+
+<div id="thing"></div>
+
+</body>
+<script src="../src/yoob/joystick.js"></script>
+<script>
+  var thing = document.getElementById('thing');
+  var x = 80;
+  var y = 80;
+  var j = new yoob.Joystick().init();
+  j.attach(window);
+  setInterval(function() {
+      x += j.dx;
+      y += j.dy;
+      thing.style.left = x + "px";
+      thing.style.top = y + "px";
+      thing.style.background = j.button ? "red" : "black";
+  }, 1000/60);
+</script>
