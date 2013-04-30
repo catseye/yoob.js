@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <title>yoob.Chargen Demo</title>
+  <style>
+#canvas {
+  border: 1px solid blue;
+  width: 640px;
+  height: 400px;
+}
+  </style>
+</head>
+<body>
+
+<h1>yoob.Chargen Demo</h1>
+
+<canvas id="canvas" width="320" height="200">
+Your browser doesn't support displaying an HTML5 canvas.
+</canvas>
+
+<button onclick="reprogram();">Reprogram Character</button>
+
+</body>
+<script src="../src/yoob/chargen.js"></script>
+<script>
+  var chargen = new yoob.Chargen();
+  var triples = [
+      [0, 0, 0],
+      [0, 0, 255],
+      [0, 255, 0],
+      [0, 255, 255],
+      [255, 0, 0],
+      [255, 0, 255],
+      [255, 255, 0],
+      [255, 255, 255]
+  ];
+  var tripleToCss = function(triple) {
+      return "rgb(" + triple[0] + "," + triple[1] + "," + triple[2] + ")";
+  };
+  var draw = function() {
+      var canvas = document.getElementById('canvas');
+      var ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (var x = 0; x < 40; x++) {
+          for (var y = 0; y < 25; y++) {
+              var bgColour = y % 8;
+              ctx.fillStyle = tripleToCss(triples[bgColour]);
+              ctx.fillRect(x * 8, y * 8, 8, 8);
+              var charNum = (y * 40 + x) % 17;
+              if (charNum === 16) charNum = 0;
+              var charColour = (y * 40 + x) % 8;
+              chargen.blitChar(charNum, charColour, ctx, x * 8, y * 8);
+          }
+      }
+  };
+  chargen.init(triples, 8, 8, 8, 2, "charset8.png", draw);
+  function reprogram() {
+      var data = [];
+      for (var i = 0; i < 8; i++) {
+          data.push(Math.floor(Math.random() * 256));
+      }
+      chargen.modifyChar(15, data);
+      draw();
+  };
+</script>
