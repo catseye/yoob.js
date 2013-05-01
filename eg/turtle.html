@@ -26,6 +26,7 @@
 
 </body>
 <script src="../src/yoob/sprite-manager.js"></script>
+<script src="../src/yoob/path.js"></script>
 <script src="../src/yoob/turtle.js"></script>
 <script src="../src/yoob/playfield.js"></script>
 <script src="../src/yoob/cursor.js"></script>
@@ -66,6 +67,10 @@
         turtle.rotateBy(deg2rad(arg));
     } else if (cmd === 'lt') {
         turtle.rotateBy(-1 * deg2rad(arg));
+    } else if (cmd === 'pu') {
+        turtle.setPenDown(false);
+    } else if (cmd === 'pd') {
+        turtle.setPenDown(true);
     }
     ctx.clearRect(0, 0, floor.width, floor.height);
     turtle.drawTrail(ctx);

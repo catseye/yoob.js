@@ -6,7 +6,7 @@
 if (window.yoob === undefined) yoob = {};
 
 /*
- * requires yoob.Sprite.
+ * requires yoob.Sprite and yoob.Path.
  *
  * I really haven't worked this out fully yet.
  * It could also have a velocity, and dx/dy = cos/sin(theta) * velocity.
@@ -24,12 +24,19 @@ yoob.Turtle = function() {
         this.dy = 0;
         this.selected = false;
         this.theta = 0;
-        this.trail = [this.getCenterX(), this.getCenterY()];
-        this.penDown = true;
+        this.trail = new yoob.PathSet().init();
+        this.setPenDown(true);
     };
 
     this.setPenDown = function(penDown) {
-        this.penDown = !!penDown;
+        penDown = !!penDown;
+        if (penDown === this.penDown) return;
+        this.penDown = penDown;
+        if (this.penDown) {
+            this.trail.add(this.curPath);
+            this.curPath = new yoob.Path().init();
+            this.curPath.addPoint(this.getCenterX(), this.getCenterY());
+        }
     };
 
     /* theta is in radians */
@@ -47,8 +54,9 @@ yoob.Turtle = function() {
     this.moveBy = function(units) {
         this.x += this.dx * units;
         this.y += this.dy * units;
-        this.trail.push(this.getCenterX());
-        this.trail.push(this.getCenterY());
+        if (this.penDown) {
+            this.curPath.addPoint(this.getCenterX(), this.getCenterY());
+        }
     };
 
     this.draw = function(ctx) {
@@ -69,16 +77,13 @@ yoob.Turtle = function() {
         ctx.stroke();
     };
 
-    this.drawTrail = function(ctx) {
-        if (this.trail.length < 2) return;
-        ctx.strokeStyle = "black";
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.moveTo(this.trail[0], this.trail[1]);
-        for (var i = 2; i < this.trail.length; i += 2) {
-            ctx.lineTo(this.trail[i], this.trail[i + 1]);
-        }
-        ctx.stroke();
+    this.drawTrail = function(ctx, cfg) {
+        cfg = cfg || {
+            strokeStyle: "black",
+            lineWidth: 1
+        };
+        this.trail.drawOverride(ctx, cfg);
+        this.curPath.drawOverride(ctx, cfg);
     };
 };
 yoob.Turtle.prototype = new yoob.Sprite();
