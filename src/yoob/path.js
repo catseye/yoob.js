@@ -15,6 +15,7 @@ if (window.yoob === undefined) yoob = {};
  */
 yoob.Path = function(cfg) {
     this.init = function(cfg) {
+        cfg = cfg || {};
         this.points = cfg.points || [];
         this.title = cfg.title;
         // if defined, the path will be filled with this style
@@ -82,14 +83,7 @@ yoob.Path = function(cfg) {
         return path;
     };
 
-    this.mapWithJitter = function(jitter) {
-        var r = function() {
-            return Math.random() * jitter - (jitter / 2);
-        };
-        return this.map(function(x, y) {
-            return [x + r(), y + r()];
-        });
-    };
+    // view methods follow
 
     this.applyLine = function(ctx) {
         this.foreachPoint(function(x, y) {
@@ -112,6 +106,10 @@ yoob.Path = function(cfg) {
         }
     };
 
+    /*
+     * Values in the cfg object will be used if they are not specified on
+     * the yoob.Line object.
+     */
     this.draw = function(ctx, cfg) {
         cfg = cfg || {};
         this._draw(ctx,
@@ -122,6 +120,10 @@ yoob.Path = function(cfg) {
         );
     };
 
+    /*
+     * Values in the cfg object will be used instead of the values on
+     * the yoob.Line object.
+     */
     this.drawOverride = function(ctx, cfg) {
         cfg = cfg || {};
         this._draw(ctx,
@@ -133,4 +135,51 @@ yoob.Path = function(cfg) {
     };
 
     this.init(cfg);
+};
+
+yoob.PathSet = function() {
+    this.init = function(paths) {
+        this.paths = paths || [];
+        return this;
+    };
+
+    this.toString = function() {
+        var t = 'new yoob.PathSet([';
+        for (var i = 0; i < this.paths.length; i++) {
+            t += this.paths[i].toString();
+            if (i < this.paths.length - 1) {
+                t += ', ';
+            }
+        }
+        return t + '])';
+    };
+
+    this.add = function(path) {
+        if (path !== undefined)
+            this.paths.push(path);
+    };
+
+    this.clear = function(path) {
+        this.paths = [];
+    };
+
+    /*
+     * Values in the cfg object will be used when they are not specified on
+     * a yoob.Line object.
+     */
+    this.draw = function(ctx, cfg) {
+        for (var i = 0; i < this.paths.length; i++) {
+            this.paths[i].draw(ctx, cfg);
+        }
+    };
+
+    /*
+     * Values in the cfg object will be used instead of the values on
+     * a yoob.Line object.
+     */
+    this.drawOverride = function(ctx, cfg) {
+        for (var i = 0; i < this.paths.length; i++) {
+            this.paths[i].drawOverride(ctx, cfg);
+        }
+    };
 };
