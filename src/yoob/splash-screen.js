@@ -9,21 +9,16 @@ if (window.yoob === undefined) yoob = {};
  * An adapter-type thing which displays a div element with some inner HTML
  * (typically containing a message or logo or such) and a "Proceed" button,
  * all in place of a given element.  When the button is clicked, the div is
- * hidden, the given element is displayed, and the passed-in callback
- * is invoked.
+ * hidden, the given element is displayed, and the passed-in `onproceed`
+ * callback is invoked.
  *
  * The intention is to allow a "splash screen", which may contain a disclaimer
  * or similar, warning of epileptic seizures or nudity or whatever, before the
  * "main canvas" or whatever is actually displayed and started.  Yeah.
  */
-yoob.splashScreen = function(cfg) {
-    var innerHTML = cfg.innerHTML;
-    var buttonText = cfg.buttonText || "Proceed";
-    var elementId = cfg.elementId;
-
-    var elem = document.getElementById(elementId);
+yoob.showSplashScreen = function(cfg) {
+    var elem = document.getElementById(cfg.elementId);
     var coveringDiv = document.createElement("div");
-    //alert(elem.style.width);
     coveringDiv.style.left = elem.offsetLeft + 'px';
     coveringDiv.style.top = elem.offsetTop + 'px';
     coveringDiv.style.width = elem.offsetWidth + 'px';
@@ -31,9 +26,18 @@ yoob.splashScreen = function(cfg) {
     coveringDiv.style.position = "absolute";
     coveringDiv.style.border = elem.style.border;
     coveringDiv.style.background = cfg.background || '#ffffff';
-    // high z-order
-    coveringDiv.innerHTML = innerHTML;
-    // append button
-    // button onclick = function that hides this div and runs callback
+    if (parseInt(elem.style.zIndex) === NaN) {
+        coveringDiv.style.zIndex = 100;
+    } else {
+        coveringDiv.style.zIndex = parseInt(elem.style.zIndex) + 1;
+    }
+    coveringDiv.innerHTML = cfg.innerHTML;
+    var button = document.createElement("button");
+    button.innerHTML = cfg.buttonText || "Proceed";
+    button.onclick = function() {
+        coveringDiv.style.display = 'none';
+        (cfg.onproceed || function() {})();
+    };
+    coveringDiv.appendChild(button);
     document.body.appendChild(coveringDiv);
 };
