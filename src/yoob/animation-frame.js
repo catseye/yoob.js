@@ -29,3 +29,59 @@ window.cancelRequestAnimationFrame =
     window.oCancelRequestAnimationFrame ||
     window.msCancelRequestAnimationFrame ||
     clearTimeout;
+
+/*
+ * Convenience function for using requestAnimationFrame.  Calls the
+ * object's draw() method on each animation frame, and calls update()
+ * as necessary to ensure it is called once every tickTime milliseconds.
+ * By default, tickTime = 1/60th of a second.  It can be configured by
+ * passing in a configuration dictionary after the object.  If the
+ * configuration dictionary is assigned to a variable outside this
+ * function, after this function returns, the request entry in the
+ * dictionary will contain the animation request handle.  e.g.,
+ *
+ *     var cfg = {};
+ *     cfg.tickTime = 1000.0 / 50.0;
+ *     yoob.setUpQuantumAnimationFrame(this, cfg);
+ *     cancelRequestAnimationFrame(cfg.request);
+ *
+ */
+yoob.setUpQuantumAnimationFrame = function(object, cfg) {
+    cfg = cfg || {};
+    cfg.lastTime = cfg.lastTime || null;
+    cfg.accumDelta = cfg.accumDelta || 0;
+    cfg.tickTime = cfg.tickTime || (1000.0 / 60.0);
+    var animFrame = function(time) {
+        object.draw();
+        if (cfg.lastTime === null) {
+            cfg.lastTime = time;
+        }
+        cfg.accumDelta += (time - cfg.lastTime);
+        while (cfg.accumDelta > cfg.tickTime) {
+            cfg.accumDelta -= cfg.tickTime;
+            object.update();
+        }
+        cfg.lastTime = time;
+        cfg.request = requestAnimationFrame(animFrame);
+    };
+    cfg.request = requestAnimationFrame(animFrame);
+};
+
+/*
+ * Convenience function for using requestAnimationFrame.  Calls the
+ * object's draw() method on each animation frame, passing the amount
+ * of time that has elapsed (in milliseconds) since the last time it
+ * was called (or 0 if it was never previously called.)  Otherwise
+ * similar to yoob.setUpQuantumAnimationFrame.
+ */
+yoob.setUpProportionalAnimationFrame = function(object, cfg) {
+    cfg = cfg || {};
+    cfg.lastTime = cfg.lastTime || null;
+    var animFrame = function(time) {
+        var timeElapsed = cfg.lastTime == null ? 0 : time - cfg.lastTime;
+        cfg.lastTime = time;
+        object.draw(timeElapsed);
+        cfg.request = requestAnimationFrame(animFrame);
+    };
+    cfg.request = requestAnimationFrame(animFrame);
+};
