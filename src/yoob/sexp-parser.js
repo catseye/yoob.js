@@ -6,9 +6,16 @@
 if (window.yoob === undefined) yoob = {};
 
 /*
- * A simple S-expression parser.
+ * A simple S-expression parser.  Note that it produces yoob.Trees rather
+ * than cons cells (pairs), so parsing "(a b c)" will yield a single yoob.Tree
+ * node with three children.
  *
- * requires you load yoob.Tree and yoob.Scanner first
+ * Note also that atomic symbols are restricted to alphanumeric characters.
+ *
+ * This module requires that you load yoob.Tree and yoob.Scanner first.
+ *
+ * This module is really intended more for you to copy and modify (and maybe
+ * extend into a parser for a more complex language) than to use directly.
  */
 yoob.SexpParser = function() {
   this.scanner = undefined;
@@ -38,7 +45,7 @@ yoob.SexpParser = function() {
       this.scanner.expect(')');
       return new yoob.Tree('list', children);
     } else {
-      /* register some kind of error */
+      /* TODO: register some kind of error */
       this.scanner.scan();
     }
   };
