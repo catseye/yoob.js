@@ -169,18 +169,80 @@ The classes are currently:
     A set of classes for (somewhat crudely) managing independent things which
     can be placed, moved, be clicked, and be dragged around a canvas.
 
+*   `yoob.Turtle`, in `yoob/turtle.js`
+    
+    For Turtle Graphics.  This should probably be a "model" and there
+    should be a separate `yoob.TurtleView` which concerns itself with
+    rendering the turtle (and its path) on a canvas.  At present, movement
+    of the turtle generates a `yoob.PathSet` (see below) which can then be
+    drawn.
+
+*   `yoob.Path` and `yoob.PathSet`, in `yoob/path.js`
+    
+    An abstraction of a path (a set of connected, two-dimensional points.)
+    Think of it as a model that also contains a nice default view (i.e.,
+    it knows how to draw itself into a 2d drawing context.)  A `PathSet` is
+    a list of paths with some convenience functions (should probably be
+    called `PathList` then.)
+    
+*   `yoob.FullScreenDetector`, in `yoob/full-screen-detector.js`
+    
+    A shim (of sorts) which detects when the user has toggled their browser's
+    full-screen mode (usually but not necessarily by pressing the F11 key) and
+    fires an 'onchange' event, in which you can resize DOM elements of your
+    choosing to suit the (non-)full-screen display (or whatever else you wish.)
+    
+    Note that this is unrelated to the idea of *programatically* asking the
+    browser to go into full-screen mode.  That isn't supported (but if you do
+    do that by some other means, the detector should still detect it.)
+
+*   `yoob.Joystick`, in `yoob/joystick.js`
+    
+    Emulates a joystick, with some finesse.  Be default, this is with the
+    cursor keys as directional control, and either control key as the fire
+    button.  However, this is configurable.
+
+*   `yoob.Chargen`, in `yoob/chargen.js`
+    
+    An object for producing bitmapped-character-like displays, such as those
+    found on 8-bit retrocomputers.  A monochromatic image, with the character
+    patterns in a regular grid, must be supplied.  Chromatic versions of the
+    character patterns, in each of the given colours, will be automatically
+    created.  The character data may also be modified programatically.
+
+Plus some functions which aren't classes:
+
+*   `yoob.showSplashScreen`, in `yoob/splash-screen.js`
+
+    An adapter-type thing which displays a `div` element with some inner HTML
+    (typically containing a message or logo or such) and a "Proceed" button,
+    all in place of a given element.  When the button is clicked, the `div` is
+    hidden, the given element is revealed, and a callback is invoked.
+
+    The intention is to allow a "splash screen", which may contain a disclaimer
+    or similar, before the "main stage" is actually displayed and started.
+
+*   `yoob.setUpQuantumAnimationFrame` and
+    `yoob.setUpProportionalAnimationFrame`, in `yoob/animation-frame.js`
+    
+    The primary purpose of `yoob/animation-frame.js` is to install a shim
+    for browsers which don't support `requestAnimationFrame` (or support it
+    only under "their" name.)  However, the file also contains two convenience
+    functions which make it easier to use `requestAnimationFrame`.  The
+    "Quantum" version calls the given object's `draw()` method on each
+    animation frame, and calls the object's `update()` method as necessary to
+    ensure that `update()` is called once every given number of milliseconds
+    (default being 1/60th of a second.)  The "Proportional" version calls the
+    object's `draw()` method on each animation frame, passing to it the amount
+    of time that has elapsed (in milliseconds) since the last time it was
+    called.
+
 ### Planned ###
 
 *   `yoob.Environment`
     
     A scoped associative structure, suitable for implementing a symbol
     table or an evaluation context.
-
-*   `yoob.Turtle`
-    
-    For Turtle Graphics.  This should probably be a "model" and there
-    should be a separate `yoob.TurtleView` which concerns itself with
-    rendering the turtle (and its path) on a canvas.
 
 *   `yoob.Error`
     
@@ -284,3 +346,19 @@ Changelog
     them, and has been tested in Firefox, Chrome, and Internet Explorer
     (recent versions.)
 
+*   version 0.5
+    
+    `yoob.SpriteManager` handles both mouse and touch events.
+    
+    Added `yoob.Turtle`, `yoob.Path`, and `yoob.PathSet`.
+    
+    Added `yoob.FullScreenDetector`.
+
+    Added `yoob.Joystick`.
+    
+    Added `yoob.Chargen`.
+    
+    Added `yoob/splash-screen.js` and `yoob/animation-frame.js`.
+    
+    `yoob.PlayfieldCanvasView` now sets up some reasonable default values
+    for cell size and cursors, and `yoob.PlayfieldHTMLView` is less incomplete.
