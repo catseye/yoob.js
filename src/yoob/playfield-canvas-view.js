@@ -1,5 +1,5 @@
 /*
- * This file is part of yoob.js version 0.4
+ * This file is part of yoob.js version 0.5-PRE
  * Available from https://github.com/catseye/yoob.js/
  * This file is in the public domain.  See http://unlicense.org/ for details.
  */
@@ -10,6 +10,7 @@ if (window.yoob === undefined) yoob = {};
  * object on an HTML5 <canvas> element (or compatible object).
  *
  * TODO: don't necesarily resize canvas each time?
+ * TODO: option to stretch content rendering to fill a fixed-size canvas
  */
 yoob.PlayfieldCanvasView = function() {
     this.pf = undefined;
@@ -18,6 +19,9 @@ yoob.PlayfieldCanvasView = function() {
     this.init = function(pf, canvas) {
         this.pf = pf;
         this.canvas = canvas;
+        this.cursors = [];
+        this.cellWidth = 8;
+        this.cellHeight = 8;
         return this;
     };
     
@@ -51,7 +55,7 @@ yoob.PlayfieldCanvasView = function() {
     };
 
     /*
-     * Returns the number of visible cells in the x direction.
+     * Returns the number of occupied cells in the x direction.
      */
     this.getExtentX = function() {
         if (this.getLowerX() === undefined || this.getUpperX() === undefined) {
@@ -95,7 +99,8 @@ yoob.PlayfieldCanvasView = function() {
     /*
      * Draws the Playfield in a drawing context.
      * cellWidth and cellHeight are canvas units of measure for each cell.
-     * offsetX and offsetY are canvas units of measure for the playfield.
+     * offsetX and offsetY are canvas units of measure for the top-left
+     *   of the entire playfield.
      */
     this.drawContext = function(ctx, offsetX, offsetY, cellWidth, cellHeight) {
         var self = this;
@@ -153,6 +158,9 @@ yoob.PlayfieldCanvasView = function() {
         this.drawContext(ctx, offsetX, offsetY, cellWidth, cellHeight);
     };
 
+    /*
+     * Render the playfield on the canvas.
+     */
     this.draw = function() {
         this.drawCanvas(
           this.canvas, this.cellWidth, this.cellHeight, this.cursors

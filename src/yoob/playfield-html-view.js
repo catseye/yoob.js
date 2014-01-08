@@ -1,5 +1,5 @@
 /*
- * This file is part of yoob.js version 0.4
+ * This file is part of yoob.js version 0.5-PRE
  * Available from https://github.com/catseye/yoob.js/
  * This file is in the public domain.  See http://unlicense.org/ for details.
  */
@@ -7,9 +7,10 @@ if (window.yoob === undefined) yoob = {};
 
 /*
  * A view (in the MVC sense) for depicting a yoob.Playfield (-compatible)
- * object onto any HTML element that supports innerHTML.
+ * object onto any DOM element that supports innerHTML.
  *
- * TODO: *** THIS DOES NOT WORK *** please do not use it yet
+ * TODO: this may be incomplete; use at your own risk
+ * TODO: have this and the canvas view inherit from a common ABC?
  */
 yoob.PlayfieldHTMLView = function() {
     this.pf = undefined;
@@ -39,12 +40,37 @@ yoob.PlayfieldHTMLView = function() {
     };
 
     /*
+     * Returns the number of occupied cells in the x direction.
+     */
+    this.getExtentX = function() {
+        if (this.getLowerX() === undefined || this.getUpperX() === undefined) {
+            return 0;
+        } else {
+            return this.getUpperX() - this.getLowerX() + 1;
+        }
+    };
+
+    /*
+     * Returns the number of occupied cells in the y direction.
+     */
+    this.getExtentY = function() {
+        if (this.getLowerY() === undefined || this.getUpperY() === undefined) {
+            return 0;
+        } else {
+            return this.getUpperY() - this.getLowerY() + 1;
+        }
+    };
+
+    /*
      * Override to convert Playfield values to HTML.
      */
     this.render = function(value) {
         return value;
     };
 
+    /*
+     * Render the playfield, as HTML, on the DOM element.
+     */
     this.draw = function() {
         var text = "";
         for (var y = this.getLowerY(); y <= this.getUpperY(); y++) {
