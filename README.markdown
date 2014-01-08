@@ -3,7 +3,9 @@ yoob.js
 
 *Version 0.5-PRE.  Everything subject to change.*
 
-yoob.js is the HTML5 counterpart to [yoob][].
+yoob.js started out as the HTML5 counterpart to [yoob][], but has since
+grown to include several generally-useful facilities for making animated
+and interactive HTML5 pages.
 
 Like yoob, yoob.js:
 
@@ -11,13 +13,13 @@ Like yoob, yoob.js:
     esoteric programming languages (esolangs).
 *   is written amateurishly.
 *   has an API that is not particularly good, finalized, or stable.
-*   will eventually ship with some public-domain implementations of some
+*   may eventually ship with some public-domain implementations of some
     esolangs (but the approach is different from yoob's; see below.)
 
 Unlike yoob, yoob.js:
 
 *   is written in Javascript which assumes HTML5 capabilities in the browser
-    (mainly `<canvas>` elements.)
+    (mainly support for the `<canvas>` element.)
 *   does not provide a single canonical overarching framework which "knows"
     how to interpret and display and run an esolang implementation.  Instead,
     more fitting with the dynamic approach of the Javascript language, yoob.js
@@ -29,11 +31,11 @@ Unlike yoob, yoob.js:
     other bizarre things".
 *   does not support unbounded integer values (yet; see "Planned", below).
 *   provides components which are meant to be used as starting points for
-    further modification.  (It's all public domain, so build on it!)  For
+    further modification.  (It's all public domain, so mangle it up!)  For
     example, `yoob.SexpParser` is meant to be used as an example or basis for
     a specific grammar of your choice.
 
-yoob.js will eventually:
+yoob.js may eventually:
 
 *   extend the idea of "a component to help implement an esolang" to
     encompass esolang implementations themselves.  So, for example, yoob.js
@@ -42,18 +44,19 @@ yoob.js will eventually:
     implementing other brainfuck-derived esolangs, and other mashups.
     
     This emphasizes a thing with yoob, which is that while the yoob
-    distribution may contain implementations of various languages, it does
+    distribution contains implementations of various languages, it does
     not contain the reference implementation of any language; but the
     reference implementations of some languages may be written in yoob.
     yoob allows for this approach, but yoob.js hopes to accomodate it
-    better than just allowing for it.
+    better than just allowing for it.  Somehow.  Perhaps.
 
 Other things you should know about yoob.js are that it:
 
-*   requires features from HTML5 and related "modern" web standards.  It does
+*   requires features from HTML5 and related "modern" web standards.  With
+    the exception of a few simple "shims" for a few critical things, it does
     not try to do any feature detection or polyfilling.  If it doesn't work
     in your browser, it doesn't work in your browser.  Try another browser.
-*   does not rely on jQuery (yet) (possibly to its detriment.)
+*   does not rely on jQuery or any other front-end web framework.
 *   does not come minified or agglomerated or anything.  I mean, this isn't
     production web development, we're not trying to optimize page load time
     here, we just want to run us some esolangs, right?  You're free to do
@@ -65,9 +68,9 @@ Other things you should know about yoob.js are that it:
 API
 ---
 
-Each yoob.js class is defined in its own `.js` file, and each `.js` file
-inserts the class it defines into the `yoob` namespace (which it will create
-as a new, empty, global namespace if it has not already been defined.)
+Each yoob.js class is defined in some `.js` file, and each `.js` file
+inserts the class\[es\] it defines into the `yoob` namespace (which it will
+create as a new, empty, global namespace if it has not already been defined.)
 
 The classes are currently:
 
@@ -271,19 +274,20 @@ yoob.js is currently used in the HTML5 implementations of:
 *   [Circute][]
 *   [Braktif][]
 *   [Jaccia][] and Jacciata
+*   [Cyclobots][] and many other [HTML5-Gewgaws][]
 
-...and soon to be used in ALPACA and the various cellular automata defined
-therein.
 
-[yoob]: http://catseye.tc/node/yoob.html
-[Gemooy]: http://catseye.tc/node/Gemooy.html
+[yoob]: http://catseye.tc/node/yoob
+[Gemooy]: http://catseye.tc/node/Gemooy
 [Javascript BigInteger]: https://github.com/silentmatt/javascript-biginteger
-[noit o' mnain worb]: http://catseye.tc/node/noit%20o%27%20mnain%20worb.html
-[Super Wumpus Land]: http://catseye.tc/node/Super%20Wumpus%20Land.html
-[REDGREEN]: http://catseye.tc/node/REDGREEN.html
-[Circute]: http://catseye.tc/node/Circute.html
-[Braktif]: http://catseye.tc/node/Braktif.html
-[Jaccia]: http://catseye.tc/node/Jaccia.html
+[noit o' mnain worb]: http://catseye.tc/node/noit_o%27_mnain_worb.html
+[Super Wumpus Land]: http://catseye.tc/node/Super_Wumpus_Land
+[REDGREEN]: http://catseye.tc/node/REDGREEN
+[Circute]: http://catseye.tc/node/Circute
+[Braktif]: http://catseye.tc/node/Braktif
+[Jaccia]: http://catseye.tc/node/Jaccia
+[Cyclobots]: http://catseye.tc/node/Cyclobots
+[HTML5-Gewgaws]: https://github.com/catseye/HTML5-Gewgaws
 
 Changelog
 ---------
