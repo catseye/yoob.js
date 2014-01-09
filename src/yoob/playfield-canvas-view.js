@@ -24,7 +24,7 @@ yoob.PlayfieldCanvasView = function() {
         this.setCellDimensions(8, 8);
         return this;
     };
-    
+
     /*** Chainable setters ***/
 
     /*
