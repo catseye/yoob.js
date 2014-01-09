@@ -38,10 +38,13 @@ Your browser doesn't support displaying an HTML5 canvas.
   var canvas = document.getElementById('canvas');
   var pf = new yoob.Playfield().setDefault(' ');
   var ip = new yoob.Cursor();
+  ip.fillStyle = "#c0c050";
   var canvasView = new yoob.PlayfieldCanvasView();
   canvasView.init(pf, canvas).setCursors([ip]).setCellDimensions(undefined, 20);
+
   var htmlView = new yoob.PlayfieldHTMLView();
   htmlView.init(pf, document.getElementById('pre'));
+  htmlView.setCursors([ip]);
 
   var textarea = document.getElementById('program');
   document.getElementById('load').onclick = function(e) {
@@ -55,6 +58,7 @@ Your browser doesn't support displaying an HTML5 canvas.
         if (value === '$') {
             ip.x = x;
             ip.y = y;
+            return '*';
         }
     });
     ip.dx = 1;
