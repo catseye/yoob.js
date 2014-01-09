@@ -121,14 +121,11 @@ yoob.PlayfieldHTMLView = function() {
             for (var x = this.getLowerX(); x <= this.getUpperX(); x++) {
                 var rendered = this.render(this.pf.get(x, y));
                 for (var i = 0; i < this.cursors.length; i++) {
-                    if (this.cursors[i].x === x && this.cursors[i].y === y &&
-                        this.cursors[i].fillStyle) {
-                        rendered = '<span style="background: ' +
-                                   this.cursors[i].fillStyle + '">' +
-                                   rendered + '</span>';
+                    if (this.cursors[i].x === x && this.cursors[i].y === y) {
+                        rendered = this.cursors[i].wrapText(rendered);
                     }
                 }
-                row += rendered
+                row += rendered;
             }
             text += row + "\n";
         }
