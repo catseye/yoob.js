@@ -1,7 +1,7 @@
 yoob.js
 =======
 
-*Version 0.5.  Everything subject to change.*
+*Version 0.6-PRE.  Everything subject to change.*
 
 yoob.js started out as the HTML5 counterpart to [yoob][], but has since
 grown to include several generally-useful facilities for making animated
@@ -174,19 +174,16 @@ The classes are currently:
 
 *   `yoob.Turtle`, in `yoob/turtle.js`
     
-    For Turtle Graphics.  This should probably be a "model" and there
-    should be a separate `yoob.TurtleView` which concerns itself with
-    rendering the turtle (and its path) on a canvas.  At present, movement
-    of the turtle generates a `yoob.PathSet` (see below) which can then be
-    drawn.
+    For Turtle Graphics.  This is a "model" rather than a "view"; movement
+    of the turtle generates a `yoob.PathList` (see below) which can then be
+    drawn on a canvas (or not.)
 
-*   `yoob.Path` and `yoob.PathSet`, in `yoob/path.js`
+*   `yoob.Path` and `yoob.PathList`, in `yoob/path.js`
     
-    An abstraction of a path (a set of connected, two-dimensional points.)
-    Think of it as a model that also contains a nice default view (i.e.,
-    it knows how to draw itself into a 2d drawing context.)  A `PathSet` is
-    a list of paths with some convenience functions (should probably be
-    called `PathList` then.)
+    A `Path` is an abstraction of a path (a list of connected, two-dimensional
+    points.)  Think of it as a model that also contains a convenient default
+    view (i.e., it knows how to draw itself into a 2d drawing context.)  A
+    `PathList` is an ordered list of paths along with some convenience methods.
     
 *   `yoob.FullScreenDetector`, in `yoob/full-screen-detector.js`
     
@@ -366,3 +363,7 @@ Changelog
     
     `yoob.PlayfieldCanvasView` now sets up some reasonable default values
     for cell size and cursors, and `yoob.PlayfieldHTMLView` is less incomplete.
+
+*   version 0.6
+    
+    Renamed `yoob.PathSet` to `yoob.PathList`.
