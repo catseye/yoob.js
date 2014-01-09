@@ -137,14 +137,14 @@ yoob.Path = function(cfg) {
     this.init(cfg);
 };
 
-yoob.PathSet = function() {
+yoob.PathList = function() {
     this.init = function(paths) {
         this.paths = paths || [];
         return this;
     };
 
     this.toString = function() {
-        var t = 'new yoob.PathSet([';
+        var t = 'new yoob.PathList([';
         for (var i = 0; i < this.paths.length; i++) {
             t += this.paths[i].toString();
             if (i < this.paths.length - 1) {

@@ -24,7 +24,7 @@ yoob.Turtle = function() {
         this.dy = 0;
         this.selected = false;
         this.theta = 0;
-        this.trail = new yoob.PathSet().init();
+        this.trail = new yoob.PathList().init();
         this.setPenDown(true);
     };
 
