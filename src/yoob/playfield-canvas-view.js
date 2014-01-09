@@ -40,6 +40,8 @@ yoob.PlayfieldCanvasView = function() {
      * Return the requested bounds of the occupied portion of the playfield.
      * "Occupation" in this sense includes all cursors.
      *
+     * These may return 'undefined' if there is nothing in the playfield.
+     *
      * Override these if you want to draw some portion of the
      * playfield which is not the whole playfield.
      * (Not yet implemented)
@@ -47,28 +49,36 @@ yoob.PlayfieldCanvasView = function() {
     this.getLowerX = function() {
         var minX = this.pf.getMinX();
         for (var i = 0; i < this.cursors.length; i++) {
-            if (this.cursors[i].x < minX) minX = this.cursors[i].x;
+            if (minX === undefined || this.cursors[i].x < minX) {
+                minX = this.cursors[i].x;
+            }
         }
         return minX;
     };
     this.getUpperX = function() {
         var maxX = this.pf.getMaxX();
         for (var i = 0; i < this.cursors.length; i++) {
-            if (this.cursors[i].x > maxX) maxX = this.cursors[i].x;
+            if (maxX === undefined || this.cursors[i].x > maxX) {
+                maxX = this.cursors[i].x;
+            }
         }
         return maxX;
     };
     this.getLowerY = function() {
         var minY = this.pf.getMinY();
         for (var i = 0; i < this.cursors.length; i++) {
-            if (this.cursors[i].y < minY) minY = this.cursors[i].y;
+            if (minY === undefined || this.cursors[i].y < minY) {
+                minY = this.cursors[i].y;
+            }
         }
         return minY;
     };
     this.getUpperY = function() {
         var maxY = this.pf.getMaxY();
         for (var i = 0; i < this.cursors.length; i++) {
-            if (this.cursors[i].y > maxY) maxY = this.cursors[i].y;
+            if (maxY === undefined || this.cursors[i].y > maxY) {
+                maxY = this.cursors[i].y;
+            }
         }
         return maxY;
     };
@@ -159,8 +169,8 @@ yoob.PlayfieldCanvasView = function() {
         ctx.textBaseline = "top";
         ctx.font = cellHeight + "px monospace";
 
-        var offsetX = this.pf.getMinX() * cellWidth * -1;
-        var offsetY = this.pf.getMinY() * cellHeight * -1;
+        var offsetX = (this.getLowerX() || 0) * cellWidth * -1;
+        var offsetY = (this.getLowerY() || 0) * cellHeight * -1;
 
         if (this.fixedPosition) {
             offsetX = 0;
