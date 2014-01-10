@@ -76,7 +76,7 @@ yoob.Cursor = function(x, y, dx, dy) {
      */
     this.wrapText = function(text) {
         var fillStyle = this.fillStyle || "#50ff50";
-        return '<span style="background: ' + this.fillStyle + '">' +
+        return '<span style="background: ' + fillStyle + '">' +
                text + '</span>';
     };
 
