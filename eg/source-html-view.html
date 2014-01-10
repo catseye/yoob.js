@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <title>yoob.Playfield Demo</title>
+  <script src="../src/yoob/cursor.js"></script>
+  <script src="../src/yoob/source-html-view.js"></script>
+  <style>
+#canvas { border: 1px solid blue; }
+#pre { border: 1px solid red; font-size: 20px; }
+  </style>
+</head>
+<body>
+
+<h1>yoob.SourceHTMLView Demo</h1>
+
+<textarea id="program" rows="10" cols="40">
+10 print "hello"
+20 goto 10
+etc
+</textarea>
+
+<pre id="pre"></pre>
+
+<button id="load">Load</button>
+<button id="step">Step</button>
+
+</body>
+<script>
+  var pre = document.getElementById('pre');
+  var textarea = document.getElementById('program');
+
+  var pc1 = new yoob.Cursor();
+  var pc2 = new yoob.Cursor();
+  pc2.fillStyle = "brown";
+  var sourceView = new yoob.SourceHTMLView();
+  sourceView.init(undefined, pre).setCursors([pc1, pc2]);
+
+  document.getElementById('load').onclick = function(e) {
+    sourceView.setSourceText(textarea.value);
+    pc1.x = 0;
+    pc1.y = 0;
+    pc1.dx = 1;
+    pc1.dy = 0;
+    pc2.x = 10;
+    pc2.y = 0;
+    pc2.dx = 1;
+    pc2.dy = 0;
+    sourceView.draw();
+  };
+
+  document.getElementById('step').onclick = function(e) {
+    pc1.advance();
+    while (sourceView.text.charAt(pc1.x) === '\n') {
+        pc1.advance();
+    }
+    sourceView.draw();
+  };
+</script>
