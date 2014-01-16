@@ -26,19 +26,19 @@ window.requestAnimationFrame =
 // http://webstuff.nfshost.com/anim-timing/Overview.html
 // but "cancelAnimationFrame" in the Candidate Recommendation:
 // http://www.w3.org/TR/animation-timing/
-window.cancelRequestAnimationFrame =
-    window.cancelRequestAnimationFrame ||
-    window.webkitCancelRequestAnimationFrame ||
-    window.mozCancelRequestAnimationFrame ||
-    window.oCancelRequestAnimationFrame ||
-    window.msCancelRequestAnimationFrame ||
+window.cancelAnimationFrame =
     window.cancelAnimationFrame ||
     window.webkitCancelAnimationFrame ||
     window.mozCancelAnimationFrame ||
     window.oCancelAnimationFrame ||
     window.msCancelAnimationFrame ||
+    window.cancelRequestAnimationFrame ||
+    window.webkitCancelRequestAnimationFrame ||
+    window.mozCancelRequestAnimationFrame ||
+    window.oCancelRequestAnimationFrame ||
+    window.msCancelRequestAnimationFrame ||
     clearTimeout;
-window.cancelAnimationFrame = window.cancelRequestAnimationFrame;
+window.cancelRequestAnimationFrame = window.cancelAnimationFrame;
 
 /*
  * Convenience function for using requestAnimationFrame.  Calls the
@@ -72,7 +72,9 @@ yoob.setUpQuantumAnimationFrame = function(object, cfg) {
             object.update();
         }
         cfg.lastTime = time;
-        cfg.request = requestAnimationFrame(animFrame);
+        if (cfg.request) {
+            cfg.request = requestAnimationFrame(animFrame);
+        }
     };
     cfg.request = requestAnimationFrame(animFrame);
 };
