@@ -1,5 +1,5 @@
 /*
- * This file is part of yoob.js version 0.5
+ * This file is part of yoob.js version 0.6-PRE
  * Available from https://github.com/catseye/yoob.js/
  * This file is in the public domain.  See http://unlicense.org/ for details.
  */
@@ -22,13 +22,23 @@ window.requestAnimationFrame =
         }, 1000 / 60);
     };
 
+// it was called "cancelRequestAnimationFrame" in the editor's draft:
+// http://webstuff.nfshost.com/anim-timing/Overview.html
+// but "cancelAnimationFrame" in the Candidate Recommendation:
+// http://www.w3.org/TR/animation-timing/
 window.cancelRequestAnimationFrame =
     window.cancelRequestAnimationFrame ||
     window.webkitCancelRequestAnimationFrame ||
     window.mozCancelRequestAnimationFrame ||
     window.oCancelRequestAnimationFrame ||
     window.msCancelRequestAnimationFrame ||
+    window.cancelAnimationFrame ||
+    window.webkitCancelAnimationFrame ||
+    window.mozCancelAnimationFrame ||
+    window.oCancelAnimationFrame ||
+    window.msCancelAnimationFrame ||
     clearTimeout;
+window.cancelAnimationFrame = window.cancelRequestAnimationFrame;
 
 /*
  * Convenience function for using requestAnimationFrame.  Calls the
@@ -81,7 +91,9 @@ yoob.setUpProportionalAnimationFrame = function(object, cfg) {
         var timeElapsed = cfg.lastTime == null ? 0 : time - cfg.lastTime;
         cfg.lastTime = time;
         object.draw(timeElapsed);
-        cfg.request = requestAnimationFrame(animFrame);
+        if (cfg.request) {
+            cfg.request = requestAnimationFrame(animFrame);
+        }
     };
     cfg.request = requestAnimationFrame(animFrame);
 };

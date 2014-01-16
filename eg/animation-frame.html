@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <title>yoob.setUpQuantumAnimationFrame Demo</title>
+  <style>
+#canvas { border: 1px solid blue; }
+  </style>
+</head>
+<body>
+
+<h1>yoob.setUpQuantumAnimationFrame Demo</h1>
+
+<div>
+  <canvas id="canvas" width="200" height="200">
+  Your browser doesn't support displaying an HTML5 canvas.
+  </canvas>
+</div>
+
+<div>
+  <button id="start" onclick="controller.start();">Start</button>
+  <button id="stop" onclick="controller.stop();">Stop</button>
+</div>
+
+</body>
+<script src="../src/yoob/animation-frame.js"></script>
+<script type="text/javascript">
+  var c = document.getElementById('canvas');
+  
+  var Controller = function() {
+      var ctx;
+      var animCfg = {};
+
+      this.init = function(canvas) {
+          this.canvas = canvas;
+          ctx = canvas.getContext("2d");
+          this.w = 20;
+          this.h = 20;
+          this.x = 0;
+          this.y = canvas.height / 2 - this.h / 2;
+          this.dx = 1;
+          this.draw();
+      };
+
+      this.draw = function() {
+         ctx.clearRect(0, 0, canvas.width, canvas.height);
+         ctx.lineWidth = "1";
+         ctx.strokeStyle = "black";
+         ctx.shadowColor = "transparent";
+         ctx.strokeRect(this.x, this.y, this.w, this.h);
+      };
+
+      this.update = function() {
+          if (this.x + this.w > this.canvas.width || this.x < 0) {
+              this.dx *= -1;
+          }
+          this.x += this.dx;
+      };
+
+      this.start = function() {
+          if (animCfg.request)
+              return;
+          yoob.setUpQuantumAnimationFrame(this, animCfg);
+      };
+
+      this.stop = function() {
+          if (!animCfg.request)
+              return;
+          cancelRequestAnimationFrame(animCfg.request);
+          animCfg.request = undefined;
+          // if you don't do the following, you will get all those ticks
+          // that have "occurred" since the stop, when you start again
+          animCfg.lastTime = null;
+      };
+  };
+
+  var controller = new Controller();
+  controller.init(document.getElementById('canvas'));
+</script>
