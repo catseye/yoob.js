@@ -1,5 +1,5 @@
 /*
- * This file is part of yoob.js version 0.3
+ * This file is part of yoob.js version 0.6-PRE
  * Available from https://github.com/catseye/yoob.js/
  * This file is in the public domain.  See http://unlicense.org/ for details.
  */
@@ -15,6 +15,11 @@ if (window.yoob === undefined) yoob = {};
  * Subclass this and override the following methods:
  * - make it evolve the state by one tick in the step() method
  * - make it load the state from a multiline string in the load() method
+ *
+ * You may wish to store the state in the controller's .state attribute,
+ * but you needn't (and arguably shouldn't.)  Likewise, the controller
+ * does not concern itself with depicting the state.  You should use
+ * something like yoob.PlayfieldCanvasView for that, instead.
  */
 yoob.Controller = function() {
     this.intervalId = undefined;
@@ -27,9 +32,9 @@ yoob.Controller = function() {
         if (this['click_' + key] !== undefined) {
             key = 'click_' + key;
         }
-        var self = this;
+        var $this = this;
         return function(e) {
-          self[key](control); 
+            $this[key](control);
         };
     };
 
@@ -40,7 +45,6 @@ yoob.Controller = function() {
      * with those ids will be obtained from the document and used.
      */
     this.connect = function(dict) {
-        var self = this;
         var keys = ["start", "stop", "step", "load", "edit", "select"];
         for (var i in keys) {
             var key = keys[i];
@@ -76,12 +80,13 @@ yoob.Controller = function() {
         }
         if (speed !== undefined) {
             this.speed = speed;
-            speed.value = self.delay;
+            speed.value = this.delay;
+            var $this = this;
             speed.onchange = function(e) {
-                self.delay = speed.value;
-                if (self.intervalId !== undefined) {
-                    self.stop();
-                    self.start();
+                $this.delay = speed.value;
+                if ($this.intervalId !== undefined) {
+                    $this.stop();
+                    $this.start();
                 }
             }
         }        
@@ -140,8 +145,8 @@ yoob.Controller = function() {
         if (this.intervalId !== undefined)
             return;
         this.step();
-        var self = this;
-        this.intervalId = setInterval(function() { self.step(); }, this.delay);
+        var $this = this;
+        this.intervalId = setInterval(function() { $this.step(); }, this.delay);
     };
 
     this.stop = function() {
