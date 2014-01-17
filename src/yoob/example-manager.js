@@ -58,7 +58,7 @@ yoob.ExampleManager = function() {
         this.selectElem.options.add(opt);
         var $this = this;
         this.reactTo[id] = callback || function(id) {
-            $this.controller.stop(); // in case it is currently running
+            $this.controller.click_stop(); // in case it is currently running
             $this.controller.loadSourceFromHTML(
               document.getElementById(id).innerHTML
             );

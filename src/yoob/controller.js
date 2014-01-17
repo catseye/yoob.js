@@ -57,6 +57,9 @@ yoob.Controller = function() {
                 this.controls[key] = value;
             }
         }
+        if (this.controls.stop) {
+            this.controls.stop.disabled = true;
+        }
 
         var keys = ["source", "display"];
         for (var i in keys) {
@@ -65,7 +68,7 @@ yoob.Controller = function() {
             if (typeof value === 'string') {
                 value = document.getElementById(value);
             }
-            if (value !== undefined) {
+            if (value) {
                 this[key] = value;
             }
         }
@@ -74,7 +77,7 @@ yoob.Controller = function() {
         if (typeof speed === 'string') {
             speed = document.getElementById(speed);
         }
-        if (speed !== undefined) {
+        if (speed) {
             this.speed = speed;
             speed.value = this.delay;
             var $this = this;
@@ -98,13 +101,13 @@ yoob.Controller = function() {
     };
 
     this.click_load = function(e) {
-        this.stop();
+        this.click_stop();
         this.load(this.source.value);
         if (this.controls.edit) this.controls.edit.style.display = "inline";
         if (this.controls.load) this.controls.load.style.display = "none";
         if (this.controls.start) this.controls.start.disabled = false;
         if (this.controls.step) this.controls.step.disabled = false;
-        if (this.controls.stop) this.controls.stop.disabled = false;
+        if (this.controls.stop) this.controls.stop.disabled = true;
         if (this.display) this.display.style.display = "block";
         if (this.source) this.source.style.display = "none";
     };
@@ -135,7 +138,7 @@ yoob.Controller = function() {
     };
 
     this.click_edit = function(e) {
-        this.stop();
+        this.click_stop();
         if (this.controls.edit) this.controls.edit.style.display = "none";
         if (this.controls.load) this.controls.load.style.display = "inline";
         if (this.controls.start) this.controls.start.disabled = true;
@@ -145,12 +148,29 @@ yoob.Controller = function() {
         if (this.source) this.source.style.display = "block";
     };
 
+    this.click_start = function(e) {
+        this.start();
+        if (this.controls.start) this.controls.start.disabled = true;
+        if (this.controls.step) this.controls.step.disabled = false;
+        if (this.controls.stop) this.controls.stop.disabled = false;
+    };
+
     this.start = function() {
         if (this.intervalId !== undefined)
             return;
         this.step();
         var $this = this;
         this.intervalId = setInterval(function() { $this.step(); }, this.delay);
+    };
+
+    this.click_stop = function(e) {
+        this.stop();
+        if (this.controls.stop && this.controls.stop.disabled) {
+            return;
+        }
+        if (this.controls.start) this.controls.start.disabled = false;
+        if (this.controls.step) this.controls.step.disabled = false;
+        if (this.controls.stop) this.controls.stop.disabled = true;
     };
 
     this.stop = function() {
