@@ -25,7 +25,6 @@ yoob.ExampleManager = function() {
         this.exampleClass = cfg.exampleClass || null;
         this.controller = cfg.controller || null;
         this.clear();
-        this.reactTo = {};
         var $this = this;
         this.selectElem.onchange = function() {
             $this.select(this.options[this.selectedIndex].value);
@@ -33,10 +32,15 @@ yoob.ExampleManager = function() {
         return this;
     };
 
+    /*
+     * Removes all options from the selectElem, and their associated data.
+     */
     this.clear = function() {
+        this.reactTo = {};
         while (this.selectElem.firstChild) {
             this.selectElem.removeChild(this.selectElem.firstChild);
         }
+        this.add('(select one...)', function() {});
         return this;
     };
 
@@ -59,8 +63,15 @@ yoob.ExampleManager = function() {
         return this;
     };
 
+    /*
+     * Called by the selectElem's onchange event.  For sanity, you should
+     * probably not call this yourself.
+     */
     this.select = function(id) {
         this.reactTo[id](id);
+        if (this.onselect) {
+            this.onselect(id);
+        }
     };
 
     /*
