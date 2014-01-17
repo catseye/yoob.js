@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <title>yoob.ExampleManager Demo</title>
+  <style>
+.example_program {
+  display: none;
+}
+  </style>
+</head>
+<body>
+
+<h1>yoob.ExampleManager Demo</h1>
+
+<p>Example program: <select id="example_selector"></select></p>
+
+<div id="program_one" class="example_program">Good
+cheese
+is rarely found
+among
+haikus.</div>
+
+<div id="program_two" class="example_program">#&gt;&gt;--
+ #&gt;&gt;--
+  #&gt;&gt;--
+#&gt;&gt;--&lt;&lt;
+&amp;</div>
+
+<pre id="program" style="border: 1px solid blue"></pre>
+
+<button id="start">Start</button>
+<button id="stop">Stop</button>
+<button id="step">Step</button>
+<button id="load">Load</button>
+Speed: <input id="speed" type="range" min="0" max="200" value="0" />
+
+</body>
+<script src="../src/yoob/controller.js"></script>
+<script src="../src/yoob/example-manager.js"></script>
+<script>
+  var c = new yoob.Controller();
+  var state = '';
+  c.load = function(text) {
+      state = text;
+      document.getElementById('program').innerHTML = state;
+  };
+  c.step = function() {
+      state = state.substr(0, state.length - 1);
+      document.getElementById('program').innerHTML = state;
+  };
+  c.connect({
+    'start': 'start',
+    'stop': 'stop',
+    'step': 'step',
+    'load': 'load',
+    'source': 'input',
+    'speed': 'speed'
+  });
+  var e = (new yoob.ExampleManager()).init({
+      selectElem: document.getElementById('example_selector'),
+      controller: c
+  }).populateFromClass('example_program');
+</script>
