@@ -6,6 +6,9 @@
 .example_program {
   display: none;
 }
+#input {
+  display: none;
+}
   </style>
 </head>
 <body>
@@ -31,12 +34,15 @@ haikus.</div>
 #&gt;&gt;--&lt;&lt;
 &amp;</div>
 
+<textarea id="input">The* [900beast] of7   "whee  galee"</textarea>
+
 <pre id="program" style="border: 1px solid blue"></pre>
 
+<button id="edit">Edit</button>
+<button id="load">Load</button>
 <button id="start">Start</button>
 <button id="stop">Stop</button>
 <button id="step">Step</button>
-<button id="load">Load</button>
 Speed: <input id="speed" type="range" min="0" max="200" value="0" />
 
 </body>
@@ -57,8 +63,10 @@ Speed: <input id="speed" type="range" min="0" max="200" value="0" />
     'start': 'start',
     'stop': 'stop',
     'step': 'step',
+    'edit': 'edit',
     'load': 'load',
     'source': 'input',
+    'display': 'program',
     'speed': 'speed'
   });
   var e = (new yoob.ExampleManager()).init({
