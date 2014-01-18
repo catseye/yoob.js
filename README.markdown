@@ -83,9 +83,10 @@ The classes are currently:
 
 *   `yoob.Cursor`, in `yoob/cursor.js`
     
-    A pointer (position vector) into two-dimensional Cartesian space
-    (typically a `yoob.Playfield`) which also has a _delta_ (direction
-    vector) which need not necessarily be used.
+    An object representing position and direction in some space, which may
+    be one-dimensional (typically a `yoob.Tape`, where it serves as a tape
+    head) or two-dimensional Cartesian space (typically a `yoob.Playfield`).
+    The direction aspect need not not necessarily be used.
 
 *   `yoob.PlayfieldCanvasView`, in `yoob/playfield-canvas-view.js`
     
@@ -120,10 +121,6 @@ The classes are currently:
     
     A (theoretically) unbounded tape, like you'd find on a Turing machine,
     optionally associated with a `<canvas>` on which it is depicted.
-
-*   `yoob.TapeHead`, in `yoob/tape-head.js`
-    
-    An object representing a position on a Tape.
 
 *   `yoob.Stack`, in `yoob/stack.js`
     

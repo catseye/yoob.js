@@ -3,7 +3,7 @@
   <meta charset="utf-8">
   <title>yoob.Tape Demo</title>
   <script src="../src/yoob/tape.js"></script>
-  <script src="../src/yoob/tape-head.js"></script>
+  <script src="../src/yoob/cursor.js"></script>
   <style>
 #canvas { border: 1px solid blue; }
   </style>
@@ -25,7 +25,8 @@ Your browser doesn't support displaying an HTML5 canvas.
 <script>
   var canvas = document.getElementById('canvas');
   var tape = new yoob.Tape();
-  var th = new yoob.TapeHead(tape, 0);
+  var th = new yoob.Cursor(0);
+  th.tape = tape;
 
   document.getElementById('write_0').onclick = function(e) {
     th.write("0");
