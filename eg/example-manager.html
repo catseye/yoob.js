@@ -72,6 +72,6 @@ Speed: <input id="speed" type="range" min="0" max="200" value="0" />
   var e = (new yoob.ExampleManager()).init({
       selectElem: document.getElementById('example_selector'),
       controller: c
-  }).populateFromClass('example_program');
+  }).populateFromClass('example_program').select('program_two');
   c.click_load();
 </script>

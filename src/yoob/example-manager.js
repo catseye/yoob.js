@@ -10,24 +10,28 @@ if (window.yoob === undefined) yoob = {};
  * things) for use in an esolang interpreter (or other thing that could
  * use these things.  For example, games for an emulator, etc.)
  *
- * Mostly intended to be connected to a yoob.Controller.
+ * Mostly intended to be connected to a yoob.Controller -- but need not be.
  */
 yoob.ExampleManager = function() {
     /*
      * The single argument is a dictionary (object) where the keys are:
+     *
      *    selectElem: (required) the <select> DOM element that will be
      *        populated with the available example programs.  Selecting one
      *        will cause the .select() method of this manager to be called.
      *        it will also call .onselect if that method is present.
+     *
+     *    controller: a yoob.Controller (or compatible object) that will
+     *        be informed of the selection, if no callback was supplied
+     *        when the item was added.
      */
     this.init = function(cfg) {
         this.selectElem = cfg.selectElem;
-        this.exampleClass = cfg.exampleClass || null;
         this.controller = cfg.controller || null;
         this.clear();
         var $this = this;
         this.selectElem.onchange = function() {
-            $this.select(this.options[this.selectedIndex].value);
+            $this._select(this.options[this.selectedIndex].value);
         }
         return this;
     };
@@ -70,11 +74,33 @@ yoob.ExampleManager = function() {
      * Called by the selectElem's onchange event.  For sanity, you should
      * probably not call this yourself.
      */
-    this.select = function(id) {
+    this._select = function(id) {
         this.reactTo[id](id);
         if (this.onselect) {
             this.onselect(id);
         }
+    };
+
+    /*
+     * Call this to programmatically select an item.  This will change
+     * the selected option in the selectElem and trigger the appropriate
+     * callback in this ExampleManager.
+     */
+    this.select = function(id) {
+        var i = 0;
+        var opt = this.selectElem.options[i];
+        while (opt) {
+            if (opt.value === id) {
+                this.selectElem.selectedIndex = i;
+                this._select(id);
+                return this;
+            }
+            i++;
+            opt = this.selectElem.options[i];
+        }
+        // if not found, select the "(select one...)" option
+        this.selectElem.selectedIndex = 0;
+        return this;
     };
 
     /*
