@@ -1,5 +1,5 @@
 /*
- * This file is part of yoob.js version 0.5
+ * This file is part of yoob.js version 0.6-PRE
  * Available from https://github.com/catseye/yoob.js/
  * This file is in the public domain.  See http://unlicense.org/ for details.
  */
@@ -56,8 +56,8 @@ yoob.Sprite = function() {
   this.setDestination = function(x, y, ticks) {
     this.destX = x;
     this.destY = y;
-    this.dx = (this.destX - this.x) / ticks;
-    this.dy = (this.destY - this.y) / ticks;
+    this.dx = (this.destX - this.getX()) / ticks;
+    this.dy = (this.destY - this.getY()) / ticks;
     this.destCounter = ticks;
   };
 
@@ -87,14 +87,14 @@ yoob.Sprite = function() {
   };
 
   this.containsPoint = function(x, y) {
-    return (x >= this.x && x <= this.x + this.w &&
-            y >= this.y && y <= this.y + this.h);
+    return (x >= this.getX() && x <= this.getX() + this.getWidth() &&
+            y >= this.getY() && y <= this.getY() + this.getHeight());
   };
 
   // you will probably want to override this
   this.draw = function(ctx) {
-    ctx.fillStyle = "green";
-    ctx.fillRect(this.x, this.y, this.w, this.h);
+    ctx.fillStyle = this.fillStyle || "green";
+    ctx.fillRect(this.getX(), this.getY(), this.getWidth(), this.getHeight());
   };
 
   // event handlers.  override to detect these events.
