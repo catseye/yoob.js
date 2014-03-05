@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <head>
   <meta charset="utf-8">
-  <title>yoob.ExampleManager Demo</title>
+  <title>yoob.PresetManager Demo</title>
   <style>
 .example_program {
   display: none;
@@ -13,7 +13,7 @@
 </head>
 <body>
 
-<h1>yoob.ExampleManager Demo</h1>
+<h1>yoob.PresetManager Demo</h1>
 
 <p>Example program: <select id="example_selector"></select></p>
 
@@ -47,7 +47,7 @@ Speed: <input id="speed" type="range" min="0" max="200" value="0" />
 
 </body>
 <script src="../src/yoob/controller.js"></script>
-<script src="../src/yoob/example-manager.js"></script>
+<script src="../src/yoob/preset-manager.js"></script>
 <script>
   var c = new yoob.Controller();
   var state = '';
@@ -69,7 +69,7 @@ Speed: <input id="speed" type="range" min="0" max="200" value="0" />
     'display': 'program',
     'speed': 'speed'
   });
-  var e = (new yoob.ExampleManager()).init({
+  var e = (new yoob.PresetManager()).init({
       selectElem: document.getElementById('example_selector'),
       controller: c
   }).populateFromClass('example_program').select('program_two');
