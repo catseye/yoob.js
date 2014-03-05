@@ -40,6 +40,16 @@ window.cancelAnimationFrame =
     clearTimeout;
 window.cancelRequestAnimationFrame = window.cancelAnimationFrame;
 
+/*
+ * A yoob.Animation object manages an animation.
+ *
+ * How many things get animated by one yoob.Animation object is up to
+ * you.  For animated demos, it may be sufficient to have only one
+ * Animation object which updates many independent graphical objects.
+ * However, it may be useful to have multiple Animation objects, if
+ * the program can be in different states (for example, one title screen
+ * Animation, and a different Animation to use during gameplay.)
+ */
 yoob.Animation = function() {
     /*
      * Initialize a yoob.Animation.  Takes a configuration dictionary:
@@ -76,6 +86,9 @@ yoob.Animation = function() {
     };
 
     this.start = function() {
+        if (this.request) {
+            return false;
+        }
         var $this = this;
         if (this.mode === 'quantum') {
             var animFrame = function(time) {
@@ -106,6 +119,7 @@ yoob.Animation = function() {
             };
         }
         this.request = requestAnimationFrame(animFrame);
+        return true;
     };
 
     this.stop = function() {
@@ -113,5 +127,10 @@ yoob.Animation = function() {
             cancelRequestAnimationFrame(this.request);
         }
         this.request = null;
+    };
+
+    this.reset = function() {
+        this.stop();
+        this.lastTime = null;
     };
 };
