@@ -6,13 +6,14 @@
 if (window.yoob === undefined) yoob = {};
 
 /*
- * An object for managing a set of example programs (or other "pre-fab"
- * things) for use in an esolang interpreter (or other thing that could
- * use these things.  For example, games for an emulator, etc.)
+ * An object for managing a set of "presets" -- which, for an esolang,
+ * might be example programs; for an emulator, might be ROM images;
+ * for a control panel, may be pre-selected combinations of settings;
+ * and so forth.
  *
  * Mostly intended to be connected to a yoob.Controller -- but need not be.
  */
-yoob.ExampleManager = function() {
+yoob.PresetManager = function() {
     /*
      * The single argument is a dictionary (object) where the keys are:
      *
@@ -49,11 +50,11 @@ yoob.ExampleManager = function() {
     };
 
     /*
-     * Adds an example to this ExampleManager.  When it is selected,
+     * Adds a preset to this PresetManager.  When it is selected,
      * the given callback will be called, being passed the id as the
      * first argument.  If no callback is provided, a default callback,
      * which loads the contents of the element with the specified id
-     * into the configured controller, will be used.
+     * into the configured yoob.Controller, will be used.
      */
     this.add = function(id, callback) {
         var opt = document.createElement("option");
@@ -84,7 +85,7 @@ yoob.ExampleManager = function() {
     /*
      * Call this to programmatically select an item.  This will change
      * the selected option in the selectElem and trigger the appropriate
-     * callback in this ExampleManager.
+     * callback in this PresetManager.
      */
     this.select = function(id) {
         var i = 0;
@@ -105,7 +106,7 @@ yoob.ExampleManager = function() {
 
     /*
      * When called, every DOM element in the document with the given
-     * class will be considered an example program, and the manager
+     * class will be considered a preset, and the manager
      * will be populated with these.  Generally the CSS for the class
      * will have `display: none` and the elements will be <div>s.
      *
