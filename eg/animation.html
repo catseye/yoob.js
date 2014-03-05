@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <title>yoob.Animation Demo</title>
+  <style>
+#quantum_canvas { border: 1px solid blue; }
+#proportional_canvas { border: 1px solid red; }
+  </style>
+</head>
+<body>
+
+<h1>yoob.Animation Demo</h1>
+
+<h2><code>quantum</code> mode</h2>
+
+<div>
+  <canvas id="quantum_canvas" width="200" height="100">
+  Your browser doesn't support displaying an HTML5 canvas.
+  </canvas>
+</div>
+
+<div>
+  <button id="quantum_start" onclick="qcontroller.start();">Start</button>
+  <button id="quantum_stop" onclick="qcontroller.stop();">Stop</button>
+</div>
+
+<h2><code>proportional</code> mode</h2>
+
+<div>
+  <canvas id="proportional_canvas" width="200" height="100">
+  Your browser doesn't support displaying an HTML5 canvas.
+  </canvas>
+</div>
+
+<div>
+  <button id="proportional_start" onclick="pcontroller.start();">Start</button>
+  <button id="proportional_stop" onclick="pcontroller.stop();">Stop</button>
+</div>
+
+</body>
+<script src="../src/yoob/animation.js"></script>
+<script type="text/javascript">
+  var QuantumController = function() {
+      var ctx;
+
+      this.init = function(canvas) {
+          this.canvas = canvas;
+          ctx = canvas.getContext("2d");
+          this.w = 20;
+          this.h = 20;
+          this.x = 0;
+          this.y = canvas.height / 2 - this.h / 2;
+          this.dx = 1;
+          this.anim = new yoob.Animation();
+          this.anim.init({
+              object: this,
+              mode: 'quantum'
+          });
+          this.draw();
+      };
+
+      this.draw = function() {
+          ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+          ctx.lineWidth = "1";
+          ctx.strokeStyle = "black";
+          ctx.strokeRect(this.x, this.y, this.w, this.h);
+      };
+
+      this.update = function() {
+          if (this.x + this.w > this.canvas.width || this.x < 0) {
+              this.dx *= -1;
+          }
+          this.x += this.dx;
+      };
+
+      this.start = function() {
+          this.anim.start();
+      };
+
+      this.stop = function() {
+          this.anim.stop();
+          // if you don't do the following, you will get all those ticks
+          // that have "occurred" since the stop, when you start again
+          this.anim.reset();
+      };
+  };
+
+  var qcontroller = new QuantumController();
+  qcontroller.init(document.getElementById('quantum_canvas'));
+
+  var ProportionalController = function() {
+      var ctx;
+
+      this.init = function(canvas) {
+          this.canvas = canvas;
+          ctx = canvas.getContext("2d");
+          this.w = 20;
+          this.h = 20;
+          this.x = 0;
+          this.y = canvas.height / 2 - this.h / 2;
+          this.dx = 1;
+          this.anim = new yoob.Animation();
+          this.anim.init({
+              object: this,
+              mode: 'proportional'
+          });
+          this.draw();
+      };
+
+      this.draw = function(timeElapsed) {
+          timeElapsed = timeElapsed || 0;
+          this.x += this.dx * (timeElapsed * 0.1);
+          if (this.x + this.w > this.canvas.width) {
+              this.x = this.canvas.width - this.w;
+              this.dx *= -1;
+          } else if (this.x < 0) {
+              this.x = 0;
+              this.dx *= -1;
+          }
+
+          ctx.fillStle = "black";
+          ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+          ctx.lineWidth = "1";
+          ctx.strokeStyle = "white";
+          ctx.strokeRect(this.x, this.y, this.w, this.h);
+      };
+
+      this.start = function() {
+          this.anim.start();
+      };
+
+      this.stop = function() {
+          this.anim.stop();
+          // if you don't do the following, you will get all those ticks
+          // that have "occurred" since the stop, when you start again
+          this.anim.reset();
+      };
+  };
+
+  var pcontroller = new ProportionalController();
+  pcontroller.init(document.getElementById('proportional_canvas'));
+</script>
