@@ -6,6 +6,10 @@
 if (window.yoob === undefined) yoob = {};
 
 /*
+ * DEPRECATED.  Please use yoob/animation.js instead.
+ */
+
+/*
  * Pretty standard shim to get window.{request,cancelRequest}AnimationFrame
  * functions, synthesized from the theory and the many examples I've seen.
  */
