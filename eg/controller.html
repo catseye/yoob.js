@@ -16,6 +16,7 @@
 <button id="stop">Stop</button>
 <button id="step">Step</button>
 <button id="load">Load</button>
+<button id="edit" style="display: none;">Edit</button>
 Speed: <input id="speed" type="range" min="0" max="200" value="0" />
 
 </body>
@@ -37,7 +38,10 @@ Speed: <input id="speed" type="range" min="0" max="200" value="0" />
     'stop': 'stop',
     'step': 'step',
     'load': 'load',
+    'edit': 'edit',
     'source': 'input',
+    'display': 'output',
     'speed': 'speed'
   });
+  c.click_load();
 </script>
