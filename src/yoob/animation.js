@@ -83,6 +83,7 @@ yoob.Animation = function() {
         this.tickTime = cfg.tickTime || (1000.0 / 60.0);
         this.mode = cfg.mode || 'quantum';
         this.request = null;
+        return this;
     };
 
     this.start = function() {
