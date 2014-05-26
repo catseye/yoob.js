@@ -1,7 +1,7 @@
 yoob.js
 =======
 
-*Version 0.6-PRE.  Everything subject to change.*
+*Version 0.6.  Everything subject to change.*
 
 yoob.js started out as the HTML5 counterpart to [yoob][], but has since
 grown to include several generally-useful facilities for making animated
@@ -100,7 +100,13 @@ The classes are currently:
     element which supports `innerHTML`, although typically a `<pre>` element.
     Compared to the canvas view, this view will allow text to be rendered
     more nicely in some browsers, be selected for copying/pasting in the
-    browser, and so forth.  *As of 0.4, this is not yet complete.*
+    browser, and so forth.
+
+*   `yoob.SourceHTMLView`, in `yoob/source-html-view.js`
+    
+    A view (in the MVC sense) which associates a program text with any
+    element which supports `innerHTML`, although typically a `<pre>` element.
+    This supports displaying cursors on a linear program text.
 
 *   `yoob.TextTerminal`, in `yoob/text-terminal.js`
 
@@ -163,7 +169,15 @@ The classes are currently:
     A controller for animating the evolution and animation of a state
     (such as an esolang program state or a cellular automaton configuration).
     Can be hooked up to DOM elements in the UI (typically buttons.)
+
+*   `yoob.PresetManager`, in `yoob/preset-manager.js`
     
+    An object for managing a set of "presets" — which, for an esolang,
+    might be example programs; for an emulator, might be ROM images;
+    for a control panel, may be pre-selected combinations of settings;
+    and so forth.  Intended to be connected to a `yoob.Controller`,
+    but need not be.
+
 *   `yoob.Sprite` and `yoob.SpriteManager`, in `yoob/sprite-manager.js`
     
     A set of classes for (somewhat crudely) managing independent things which
@@ -206,6 +220,11 @@ The classes are currently:
     patterns in a regular grid, must be supplied.  Chromatic versions of the
     character patterns, in each of the given colours, will be automatically
     created.  The character data may also be modified programatically.
+
+*   `yoob.Animation`, in `yoob/animation.js`
+    
+    Object-based replacement for the now-deprecated `AnimationFrame`
+    functions described below.
 
 Plus some functions which aren't classes:
 
@@ -364,3 +383,20 @@ Changelog
 *   version 0.6
     
     Renamed `yoob.PathSet` to `yoob.PathList`.
+    
+    Added `yoob.SourceHTMLView`.
+    
+    `yoob.PlayfieldHTMLView` may now have cursors.
+    The extents of both kinds of Playfield View now include cursors.
+    Cursors may be drawn early or late in `yoob.PlayfieldCanvasView`.
+
+    Added `yoob.PresetManager`.
+    
+    `yoob.Controller` is no longer responsible for selecting between
+    provided programs/configurations.  It also keeps track of its state
+    (running/paused/stopped/blocked on input) internally.
+        
+    animationFrame shims improved; animation functions deprecated in
+    favour of the `yoob.Animation` object.
+    
+    `yoob.TapeHead` deprecated in favour of `yoob.Cursor`.
