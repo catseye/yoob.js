@@ -1,7 +1,7 @@
 yoob.js
 =======
 
-*Version 0.6.  Everything subject to change.*
+*Version 0.7-PRE.  Everything subject to change.*
 
 yoob.js started out as the HTML5 counterpart to [yoob][], but has since
 grown to include several generally-useful facilities for making animated
@@ -400,3 +400,9 @@ Changelog
     favour of the `yoob.Animation` object.
     
     `yoob.TapeHead` deprecated in favour of `yoob.Cursor`.
+
+*   version 0.7
+    
+    Added `yoob.StateMachine`.
+    
+    Removed `yoob/animation-frame.js`.
