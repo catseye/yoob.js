@@ -1,5 +1,5 @@
 /*
- * This file is part of yoob.js version 0.6
+ * This file is part of yoob.js version 0.7-PRE
  * Available from https://github.com/catseye/yoob.js/
  * This file is in the public domain.  See http://unlicense.org/ for details.
  */
@@ -19,11 +19,18 @@ if (window.yoob === undefined) yoob = {};
  * colour given by the fillStyle attribute, if present, or a light green if
  * it is not defined.
  */
-yoob.Cursor = function(x, y, dx, dy) {
-    this.x = x;
-    this.y = y;
-    this.dx = dx;
-    this.dy = dy;
+yoob.Cursor = function() {
+    this.init = function(x, y, dx, dy) {
+        this.x = x;
+        this.y = y;
+        this.dx = dx;
+        this.dy = dy;
+        return this;
+    };
+
+    this.clone = function() {
+        return new yoob.Cursor().init(this.x, this.y, this.dx, this.dy);
+    };
 
     this.getX = function() {
         return this.x;
@@ -87,6 +94,13 @@ yoob.Cursor = function(x, y, dx, dy) {
             this.dx = 1; this.dy = -1;
         } else if (this.dx === 1 && this.dy === -1) {
             this.dx = 0; this.dy = -1;
+        }
+    };
+
+    this.rotateDegrees = function(degrees) {
+        while (degrees > 0) {
+            this.rotateCounterclockwise();
+            degrees -= 45;
         }
     };
 
