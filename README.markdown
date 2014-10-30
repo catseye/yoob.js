@@ -281,6 +281,8 @@ Used in
 yoob.js is currently used in the HTML5 implementations of:
 
 *   [Gemooy][]
+*   [Wunnel][]
+*   [Etcha][]
 *   [noit o' mnain worb][]
 *   [Super Wumpus Land][]
 *   [REDGREEN][]
@@ -292,6 +294,8 @@ yoob.js is currently used in the HTML5 implementations of:
 
 [yoob]: http://catseye.tc/node/yoob
 [Gemooy]: http://catseye.tc/node/Gemooy
+[Wunnel]: http://catseye.tc/node/Wunnel
+[Etcha]: http://catseye.tc/node/Etcha
 [Javascript BigInteger]: https://github.com/silentmatt/javascript-biginteger
 [noit o' mnain worb]: http://catseye.tc/node/noit_o%27_mnain_worb.html
 [Super Wumpus Land]: http://catseye.tc/node/Super_Wumpus_Land
@@ -406,3 +410,11 @@ Changelog
     Added `yoob.StateMachine`.
     
     Removed `yoob/animation-frame.js`.
+    
+    Added `.size()` method to yoob.Stack.
+    
+    Added `.clone()` and `.rotateDegrees()` to yoob.Cursor.
+    
+    Added `yoob/element-factory.js`.
+    
+    Fixed z-index bugs in yoob.SplashScreen.

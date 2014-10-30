@@ -1,5 +1,5 @@
 /*
- * This file is part of yoob.js version 0.5
+ * This file is part of yoob.js version 0.7-PRE
  * Available from https://github.com/catseye/yoob.js/
  * This file is in the public domain.  See http://unlicense.org/ for details.
  */
@@ -26,10 +26,11 @@ yoob.showSplashScreen = function(cfg) {
     coveringDiv.style.position = "absolute";
     coveringDiv.style.border = elem.style.border;
     coveringDiv.style.background = cfg.background || '#ffffff';
+    coveringDiv.style.textAlign = "center";
     if (parseInt(elem.style.zIndex) === NaN) {
-        coveringDiv.style.zIndex = 100;
+        coveringDiv.style.zIndex = "100";
     } else {
-        coveringDiv.style.zIndex = parseInt(elem.style.zIndex) + 1;
+        coveringDiv.style.zIndex = (parseInt(elem.style.zIndex) + 1).toString();
     }
     coveringDiv.innerHTML = cfg.innerHTML;
     var button = document.createElement("button");
