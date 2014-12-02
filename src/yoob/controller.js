@@ -1,5 +1,5 @@
 /*
- * This file is part of yoob.js version 0.6
+ * This file is part of yoob.js version 0.7-PRE
  * Available from https://github.com/catseye/yoob.js/
  * This file is in the public domain.  See http://unlicense.org/ for details.
  */
@@ -19,6 +19,7 @@ if (window.yoob === undefined) yoob = {};
  *   - step
  *   - load
  *   - edit
+ *   - reset
  *
  * - a slider control which adjusts the speed of program state evolution.
  *
@@ -95,7 +96,7 @@ yoob.Controller = function() {
     this.connect = function(dict) {
         var $this = this;
 
-        var keys = ["start", "stop", "step", "load", "edit"];
+        var keys = ["start", "stop", "step", "load", "edit", "reset"];
         for (var i in keys) {
             var key = keys[i];
             var value = dict[key];
@@ -260,4 +261,10 @@ yoob.Controller = function() {
         clearInterval(this.intervalId);
         this.intervalId = undefined;
     };
+
+    this.click_reset = function(e) {
+        this.click_stop();
+        this.load(this.source.value);
+    };
+
 };
