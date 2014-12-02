@@ -92,6 +92,24 @@ yoob.Controller = function() {
      * are the actions a controller can undertake, and the values
      * are either DOM elements or strings; if strings, DOM elements
      * with those ids will be obtained from the document and used.
+     *
+     * When the button associated with e.g. 'start' is clicked,
+     * the corresponding method (in this case, 'click_start()')
+     * on this Controller will be called.  These functions are
+     * responsible for changing the state of the Controller (both
+     * the internal state, and the enabled status, etc. of the
+     * controls), and for calling other methods on the Controller
+     * to implement the particulars of the action.
+     *
+     * For example, 'click_step()' calls 'performStep()' which
+     * calls 'step()' (which a subclass or instantiator must
+     * provide an implementation for.)
+     *
+     * To simulate one of the buttons being clicked, you may
+     * call 'click_foo()' yourself in code.  However, that will
+     * be subject to the current restrictions of the interface.
+     * You may be better off calling one of the "internal" methods
+     * like 'performStep()'.
      */
     this.connect = function(dict) {
         var $this = this;
@@ -122,7 +140,7 @@ yoob.Controller = function() {
                 if (key === 'speed') {
                     this.speed.value = this.delay;
                     this.speed.onchange = function(e) {
-                        $this.delay = speed.value;
+                        $this.setDelayFrom(speed);
                         if ($this.intervalId !== undefined) {
                             $this.stop();
                             $this.start();
@@ -267,4 +285,11 @@ yoob.Controller = function() {
         this.load(this.source.value);
     };
 
+    /*
+     * Override this to change how the delay is acquired from the 'speed'
+     * element.
+     */
+    this.setDelayFrom = function(elem) {
+        this.delay = elem.max - elem.value;
+    };
 };
