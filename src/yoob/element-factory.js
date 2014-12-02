@@ -23,9 +23,9 @@ yoob.makeCanvas = function(container, width, height) {
     return canvas;
 };
 
-yoob.makeButton = function(container, label) {
+yoob.makeButton = function(container, labelText) {
     var button = document.createElement('button');
-    button.innerHTML = label;
+    button.innerHTML = labelText;
     container.appendChild(button);
     return button;
 };
@@ -67,4 +67,44 @@ yoob.makeParagraph = function(container, innerHTML) {
     p.innerHTML = innerHTML;
     container.appendChild(p);
     return p;
+};
+
+yoob.makeTextArea = function(container, cols, rows, initial) {
+    var textarea = document.createElement('textarea');
+    textarea.rows = "" + rows;
+    textarea.cols = "" + cols;
+    if (initial) {
+        container.value = initial;
+    }
+    container.appendChild(textarea);
+    return textarea;
+};
+
+yoob.makeLineBreak = function(container) {
+    var br = document.createElement('br');
+    container.appendChild(br);
+    return br;
+};
+
+yoob.makeSelect = function(container, labelText, optionsArray) {
+    var label = document.createElement('label');
+    label.innerHTML = labelText;
+    container.appendChild(label);
+
+    var select = document.createElement("select");
+
+    for (var i = 0; i < optionsArray.length; i++) {
+        var op = document.createElement("option");
+        op.value = optionsArray[i][0];
+        op.text = optionsArray[i][1];
+        if (optionsArray[i].length > 2) {
+            op.selected = optionsArray[i][2];
+        } else {
+            op.selected = false;
+        }
+        select.options.add(op);
+    }
+
+    container.appendChild(select);
+    return select;
 };
