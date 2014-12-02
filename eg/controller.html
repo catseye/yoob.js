@@ -8,10 +8,6 @@
 
 <h1>yoob.Controller Demo</h1>
 
-<textarea id="input">The* [900beast] of7   "whee  galee"</textarea>
-
-<p id="output" style="border: 1px solid blue"></p>
-
 <button id="start">Start</button>
 <button id="stop">Stop</button>
 <button id="reset">Reset</button>
@@ -20,19 +16,26 @@
 <button id="edit" style="display: none;">Edit</button>
 Speed: <input id="speed" type="range" min="0" max="200" value="0" />
 
+<textarea id="input">The* [900beast] of7   "whee  galee"</textarea>
+
+<p id="output" style="border: 1px solid blue"></p>
+
 </body>
 <script>
+  var output = document.getElementById('output');
   var c = new yoob.Controller();
   var state = '';
   c.load = function(text) {
       state = text;
-      var output = document.getElementById('output');
       output.innerHTML = state;
   };
   c.step = function() {
-      state = state.substr(0, state.length - 1);
-      var output = document.getElementById('output');
-      output.innerHTML = state;
+      if (state.length === 0) {
+          return 'stop';
+      } else {
+          state = state.substr(0, state.length - 1);
+          output.innerHTML = state;
+      }
   };
   c.connect({
     'start': 'start',
@@ -42,7 +45,7 @@ Speed: <input id="speed" type="range" min="0" max="200" value="0" />
     'load': 'load',
     'edit': 'edit',
     'source': 'input',
-    'display': 'output',
+    'display': output,
     'speed': 'speed'
   });
   c.click_load();

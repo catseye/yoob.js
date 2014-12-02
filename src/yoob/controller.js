@@ -257,6 +257,7 @@ yoob.Controller = function() {
     this.click_stop = function(e) {
         this.stop();
         this.state = PAUSED;
+        /* why is this check here? ... */
         if (this.controls.stop && this.controls.stop.disabled) {
             return;
         }
@@ -283,6 +284,9 @@ yoob.Controller = function() {
     this.click_reset = function(e) {
         this.click_stop();
         this.load(this.source.value);
+        if (this.controls.start) this.controls.start.disabled = false;
+        if (this.controls.step) this.controls.step.disabled = false;
+        if (this.controls.stop) this.controls.stop.disabled = true;
     };
 
     /*
