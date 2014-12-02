@@ -418,3 +418,6 @@ Changelog
     Added `yoob/element-factory.js`.
     
     Fixed z-index bugs in yoob.SplashScreen.
+
+    `yoob.Controller` now supports a 'reset' button.  In addition, the
+    'speed' controller defaults to reversed mode (low values = slow.)
