@@ -23,10 +23,13 @@ yoob.makeCanvas = function(container, width, height) {
     return canvas;
 };
 
-yoob.makeButton = function(container, labelText) {
+yoob.makeButton = function(container, labelText, fun) {
     var button = document.createElement('button');
     button.innerHTML = labelText;
     container.appendChild(button);
+    if (fun) {
+        button.onclick = fun;
+    }
     return button;
 };
 
@@ -64,9 +67,23 @@ yoob.makeSlider = function(container, min, max, value) {
 
 yoob.makeParagraph = function(container, innerHTML) {
     var p = document.createElement('p');
-    p.innerHTML = innerHTML;
+    p.innerHTML = innerHTML || '';
     container.appendChild(p);
     return p;
+};
+
+yoob.makeSpan = function(container, innerHTML) {
+    var span = document.createElement('span');
+    span.innerHTML = innerHTML || '';
+    container.appendChild(span);
+    return span;
+};
+
+yoob.makeDiv = function(container, innerHTML) {
+    var div = document.createElement('div');
+    div.innerHTML = innerHTML || '';
+    container.appendChild(div);
+    return div;
 };
 
 yoob.makeTextArea = function(container, cols, rows, initial) {
