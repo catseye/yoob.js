@@ -225,6 +225,34 @@ yoob.Controller = function() {
         this.loadSource(text);
     };
 
+    /*
+     * This is the basic idea, but not fleshed out yet.
+     * - Should we cache the source somewhere?
+     * - While we're waiting, should we disable the UI / show a spinny?
+     */
+    this.loadSourceFromURL = function(url, errorCallback) {
+        var http = new XMLHttpRequest();
+        var $this = this;
+        if (!errorCallback) {
+            errorCallback = function(http) {
+                $this.loadSource(
+                    "Error: could not load " + url + ": " + http.statusText
+                );
+            }
+        }
+        http.open("get", url, true);
+        http.onload = function(e) {
+            if (http.readyState === 4 && http.responseText) {
+                if (http.status === 200) {
+                    $this.loadSource(http.responseText);
+                } else {
+                    errorCallback(http);
+                }
+            }
+        };
+        http.send(null);
+    };
+
     this.click_edit = function(e) {
         this.click_stop();
         if (this.controls.edit) this.controls.edit.style.display = "none";
