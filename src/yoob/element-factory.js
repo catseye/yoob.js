@@ -7,8 +7,6 @@ if (window.yoob === undefined) yoob = {};
 
 /*
  * Functions for creating elements.
- *
- * I dunno -- maybe just setting innerHTML would be better.
  */
 
 yoob.makeCanvas = function(container, width, height) {
@@ -50,17 +48,30 @@ yoob.makeCheckbox = function(container, checked, labelText, fun) {
     if (fun) {
         checkbox.onchange = function(e) {
             fun(checkbox.checked);
-        }
+        };
     }
     return checkbox;
 };
 
-yoob.makeSlider = function(container, min, max, value) {
+yoob.makeTextInput = function(container, size, value) {
+    var input = document.createElement('input');
+    input.size = "" + (size || 12);
+    input.value = value || "";
+    container.appendChild(input);
+    return input;
+};
+
+yoob.makeSlider = function(container, min, max, value, fun) {
     var slider = document.createElement('input');
     slider.type = "range";
     slider.min = min;
     slider.max = max;
-    slider.value = value;
+    slider.value = value || 0;
+    if (fun) {
+        slider.onchange = function(e) {
+            fun(parseInt(slider.value, 10));
+        };
+    }
     container.appendChild(slider);
     return slider;
 };
@@ -84,6 +95,26 @@ yoob.makeDiv = function(container, innerHTML) {
     div.innerHTML = innerHTML || '';
     container.appendChild(div);
     return div;
+};
+
+yoob.makePanel = function(container, title, isOpen) {
+    isOpen = !!isOpen;
+    var panelContainer = document.createElement('div');
+    var button = document.createElement('button');
+    var innerContainer = document.createElement('div');
+    innerContainer.style.display = isOpen ? "block" : "none";
+
+    button.innerHTML = (isOpen ? "∇" : "⊳") + " " + title;
+    button.onclick = function(e) {
+        isOpen = !isOpen;
+        button.innerHTML = (isOpen ? "∇" : "⊳") + " " + title;
+        innerContainer.style.display = isOpen ? "block" : "none";
+    };
+
+    panelContainer.appendChild(button);
+    panelContainer.appendChild(innerContainer);
+    container.appendChild(panelContainer);
+    return innerContainer;
 };
 
 yoob.makeTextArea = function(container, cols, rows, initial) {
@@ -124,4 +155,42 @@ yoob.makeSelect = function(container, labelText, optionsArray) {
 
     container.appendChild(select);
     return select;
+};
+
+SliderPlusTextInput = function() {
+    this.init = function(cfg) {
+        this.slider = cfg.slider;
+        this.textInput = cfg.textInput;
+        this.callback = cfg.callback;
+        return this;
+    };
+
+    this.set = function(value) {
+        this.slider.value = "" + value;
+        this.textInput.value = "" + value;
+        this.callback(value);
+    };
+};
+
+yoob.makeSliderPlusTextInput = function(container, label, min_, max_, size, value, fun) {
+    yoob.makeSpan(container, label);
+    var slider = yoob.makeSlider(container, min_, max_, value);
+    var s = "" + value;
+    var textInput = yoob.makeTextInput(container, size, s);
+    slider.onchange = function(e) {
+        textInput.value = slider.value;
+        fun(parseInt(slider.value, 10));
+    };
+    textInput.onchange = function(e) {
+        var v = parseInt(textInput.value, 10);
+        if (v !== NaN) {
+            slider.value = "" + v;
+            fun(v);
+        }
+    };
+    return new SliderPlusTextInput().init({
+        'slider': slider,
+        'textInput': textInput,
+        'callback': fun
+    });
 };
