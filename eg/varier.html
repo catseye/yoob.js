@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <title>yoob.Varier Demo</title>
+</head>
+<body>
+
+<h1>yoob.Varier Demo</h1>
+
+<p id="text">Here is some text.</p>
+
+<button onclick="fade('text', 1.0, 0.0, 5000, function() { alert('ok'); })">
+Fade that text over 5 seconds
+</button>
+
+</body>
+<script src="../src/yoob/animation.js"></script>
+<script src="../src/yoob/varier.js"></script>
+<script type="text/javascript">
+var fade = function(elem, begin, end, duration, ondone) {
+    if (typeof(elem) === 'string') { elem = document.getElementById(elem); }
+    var v = (new yoob.Varier()).init({
+        'begin': begin,
+        'end': end,
+        'duration': duration,
+        'update': function(value) {
+            elem.style.opacity = value;
+        },
+        'ondone': ondone
+    }).start();
+};
+</script>
