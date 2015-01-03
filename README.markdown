@@ -240,6 +240,12 @@ The classes are currently:
     This object is a replacement for the deprecated `*AnimationFrame` functions
     which appeared in an earlier version.
 
+*   `yoob.Varier`, in `yoob/varier.js`
+    
+    A small wrapper on top of `yoob.Animation` which varies a variable from
+    one value to another, automatically stopping the animation when the final
+    value has been reached.
+
 Plus some functions which aren't classes:
 
 *   `yoob.showSplashScreen`, in `yoob/splash-screen.js`
@@ -420,3 +426,9 @@ Changelog
 
     `yoob.Controller` now supports a 'reset' button.  In addition, the
     'speed' controller defaults to reversed mode (low values = slow.)
+
+    `yoob.Animation` allows the `update()` (or `draw()`, in `proportional`
+    mode) to return the exact object `false` to force the animation to stop
+    immediately.
+    
+    Added `yoob.Varier`.
