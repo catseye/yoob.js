@@ -223,8 +223,22 @@ The classes are currently:
 
 *   `yoob.Animation`, in `yoob/animation.js`
     
-    Object-based replacement for the now-deprecated `AnimationFrame`
-    functions described below.
+    An object which manages animations.  It is given an object to operate on,
+    and can be initialized in one of two modes.  The `quantum` mode calls the
+    given object's `draw()` method on each animation frame, and calls the
+    object's `update()` method as necessary to ensure that `update()` is called
+    once every given number of milliseconds (default being 1/60th of a second.)
+    The `proportional` mode calls the object's `draw()` method on each animation
+    frame, passing to it the amount of time that has elapsed (in milliseconds)
+    since the last time it was called.
+    
+    This object uses the `requestAnimationFrame` API to conduct the animation,
+    or falls back on its included `setInterval`-based shim in browsers which
+    don't support `requestAnimationFrame` (or support it only under "their"
+    name.)
+    
+    This object is a replacement for the deprecated `*AnimationFrame` functions
+    which appeared in an earlier version.
 
 Plus some functions which aren't classes:
 
@@ -237,21 +251,6 @@ Plus some functions which aren't classes:
 
     The intention is to allow a "splash screen", which may contain a disclaimer
     or similar, before the "main stage" is actually displayed and started.
-
-*   `yoob.setUpQuantumAnimationFrame` and
-    `yoob.setUpProportionalAnimationFrame`, in `yoob/animation-frame.js`
-    
-    The primary purpose of `yoob/animation-frame.js` is to install a shim
-    for browsers which don't support `requestAnimationFrame` (or support it
-    only under "their" name.)  However, the file also contains two convenience
-    functions which make it easier to use `requestAnimationFrame`.  The
-    "Quantum" version calls the given object's `draw()` method on each
-    animation frame, and calls the object's `update()` method as necessary to
-    ensure that `update()` is called once every given number of milliseconds
-    (default being 1/60th of a second.)  The "Proportional" version calls the
-    object's `draw()` method on each animation frame, passing to it the amount
-    of time that has elapsed (in milliseconds) since the last time it was
-    called.
 
 ### Planned ###
 
