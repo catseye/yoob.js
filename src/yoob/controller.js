@@ -140,7 +140,7 @@ yoob.Controller = function() {
                 if (key === 'speed') {
                     this.speed.value = this.delay;
                     this.speed.onchange = function(e) {
-                        $this.setDelayFrom(speed);
+                        $this.setDelayFrom($this.speed);
                         if ($this.intervalId !== undefined) {
                             $this.stop();
                             $this.start();
