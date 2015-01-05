@@ -1,7 +1,7 @@
 yoob.js
 =======
 
-*Version 0.7-PRE.  Everything subject to change.*
+*Version 0.7.  Everything subject to change.*
 
 yoob.js started out as the HTML5 counterpart to [yoob][], but has since
 grown to include several generally-useful facilities for making animated
@@ -425,8 +425,11 @@ Changelog
     Fixed z-index bugs in yoob.SplashScreen.
 
     `yoob.Controller` now supports a 'reset' button.  In addition, the
-    'speed' controller defaults to reversed mode (low values = slow.)
-
+    'speed' control defaults to reversed mode (low values = slow.)
+    
+    `yoob.Controller` now has rudimentary support for loading source via XHR
+    (AJAX).
+    
     `yoob.Animation` allows the `update()` (or `draw()`, in `proportional`
     mode) to return the exact object `false` to force the animation to stop
     immediately.
