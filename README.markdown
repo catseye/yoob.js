@@ -1,7 +1,7 @@
 yoob.js
 =======
 
-*Version 0.7.  Everything subject to change.*
+*Version 0.7-2015.0108.  Everything subject to change.*
 
 yoob.js started out as the HTML5 counterpart to [yoob][], but has since
 grown to include several generally-useful facilities for making animated
@@ -435,3 +435,8 @@ Changelog
     immediately.
     
     Added `yoob.Varier`.
+
+*   version 0.7-2015.0108
+    
+    Fixed bug in `yoob.Controller` where the "Reset" button was not being
+    disabled during source editing.
