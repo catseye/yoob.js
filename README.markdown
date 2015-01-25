@@ -1,7 +1,7 @@
 yoob.js
 =======
 
-*Version 0.7-2015.0108.  Everything subject to change.*
+*Version 0.8-PRE.  Everything subject to change.*
 
 yoob.js started out as the HTML5 counterpart to [yoob][], but has since
 grown to include several generally-useful facilities for making animated
@@ -170,13 +170,18 @@ The classes are currently:
     (such as an esolang program state or a cellular automaton configuration).
     Can be hooked up to DOM elements in the UI (typically buttons.)
 
+*   `yoob.SourceManager`, in `yoob/source-manager.js`
+    
+    An object for managing the editing and registering (generally, to a
+    `yoob.Controller`) the textual source of a program or configuration.
+
 *   `yoob.PresetManager`, in `yoob/preset-manager.js`
     
     An object for managing a set of "presets" — which, for an esolang,
     might be example programs; for an emulator, might be ROM images;
     for a control panel, may be pre-selected combinations of settings;
-    and so forth.  Intended to be connected to a `yoob.Controller`,
-    but need not be.
+    and so forth.  May be used to populate the source of a `yoob.SourceManager`
+    and/or a `yoob.Controller`,
 
 *   `yoob.Sprite` and `yoob.SpriteManager`, in `yoob/sprite-manager.js`
     
@@ -440,3 +445,7 @@ Changelog
     
     Fixed bug in `yoob.Controller` where the "Reset" button was not being
     disabled during source editing.
+
+*   version 0.8-PRE
+    
+    TBW

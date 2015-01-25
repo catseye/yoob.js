@@ -1,5 +1,5 @@
 /*
- * This file is part of yoob.js version 0.6
+ * This file is part of yoob.js version 0.8-PRE
  * Available from https://github.com/catseye/yoob.js/
  * This file is in the public domain.  See http://unlicense.org/ for details.
  */
@@ -31,6 +31,19 @@ yoob.PlayfieldHTMLView = function() {
      */
     this.setCursors = function(cursors) {
         this.cursors = cursors;
+        return this;
+    };
+
+    this.setPlayfield = function(pf) {
+        this.pf = pf;
+        return this;
+    };
+
+    /*
+     * For compatibility with PlayfieldCanvasView.  Sets the font size.
+     */
+    this.setCellDimensions = function(cellWidth, cellHeight) {
+        this.element.style.fontSize = cellHeight + "px";
         return this;
     };
 
@@ -108,6 +121,7 @@ yoob.PlayfieldHTMLView = function() {
      * Override to convert Playfield values to HTML.
      */
     this.render = function(value) {
+        if (value === undefined) return ' ';
         return value;
     };
 
