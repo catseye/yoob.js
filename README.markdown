@@ -328,6 +328,7 @@ Changelog
     Added `yoob.Controller` class.
     
     In `yoob.Playfield`:
+    
     *   made attributes camelCase
     *   added support for `transformer` argument to `load`
     *   added support for default values (`setDefault`)
@@ -448,4 +449,27 @@ Changelog
 
 *   version 0.8-PRE
     
-    TBW
+    Added `yoob.SourceManager`.
+    
+    `yoob.Controller` is no longer responsible for showing the editor for
+    the textual source of a program/configuration; that's the new
+    `yoob.SourceManager`'s job.  All that code has been removed from
+    `yoob.Controller`, and several backwards-incompatible changes have
+    been made to its API as well.  In particular, a subclass or client
+    must supply a `reset` method now rather than a `load` method.  Please
+    consuly the source comments in `yoob/controller.js` for more details.
+    
+    Both `yoob.Controller` and `yoob.SourceManager` are capable of
+    creating their control panels (full of buttons) programmatically.
+    
+    `yoob.PresetManager` no longer takes a `yoob.Controller` to establish
+    a default callback.  Instead, a default callback can be configured
+    with the `setPreset` key.
+    
+    Added `yoob.makePre()` to `yoob/element-factory.js`.
+
+    Added `setPlayfield(pf)` to `yoob.PlayfieldCanvasView` and
+    `yoob.PlayfieldHTMLView`.  Also added `setCellDimensions()` to
+    `yoob.PlayfieldHTMLView`, mostly as compatibility with
+    `yoob.PlayfieldCanvasView`; and `yoob.PlayfieldHTMLView` renders
+    undefined values as ` ` (space) by default now.
