@@ -1,7 +1,7 @@
 Changelog
 =========
 
-*   version 0.8-PRE
+*   version 0.8
     
     Added `yoob.SourceManager`.
     

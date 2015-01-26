@@ -1,12 +1,14 @@
 yoob.js
 =======
 
-*Version 0.8-PRE.  Everything subject to change.*
+*Version 0.8.  Everything subject to change.*
 *For version history, see the file [HISTORY.markdown](HISTORY.markdown).*
 
 yoob.js started out as the HTML5 counterpart to [yoob][], but has since
 grown to include several generally-useful facilities for making animated
 and interactive HTML5 pages.
+
+[yoob]: http://catseye.tc/node/yoob
 
 Like yoob, yoob.js:
 
@@ -14,8 +16,6 @@ Like yoob, yoob.js:
     esoteric programming languages (esolangs).
 *   is written amateurishly.
 *   has an API that is not particularly good, finalized, or stable.
-*   may eventually ship with some public-domain implementations of some
-    esolangs (but the approach is different from yoob's; see below.)
 
 Unlike yoob, yoob.js:
 
@@ -36,21 +36,6 @@ Unlike yoob, yoob.js:
     example, `yoob.SexpParser` is meant to be used as an example or basis for
     a specific grammar of your choice.
 
-yoob.js may eventually:
-
-*   extend the idea of "a component to help implement an esolang" to
-    encompass esolang implementations themselves.  So, for example, yoob.js
-    might include an implementation of brainfuck, but this would not be
-    provided solely as an "end implementation" but also as a component for
-    implementing other brainfuck-derived esolangs, and other mashups.
-    
-    This emphasizes a thing with yoob, which is that while the yoob
-    distribution contains implementations of various languages, it does
-    not contain the reference implementation of any language; but the
-    reference implementations of some languages may be written in yoob.
-    yoob allows for this approach, but yoob.js hopes to accomodate it
-    better than just allowing for it.  Somehow.  Perhaps.
-
 Other things you should know about yoob.js are that it:
 
 *   requires features from HTML5 and related "modern" web standards.  With
@@ -65,6 +50,35 @@ Other things you should know about yoob.js are that it:
     may one day be a small script to do this sort of thing for you, more
     intelligently, respecting dependencies and whatnot.  Especially if you
     write it and send a pull request.)
+
+Used in
+-------
+
+yoob.js is currently used in the HTML5 implementations of:
+
+*   [Gemooy][]
+*   [Wunnel][]
+*   [Etcha][]
+*   [noit o' mnain worb][]
+*   [Super Wumpus Land][]
+*   [REDGREEN][]
+*   [Circute][]
+*   [Braktif][]
+*   [Jaccia][] and Jacciata
+*   [Cyclobots][] and many other [HTML5-Gewgaws][]
+
+[Gemooy]: http://catseye.tc/node/Gemooy
+[Wunnel]: http://catseye.tc/node/Wunnel
+[Etcha]: http://catseye.tc/node/Etcha
+[Javascript BigInteger]: https://github.com/silentmatt/javascript-biginteger
+[noit o' mnain worb]: http://catseye.tc/node/noit_o%27_mnain_worb.html
+[Super Wumpus Land]: http://catseye.tc/node/Super_Wumpus_Land
+[REDGREEN]: http://catseye.tc/node/REDGREEN
+[Circute]: http://catseye.tc/node/Circute
+[Braktif]: http://catseye.tc/node/Braktif
+[Jaccia]: http://catseye.tc/node/Jaccia
+[Cyclobots]: http://catseye.tc/node/Cyclobots
+[HTML5-Gewgaws]: https://github.com/catseye/HTML5-Gewgaws
 
 API
 ---
@@ -285,34 +299,3 @@ Plus some functions which aren't classes:
     support for working with objects which conform to a subset of the API
     exposed by Matthew Crumley's [Javascript BigInteger][] class, which is
     unastonishing.
-
-Used in
--------
-
-yoob.js is currently used in the HTML5 implementations of:
-
-*   [Gemooy][]
-*   [Wunnel][]
-*   [Etcha][]
-*   [noit o' mnain worb][]
-*   [Super Wumpus Land][]
-*   [REDGREEN][]
-*   [Circute][]
-*   [Braktif][]
-*   [Jaccia][] and Jacciata
-*   [Cyclobots][] and many other [HTML5-Gewgaws][]
-
-
-[yoob]: http://catseye.tc/node/yoob
-[Gemooy]: http://catseye.tc/node/Gemooy
-[Wunnel]: http://catseye.tc/node/Wunnel
-[Etcha]: http://catseye.tc/node/Etcha
-[Javascript BigInteger]: https://github.com/silentmatt/javascript-biginteger
-[noit o' mnain worb]: http://catseye.tc/node/noit_o%27_mnain_worb.html
-[Super Wumpus Land]: http://catseye.tc/node/Super_Wumpus_Land
-[REDGREEN]: http://catseye.tc/node/REDGREEN
-[Circute]: http://catseye.tc/node/Circute
-[Braktif]: http://catseye.tc/node/Braktif
-[Jaccia]: http://catseye.tc/node/Jaccia
-[Cyclobots]: http://catseye.tc/node/Cyclobots
-[HTML5-Gewgaws]: https://github.com/catseye/HTML5-Gewgaws
