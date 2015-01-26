@@ -1,52 +1,85 @@
 <!DOCTYPE html>
 <head>
   <meta charset="utf-8">
-  <title>yoob.Controller Demo</title>
+  <title>yoob.Controller + yoob.SourceManager + yoob.PresetManager Demo</title>
+  <style>
+.example_program {
+  display: none;
+}
+#input {
+  display: none;
+}
+  </style>
   <script src="../src/yoob/controller.js"></script>
+  <script src="../src/yoob/source-manager.js"></script>
+  <script src="../src/yoob/preset-manager.js"></script>
 </head>
 <body>
 
-<h1>yoob.Controller Demo</h1>
+<h1>yoob.Controller + yoob.SourceManager + yoob.PresetManager Demo</h1>
 
-<button id="start">Start</button>
-<button id="stop">Stop</button>
-<button id="reset">Reset</button>
-<button id="step">Step</button>
-<button id="load">Load</button>
-<button id="edit" style="display: none;">Edit</button>
-Speed: <input id="speed" type="range" min="0" max="200" value="0" />
+<div>
+  Select Example program: <select id="example_selector"></select>
+  <button onclick="presetManager.clear();">Clear Example Selector</button>
+  <button onclick="presetManager.populateFromClass('example_program');">Populate Example Selector</button>
+</div>
 
-<textarea id="input">The* [900beast] of7   "whee  galee"</textarea>
+<div id="control_panel"></div>
 
-<p id="output" style="border: 1px solid blue"></p>
+<textarea id="editor" rows="20" cols="80"></textarea>
+
+<pre id="display" style="border: 1px solid blue"></pre>
+
+<!-- example programs; not visible, because display: none. -->
+
+<div id="program_zero" class="example_program">The* [900beast] of7   "whee  galee"</div>
+
+<div id="program_one" class="example_program">Good
+cheese
+is rarely found
+among
+haikus.</div>
+
+<div id="program_two" class="example_program">#&gt;&gt;--
+ #&gt;&gt;--
+  #&gt;&gt;--
+#&gt;&gt;--&lt;&lt;
+&amp;</div>
 
 </body>
 <script>
-  var output = document.getElementById('output');
-  var c = new yoob.Controller();
-  var state = '';
-  c.load = function(text) {
-      state = text;
-      output.innerHTML = state;
-  };
-  c.step = function() {
-      if (state.length === 0) {
-          return 'stop';
-      } else {
-          state = state.substr(0, state.length - 1);
-          output.innerHTML = state;
+  var controlPanel = document.getElementById('control_panel');
+  var display = document.getElementById('display');
+  var programState = '';
+  var controller = (new yoob.Controller()).init({
+      'panelContainer': controlPanel,
+      'reset': function(text) {
+          programState = text;
+          display.innerHTML = programState;
+      },
+      'step': function() {
+          if (programState.length === 0) {
+              return 'stop';
+          } else {
+              programState = programState.substr(0, programState.length - 1);
+              display.innerHTML = programState;
+          }
       }
-  };
-  c.connect({
-    'start': 'start',
-    'stop': 'stop',
-    'reset': 'reset',
-    'step': 'step',
-    'load': 'load',
-    'edit': 'edit',
-    'source': 'input',
-    'display': output,
-    'speed': 'speed'
   });
-  c.click_load();
+  var sourceManager = (new yoob.SourceManager()).init({
+      'panelContainer': controlPanel,
+      'editor': document.getElementById('editor'),
+      'hideDuringEdit': [display],
+      'disableDuringEdit': [controller.panel],
+      'storageKey': 'eg/controller.html',
+      'onDone': function() {
+          controller.performReset(this.getEditorText());
+      }
+  });
+  var presetManager = (new yoob.PresetManager()).init({
+      'selectElem': document.getElementById('example_selector'),
+      'setPreset': function(id) {
+          sourceManager.loadSourceFromHTML(document.getElementById(id).innerHTML);
+      }
+  }).populateFromClass('example_program').select('program_zero');
 </script>
