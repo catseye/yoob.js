@@ -1,5 +1,5 @@
 /*
- * This file is part of yoob.js version 0.3
+ * This file is part of yoob.js version 0.9-PRE
  * Available from https://github.com/catseye/yoob.js/
  * This file is in the public domain.  See http://unlicense.org/ for details.
  */
@@ -16,85 +16,83 @@ if (window.yoob === undefined) yoob = {};
  * 
  */
 yoob.Scanner = function() {
-  this.text = undefined;
-  this.token = undefined;
-  this.type = undefined;
-  this.error = undefined;
-  this.table = undefined;
-  this.whitespacePattern = "^[ \\t\\n\\r]*";
+    this.init = function(cfg) {
+        this.text = undefined;
+        this.token = undefined;
+        this.type = undefined;
+        this.error = undefined;
+        this.table = cfg.table;
+        this.whitespacePattern = cfg.whitespacePattern || "^[ \\t\\n\\r]*";
+        return this;
+    };
 
-  this.init = function(table) {
-    this.table = table;
-  };
+    this.reset = function(text) {
+        this.text = text;
+        this.token = undefined;
+        this.type = undefined;
+        this.error = undefined;
+        this.scan();
+    };
 
-  this.reset = function(text) {
-    this.text = text;
-    this.token = undefined;
-    this.type = undefined;
-    this.error = undefined;
-    this.scan();
-  };
-  
-  this.scanPattern = function(pattern, type) {
-    var re = new RegExp(pattern);
-    var match = re.exec(this.text);
-    if (match === null) return false;
-    this.type = type;
-    this.token = match[1];
-    this.text = this.text.substr(match[0].length);
-    return true;
-  };
+    this.scanPattern = function(pattern, type) {
+        var re = new RegExp(pattern);
+        var match = re.exec(this.text);
+        if (match === null) return false;
+        this.type = type;
+        this.token = match[1];
+        this.text = this.text.substr(match[0].length);
+        return true;
+    };
 
-  this.scan = function() {
-    this.scanPattern(this.whitespacePattern, "whitespace");
-    if (this.text.length === 0) {
-      this.token = null;
-      this.type = "EOF";
-      return;
-    }
-    for (var i = 0; i < this.table.length; i++) {
-      var type = this.table[i][0];
-      var pattern = this.table[i][1];
-      if (this.scanPattern(pattern, type)) return;
-    }
-    if (this.scanPattern("^([\\s\\S])", "unknown character")) return;
-    // should never get here
-  };
-
-  this.expect = function(token) {
-    if (this.token === token) {
-      this.scan();
-    } else {
-      this.error = "expected '" + token + "' but found '" + this.token + "'";
-    }
-  };
-
-  this.on = function(token) {
-    return this.token === token;
-  };
-
-  this.onType = function(type) {
-    return this.type === type;
-  };
-
-  this.checkType = function(type) {
-    if (this.type !== type) {
-      this.error = "expected " + type + " but found " + this.type + " (" + this.token + ")"
-    }
-  };
-
-  this.expectType = function(type) {
-    this.checkType(type);
-    this.scan();
-  };
-
-  this.consume = function(token) {
-    if (this.on(token)) {
-      this.scan();
-      return true;
-    } else {
-      return false;
-    }
-  };
-
+    this.scan = function() {
+        this.scanPattern(this.whitespacePattern, "whitespace");
+        if (this.text.length === 0) {
+            this.token = null;
+            this.type = "EOF";
+            return;
+        }
+        for (var i = 0; i < this.table.length; i++) {
+            var type = this.table[i][0];
+            var pattern = this.table[i][1];
+            if (this.scanPattern(pattern, type)) return;
+        }
+        if (this.scanPattern("^([\\s\\S])", "unknown character")) return;
+        // should never get here
+    };
+    
+    this.expect = function(token) {
+        if (this.token === token) {
+            this.scan();
+        } else {
+            this.error = "expected '" + token + "' but found '" + this.token + "'";
+        }
+    };
+    
+    this.on = function(token) {
+        return this.token === token;
+    };
+    
+    this.onType = function(type) {
+        return this.type === type;
+    };
+    
+    this.checkType = function(type) {
+        if (this.type !== type) {
+            this.error = "expected " + type + " but found " + this.type + " (" + this.token + ")"
+        }
+    };
+    
+    this.expectType = function(type) {
+        this.checkType(type);
+        this.scan();
+    };
+    
+    this.consume = function(token) {
+        if (this.on(token)) {
+            this.scan();
+            return true;
+        } else {
+            return false;
+        }
+    };
 };
