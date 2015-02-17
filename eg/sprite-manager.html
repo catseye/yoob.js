@@ -19,84 +19,90 @@ Your browser doesn't support displaying an HTML5 canvas.
 <script type="text/javascript">
   var c = document.getElementById('canvas');
   var manager = new yoob.SpriteManager();
-  manager.init(c);
+  manager.init({
+      canvas: c
+  });
 
-  var drawDraggable = function(ctx) {
-    ctx.shadowOffsetX = 10;
-    ctx.shadowOffsetY = 10;
-    ctx.shadowBlur = 15;
-    ctx.shadowColor = "black";
-
-    var x = this.getX();
-    var y = this.getY();
-    var w = this.getWidth();
-    var h = this.getHeight();
-    if (this.selected) {
-      var max = w > h ? w : h;
-      var gradient = ctx.createLinearGradient(x, y, x + max, y + max);
-      gradient.addColorStop(0, this.style);
-      gradient.addColorStop(0.5, "white");
-      gradient.addColorStop(1, this.style);
-      ctx.fillStyle = gradient;
-    } else {
-      ctx.fillStyle = this.style;
-    }
-    ctx.fillRect(x, y, w, h);
-
-    ctx.lineWidth = "1";
-    ctx.strokeStyle = "black";
-    ctx.shadowColor = "transparent";
-    ctx.strokeRect(x, y, w, h);
-  };
-  
   var addDraggable = function(x, y, w, h, style) {
-    var d = new yoob.Sprite();
-    d.init(x, y, w, h);
-    d.isDraggable = true;
-    d.draw = drawDraggable;
-    d.style = style;
-    d.ongrab = function() {
-      manager.moveToFront(this);
-    };
-    d.ondrop = function() {
-      //alert("Dropped at (" + this.getX() + ", " + this.getY() + ")");
-      if (this.getX() > canvas.width - this.getWidth()) {
-        manager.removeSprite(this);
-      }
-    };
-    manager.addSprite(d);
+      var d = new yoob.Sprite();
+      d.init({
+          x: x,
+          y: y,
+          width: w,
+          height: h,
+          isDraggable: true
+      });
+      d.draw = function(ctx) {
+          ctx.shadowOffsetX = 10;
+          ctx.shadowOffsetY = 10;
+          ctx.shadowBlur = 15;
+          ctx.shadowColor = "black";
+
+          var x = this.getLeftX();
+          var y = this.getTopY();
+          var w = this.getWidth();
+          var h = this.getHeight();
+          if (this.selected) {
+              var max = w > h ? w : h;
+              var gradient = ctx.createLinearGradient(x, y, x + max, y + max);
+              gradient.addColorStop(0, this.style);
+              gradient.addColorStop(0.5, "white");
+              gradient.addColorStop(1, this.style);
+              ctx.fillStyle = gradient;
+          } else {
+              ctx.fillStyle = this.style;
+          }
+          ctx.fillRect(x, y, w, h);
+
+          ctx.lineWidth = 1;
+          ctx.strokeStyle = "black";
+          ctx.shadowColor = "transparent";
+          ctx.strokeRect(x, y, w, h);
+      };
+      d.style = style;
+      d.ongrab = function() {
+          manager.moveToFront(this);
+      };
+      d.ondrop = function() {
+          if (this.getX() > canvas.width - this.getWidth()) {
+              manager.removeSprite(this);
+          }
+      };
+      manager.addSprite(d);
   };
 
   var addClickable = function(x, y, w, h, text) {
-    var d = new yoob.Sprite();
-    d.init(x, y, w, h);
-    d.isClickable = true;
-    d.draw = function(ctx) {
-      ctx.fillStyle = "blue";
-      ctx.beginPath();
-      ctx.arc(
-        this.getX() + this.getWidth() / 2,
-        this.getY() + this.getHeight() / 2,
-        this.getWidth() / 2,
-        0, 2 * Math.PI,
-        false
-      );
-      ctx.fill();
-      ctx.strokeStyle = "black";
-      ctx.lineWidth = 2;
-      ctx.stroke();
-    };
-    d.containsPoint = function(x, y) {
-      var r = this.getWidth() / 2;
-      var dx = x - (this.getX() + r);
-      var dy = y - (this.getY() + this.getHeight() / 2);
-      var dist = dx * dx + dy * dy;
-      return dist < r * r;
-    };
-    d.onclick = function() {
-      alert("You clicked " + text);
-    };
-    manager.addSprite(d);
+      var d = new yoob.Sprite();
+      d.init({
+          x: x,
+          y: y,
+          width: w,
+          height: h,
+          isClickable: true
+      });
+      d.draw = function(ctx) {
+          ctx.fillStyle = "blue";
+          ctx.beginPath();
+          ctx.arc(
+              this.getX(), this.getY(), this.getWidth() / 2,
+              0, 2 * Math.PI, false
+          );
+          ctx.fill();
+          ctx.strokeStyle = "black";
+          ctx.lineWidth = 2;
+          ctx.stroke();
+      };
+      d.containsPoint = function(x, y) {
+          var r = this.getWidth() / 2;
+          var dx = x - this.getX();
+          var dy = y - this.getY();
+          var dist = dx * dx + dy * dy;
+          return dist < r * r;
+      };
+      d.onclick = function() {
+          alert("You clicked " + text);
+      };
+      manager.addSprite(d);
   };
 
   addDraggable(100, 100, 60, 60, "green");
@@ -106,8 +112,8 @@ Your browser doesn't support displaying an HTML5 canvas.
   addClickable(200, 200, 80, 80, "blue circle");
 
   interval_id = setInterval(function() {
-    var ctx = canvas.getContext("2d");
-    ctx.clearRect(0, 0, c.width, c.height);
-    manager.draw(ctx);
+      var ctx = canvas.getContext("2d");
+      ctx.clearRect(0, 0, c.width, c.height);
+      manager.draw(ctx);
   }, 20);
 </script>
