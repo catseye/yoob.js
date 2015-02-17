@@ -11,41 +11,63 @@ if (window.yoob === undefined) yoob = {};
  * methods.
  */
 yoob.Sprite = function() {
-    this.isDraggable = false;
-    this.isClickable = false;
 
-    this.init = function(x, y, w, h) {
-        this.x = x;
-        this.y = y;
-        this.w = w;
-        this.h = h;
-        this.dx = 0;
-        this.dy = 0;
+    /*
+     * x and y always represent the CENTRE of the Sprite().
+     */
+    this.init = function(cfg) {
+        this.x = cfg.x;
+        this.y = cfg.y;
+        this.width = cfg.width;
+        this.height = cfg.height;
+        this.dx = cfg.dx || 0;
+        this.dy = cfg.dy || 0;
+        this.isDraggable = cfg.isDraggable || false;
+        this.isClickable = cfg.isClickable || false;
         this.selected = false;
+        return this;
     };
 
     this.getX = function() {
         return this.x;
     };
 
+    this.getLeftX = function() {
+        return this.x - this.width / 2;
+    };
+
+    this.getRightX = function() {
+        return this.x + this.width / 2;
+    };
+
     this.getY = function() {
         return this.y;
     };
 
-    this.getCenterX = function() {
-        return this.x + this.w / 2;
+    this.getTopY = function() {
+        return this.y - this.height / 2;
     };
 
-    this.getCenterY = function() {
-        return this.y + this.h / 2;
+    this.getBottomY = function() {
+        return this.y + this.height / 2;
     };
 
     this.getWidth = function() {
-        return this.w;
+        return this.width;
     };
 
     this.getHeight = function() {
-        return this.h;
+        return this.height;
+    };
+
+    this.setPosition = function(x, y) {
+        this.x = x;
+        this.y = y;
+    };
+
+    this.setDimensions = function(width, height) {
+        this.width = width;
+        this.height = height;
     };
 
     this.setVelocity = function(dx, dy) {
@@ -56,8 +78,7 @@ yoob.Sprite = function() {
     this.setDestination = function(x, y, ticks) {
         this.destX = x;
         this.destY = y;
-        this.dx = (this.destX - this.getX()) / ticks;
-        this.dy = (this.destY - this.getY()) / ticks;
+        this.setVelocity((this.destX - this.getX()) / ticks, (this.destY - this.getY()) / ticks);
         this.destCounter = ticks;
     };
 
@@ -69,32 +90,21 @@ yoob.Sprite = function() {
             this.destCounter--;
             if (this.destCounter <= 0) {
                 this.destCounter = undefined;
-                this.x = this.destX;
-                this.y = this.destY;
+                this.setPosition(this.destX, this.destY);
                 this.onreachdestination();
             }
         }
     };
 
-    this.moveTo = function(x, y) {
-        this.x = x;
-        this.y = y;
-    };
-
-    this.moveCenterTo = function(x, y) {
-        this.x = x - this.getWidth() / 2;
-        this.y = y - this.getHeight() / 2;
-    };
-
     this.containsPoint = function(x, y) {
-        return (x >= this.getX() && x <= this.getX() + this.getWidth() &&
-                y >= this.getY() && y <= this.getY() + this.getHeight());
+        return (x >= this.getLeftX() && x <= this.getRightX() &&
+                y >= this.getTopY() && y <= this.getBottomY());
     };
 
     // you will probably want to override this
     this.draw = function(ctx) {
         ctx.fillStyle = this.fillStyle || "green";
-        ctx.fillRect(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+        ctx.fillRect(this.getLeftX(), this.getTopY(), this.getWidth(), this.getHeight());
     };
 
     // event handlers.  override to detect these events.
@@ -118,13 +128,43 @@ yoob.Sprite = function() {
  * This still has a few shortcomings at the moment.
  */
 yoob.SpriteManager = function() {
-    this.canvas = undefined;
-    this.canvasX = undefined;
-    this.canvasY = undefined;
-    this.offsetX = undefined;
-    this.offsetY = undefined;
-    this.dragging = undefined;
-    this.sprites = [];
+    /*
+     * Attach this SpriteManager to a canvas.
+     */
+    this.init = function(cfg) {
+        this.canvasX = undefined;
+        this.canvasY = undefined;
+        this.offsetX = undefined;
+        this.offsetY = undefined;
+        this.dragging = undefined;
+        this.sprites = [];
+
+        this.canvas = cfg.canvas;
+        
+        var $this = this;
+        this.canvas.addEventListener('mousedown', function(e) {
+            return $this.onmousedown(e, e);
+        });
+        this.canvas.addEventListener('touchstart', function(e) {
+            return $this.onmousedown(e, e.touches[0]);
+        });
+
+        this.canvas.addEventListener('mousemove', function(e) {
+            return $this.onmousemove(e, e);
+        });
+        this.canvas.addEventListener('touchmove', function(e) {
+            return $this.onmousemove(e, e.touches[0]);
+        });
+
+        this.canvas.addEventListener('mouseup', function(e) {
+            return $this.onmouseup(e, e);
+        });
+        this.canvas.addEventListener('touchend', function(e) {
+            return $this.onmouseup(e, e.touches[0]);
+        });
+
+        return this;
+    };
 
     /*
      * Common handling of mouse and touch events
@@ -155,8 +195,8 @@ yoob.SpriteManager = function() {
         this.canvasX = touch.pageX - this.canvas.offsetLeft;
         this.canvasY = touch.pageY - this.canvas.offsetTop;
         
-        this.dragging.moveTo(this.canvasX + this.offsetX,
-                             this.canvasY + this.offsetY);
+        this.dragging.setPosition(this.canvasX + this.offsetX,
+                                  this.canvasY + this.offsetY);
     };
     
     this.onmouseup = function(e, touch) {
@@ -173,47 +213,20 @@ yoob.SpriteManager = function() {
         this.dragging = undefined;
         this.canvas.style.cursor = "auto";
     };
-    
-    /*
-     * Attach this SpriteManager to a canvas.
-     */
-    this.init = function(canvas) {
-        this.canvas = canvas;
-        
-        var self = this;
-        this.canvas.addEventListener('mousedown', function(e) {
-            return self.onmousedown(e, e);
-        });
-        this.canvas.addEventListener('touchstart', function(e) {
-            return self.onmousedown(e, e.touches[0]);
-        });
-
-        this.canvas.addEventListener('mousemove', function(e) {
-            return self.onmousemove(e, e);
-        });
-        this.canvas.addEventListener('touchmove', function(e) {
-            return self.onmousemove(e, e.touches[0]);
-        });
-
-        this.canvas.addEventListener('mouseup', function(e) {
-            return self.onmouseup(e, e);
-        });
-        this.canvas.addEventListener('touchend', function(e) {
-            return self.onmouseup(e, e.touches[0]);
-        });
-    };
 
     this.move = function() {
-        this.foreach(function(sprite) { sprite.move(); });
+        this.foreach(function(sprite) {
+            sprite.move();
+        });
     };
 
     this.draw = function(ctx) {
         if (ctx === undefined) {
             ctx = this.canvas.getContext('2d');
         }
-        for (var i = 0; i < this.sprites.length; i++) {
-            this.sprites[i].draw(ctx);
-        }
+        this.foreach(function(sprite) {
+            sprite.draw(ctx);
+        });
     };
 
     this.addSprite = function(sprite) {
