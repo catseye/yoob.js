@@ -1,6 +1,20 @@
 Changelog
 =========
 
+*   version 0.9-PRE
+    
+    Several more objects support the standard `init` protocol: caller passes
+    in a configuation object, and the method is chainable (returns the object
+    that was initialized.)
+    
+    `yoob.Tape` now has a `clear()` method, and supports default values for
+    cells that have never been written.
+    
+    `yoob.SpriteManager` underwent significant refactoring.  In particular,
+    the x and y values are assumed to always refer to the centre of the
+    sprite.  An `intersects()` method was added, to help detect collision
+    between two sprites.
+    
 *   version 0.8
     
     Added `yoob.SourceManager`.
