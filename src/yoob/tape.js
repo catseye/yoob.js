@@ -1,5 +1,5 @@
 /*
- * This file is part of yoob.js version 0.3
+ * This file is part of yoob.js version 0.9-PRE
  * Available from https://github.com/catseye/yoob.js/
  * This file is in the public domain.  See http://unlicense.org/ for details.
  */
@@ -9,16 +9,30 @@ if (window.yoob === undefined) yoob = {};
  * A (theoretically) unbounded tape, like you'd find on a Turing machine.
  */
 yoob.Tape = function() {
-    this._store = {};
-    this.min = undefined;
-    this.max = undefined;
+    this.init = function(cfg) {
+        cfg = cfg || {};
+        this.default = cfg.default;
+        this.clear();
+        return this;
+    };
+
+    /*
+     * Removes all values that have been written to the tape.
+     */
+    this.clear = function() {
+        this._store = {};
+        this.min = undefined;
+        this.max = undefined;
+        return this;
+    };
 
     /*
      * Obtain the value at the given position.
-     * Cells are undefined if they were never written to.
+     * Returns the tape's default value, if the position was never written to.
      */
     this.get = function(pos) {
-        return this._store[pos];
+        var val = this._store[pos];
+        return val === undefined ? this.default : val;
     };
 
     /*
@@ -27,18 +41,18 @@ yoob.Tape = function() {
     this.put = function(pos, value) {
         if (this.min === undefined || pos < this.min) this.min = pos;
         if (this.max === undefined || pos > this.max) this.max = pos;
-        if (value === undefined) {
+        if (value === this.default) {
             delete this._store[pos];
         }
         this._store[pos] = value;
     };
 
     /*
-     * Iterate over every defined cell on the Tape
+     * Iterate over every defined cell on the Tape.
      * fun is a callback which takes two parameters:
      * position and value.  If this callback returns a value,
      * it is written into the Tape at that position.
-     * This function ensures a particular order.
+     * This function iterates in a defined order: ascending.
      */
     this.foreach = function(fun) {
         for (var pos = this.min; pos <= this.max; pos++) {
@@ -47,9 +61,6 @@ yoob.Tape = function() {
                 continue;
             var result = fun(pos, value);
             if (result !== undefined) {
-                if (result === ' ') {
-                    result = undefined;
-                }
                 this.put(pos, result);
             }
         }
@@ -73,10 +84,10 @@ yoob.Tape = function() {
      * cellWidth and cellHeight are canvas units of measure for each cell.
      */
     this.drawContext = function(ctx, offsetX, offsetY, cellWidth, cellHeight) {
-        var me = this;
+        var $this = this;
         this.foreach(function (pos, elem) {
-            me.drawElement(ctx, offsetX + pos * cellWidth, offsetY,
-                           cellWidth, cellHeight, elem);
+            $this.drawElement(ctx, offsetX + pos * cellWidth, offsetY,
+                              cellWidth, cellHeight, elem);
         });
     };
 
