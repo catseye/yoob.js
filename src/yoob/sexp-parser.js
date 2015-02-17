@@ -1,5 +1,5 @@
 /*
- * This file is part of yoob.js version 0.3
+ * This file is part of yoob.js version 0.9-PRE
  * Available from https://github.com/catseye/yoob.js/
  * This file is in the public domain.  See http://unlicense.org/ for details.
  */
@@ -18,36 +18,36 @@ if (window.yoob === undefined) yoob = {};
  * extend into a parser for a more complex language) than to use directly.
  */
 yoob.SexpParser = function() {
-  this.scanner = undefined;
+    this.scanner = undefined;
 
-  this.init = function(text) {
-    this.scanner = new yoob.Scanner();
-    this.scanner.init([
-      ['paren',  "^(\\(|\\))"],
-      ['atom',   "^([a-zA-Z]\\w*)"]
-    ]);
-    this.scanner.reset(text);
-  };
+    this.init = function(text) {
+        this.scanner = (new yoob.Scanner()).init({
+          table: [
+            ['paren',  "^(\\(|\\))"],
+            ['atom',   "^([a-zA-Z]\\w*)"]
+          ]
+        });
+        this.scanner.reset(text);
+    };
 
-  /*
-   * SExp ::= Atom | "(" {SExpr} ")".
-   */
-  this.parse = function(text) {
-    if (this.scanner.onType('atom')) {
-      var x = this.scanner.token;
-      this.scanner.scan();
-      return (new yoob.Tree('atom')).setValue(x);
-    } else if (this.scanner.consume('(')) {
-      var children = []
-      while (!this.scanner.on(')') && !this.scanner.onType('EOF')) {
-        children.push(this.parse());
-      }
-      this.scanner.expect(')');
-      return new yoob.Tree('list', children);
-    } else {
-      /* TODO: register some kind of error */
-      this.scanner.scan();
-    }
-  };
-
+    /*
+     * SExp ::= Atom | "(" {SExpr} ")".
+     */
+    this.parse = function(text) {
+        if (this.scanner.onType('atom')) {
+            var x = this.scanner.token;
+            this.scanner.scan();
+            return (new yoob.Tree('atom')).setValue(x);
+        } else if (this.scanner.consume('(')) {
+            var children = []
+            while (!this.scanner.on(')') && !this.scanner.onType('EOF')) {
+              children.push(this.parse());
+            }
+            this.scanner.expect(')');
+            return new yoob.Tree('list', children);
+        } else {
+            /* TODO: register some kind of error */
+            this.scanner.scan();
+        }
+    };
 };
