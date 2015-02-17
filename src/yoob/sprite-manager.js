@@ -14,6 +14,7 @@ yoob.Sprite = function() {
 
     /*
      * x and y always represent the CENTRE of the Sprite().
+     * Chainable.
      */
     this.init = function(cfg) {
         this.x = cfg.x;
@@ -24,7 +25,9 @@ yoob.Sprite = function() {
         this.dy = cfg.dy || 0;
         this.isDraggable = cfg.isDraggable || false;
         this.isClickable = cfg.isClickable || false;
-        this.selected = false;
+        this.fillStyle = cfg.fillStyle || "green";
+        this.visible = (cfg.visible === undefined ? true : (!!cfg.visible));
+        this._isBeingDragged = false;
         return this;
     };
 
@@ -60,26 +63,46 @@ yoob.Sprite = function() {
         return this.height;
     };
 
+    this.isBeingDragged = function() {
+        return this._isBeingDragged;
+    };
+
+    /*
+     * Chainable.
+     */
     this.setPosition = function(x, y) {
         this.x = x;
         this.y = y;
+        return this;
     };
 
+    /*
+     * Chainable.
+     */
     this.setDimensions = function(width, height) {
         this.width = width;
         this.height = height;
+        return this;
     };
 
+    /*
+     * Chainable.
+     */
     this.setVelocity = function(dx, dy) {
         this.dx = dx;
         this.dy = dy;
+        return this;
     };
 
+    /*
+     * Chainable.
+     */
     this.setDestination = function(x, y, ticks) {
         this.destX = x;
         this.destY = y;
         this.setVelocity((this.destX - this.getX()) / ticks, (this.destY - this.getY()) / ticks);
         this.destCounter = ticks;
+        return this;
     };
 
     this.move = function(x, y) {
@@ -90,19 +113,33 @@ yoob.Sprite = function() {
             this.destCounter--;
             if (this.destCounter <= 0) {
                 this.destCounter = undefined;
-                this.setPosition(this.destX, this.destY);
+                this.setPosition(this.destX, this.destY).setVelocity(0, 0);
                 this.onreachdestination();
             }
         }
     };
 
+    // override this if your shape is not a rectangle
     this.containsPoint = function(x, y) {
         return (x >= this.getLeftX() && x <= this.getRightX() &&
                 y >= this.getTopY() && y <= this.getBottomY());
     };
 
+    // you may need to override this in a sophisticated way if you
+    // expect it to detect sprites of different shapes intersecting
+    this.intersects = function(sprite) {
+        var x1 = this.getLeftX();
+        var x2 = this.getRightX();
+        var y1 = this.getTopY();
+        var y2 = this.getBottomY();
+        return (sprite.containsPoint(x1, y1) || sprite.containsPoint(x2, y1) ||
+                sprite.containsPoint(x1, y2) || sprite.containsPoint(x2, y2));
+    };
+
     // you will probably want to override this
+    // if you do, it's up to you to honour this.visible.
     this.draw = function(ctx) {
+        if (!this.visible) return;
         ctx.fillStyle = this.fillStyle || "green";
         ctx.fillRect(this.getLeftX(), this.getTopY(), this.getWidth(), this.getHeight());
     };
@@ -119,7 +156,6 @@ yoob.Sprite = function() {
     this.onmove = function() {
     };
     this.onreachdestination = function() {
-        this.setVelocity(0, 0);
     };
 
 };
@@ -178,7 +214,7 @@ yoob.SpriteManager = function() {
         if (sprite === undefined) return;
         if (sprite.isDraggable) {
             this.dragging = sprite;
-            this.dragging.selected = true;
+            this.dragging._isBeingDragged = true;
             this.dragging.ongrab();
             this.offsetX = sprite.getX() - this.canvasX;
             this.offsetY = sprite.getY() - this.canvasY;
@@ -208,7 +244,7 @@ yoob.SpriteManager = function() {
         this.offsetY = undefined;
         if (this.dragging !== undefined) {
             this.dragging.ondrop();
-            this.dragging.selected = false;
+            this.dragging._isBeingDragged = false;
         }
         this.dragging = undefined;
         this.canvas.style.cursor = "auto";
