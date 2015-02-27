@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <title>yoob.Resizer Demo 1</title>
+</head>
+<body>
+
+<h1>yoob.Resizer Demo 1</h1>
+
+<canvas id="c"></canvas>
+
+</body>
+<script src="../src/yoob/resizer.js"></script>
+<script type="text/javascript">
+
+var c = document.getElementById('c');
+c.style.border = "1px solid blue";
+var s = (new yoob.Size()).init({ width: 200, height: 400 });
+s.applyToElement(c);
+
+</script>
