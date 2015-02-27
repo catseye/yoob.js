@@ -176,7 +176,7 @@ yoob.SpriteManager = function() {
         this.sprites = [];
 
         this.canvas = cfg.canvas;
-        
+
         var $this = this;
         this.canvas.addEventListener('mousedown', function(e) {
             return $this.onmousedown(e, e);
