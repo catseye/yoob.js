@@ -2,20 +2,42 @@
 <head>
   <meta charset="utf-8">
   <title>yoob.Resizer Demo 1</title>
+  <style>
+canvas { border: 1px solid blue; }
+  </style>
 </head>
 <body>
 
 <h1>yoob.Resizer Demo 1</h1>
 
-<canvas id="c"></canvas>
+<canvas id="c1"></canvas>
+
+<canvas id="c2"></canvas>
 
 </body>
 <script src="../src/yoob/resizer.js"></script>
 <script type="text/javascript">
+"use strict";
+var c1 = document.getElementById('c1');
+var ctx1 = c1.getContext('2d');
+var c2 = document.getElementById('c2');
+var ctx2 = c2.getContext('2d');
 
-var c = document.getElementById('c');
-c.style.border = "1px solid blue";
-var s = (new yoob.Size()).init({ width: 200, height: 400 });
-s.applyToElement(c);
+var s1 = (new yoob.Size()).init({ width: 200, height: 400 });
+s1.applyToElement(c1);
+
+var s2 = (new yoob.Size()).init({ width: 200, height: 8 });
+s2.applyToElement(c2);
+
+var img = new Image();
+img.onload = function() {
+    var is = (new yoob.Size()).setFromImage(img);
+    is.fit(s1);
+    ctx1.drawImage(img, 0, 0, is.width, is.height);
+    var is = (new yoob.Size()).setFromImage(img);
+    is.fit(s2);
+    ctx2.drawImage(img, 0, 0, is.width, is.height);
+}
+img.src = 'charset8.png';
 
 </script>
