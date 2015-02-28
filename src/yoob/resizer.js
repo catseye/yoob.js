@@ -93,6 +93,40 @@ yoob.Size = function() {
 };
 
 /*
+ * Offsets, too.
+ */
+
+yoob.Offset = function() {
+    this.init = function(cfg) {
+        this.left = cfg.left;
+        this.top = cfg.top;
+        return this;
+    };
+
+    /*
+     * Yep, this does that thing.
+     */
+    this.setFromElement = function(elem) {
+        var left = 0;
+        var top = 0;
+        while (elem) {
+            left += elem.offsetLeft;
+            top += elem.offsetTop;
+            elem = elem.parentElement;
+        }
+        this.left = left;
+        this.top = top;
+        return this;
+    };
+
+    this.applyAsStyle = function(elem) {
+        elem.style.left = this.left + "px";
+        elem.style.top = this.top + "px";
+        return this;
+    };
+};
+
+/*
  * Now that we have Sizes, what we want to do is reconcile them
  *
  * So, what we have is a _source size_, which might be the size of an image we
