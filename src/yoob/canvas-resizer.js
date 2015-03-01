@@ -30,7 +30,7 @@ yoob.CanvasResizer = function() {
      * `redimensionCanvas`: should we set the canvas's width and height
      *   properties to the clientWidth and clientHeight of the element
      *   after it has been resized?  defaults to true.
-     * `retainAspectRatio`: should we try to retain the aspect ratio
+     * `preserveAspectRatio`: should we try to preserve the aspect ratio
      *   of the canvas after resizing?  defaults to true.
      * `allowExpansion`: should we ever resize the canvas to a size larger
      *   than the desired width & height?  defaults to false.
@@ -44,7 +44,7 @@ yoob.CanvasResizer = function() {
         this.desiredWidth = cfg.desiredWidth || null;
         this.desiredHeight = cfg.desiredHeight || null;
         this.redimensionCanvas = cfg.redimensionCanvas === false ? false : true;
-        this.retainAspectRatio = cfg.retainAspectRatio === false ? false : true;
+        this.preserveAspectRatio = cfg.preserveAspectRatio === false ? false : true;
         this.allowExpansion = !!cfg.allowExpansion;
         this.centerVertically = cfg.centerVertically === false ? false : true;
         return this;
@@ -94,7 +94,7 @@ yoob.CanvasResizer = function() {
         var newWidth = availWidth;
         var newHeight = availHeight;
         if (this.preserveAspectRatio) {
-            var scale = this.getFitScale(avail);
+            var scale = this.getFitScale(availWidth, availHeight);
             if (!this.allowExpansion) {
                 scale = Math.min(scale, 1);
             }
@@ -112,8 +112,8 @@ yoob.CanvasResizer = function() {
             this.canvas.style.width = newWidth + "px";
             this.canvas.style.height = newHeight + "px";
         }
+        this.canvas.style.marginTop = "0";
         if (this.centerVertically) {
-            this.canvas.style.marginTop = "0";
             if (availHeight > newHeight) {
                 this.canvas.style.marginTop =
                     Math.trunc((availHeight - newHeight) / 2) + "px";
