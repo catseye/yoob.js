@@ -12,21 +12,29 @@ html, body, article {
 }
 header {
     background: goldenrod;
+    line-height: 28px;
+    text-align: left;
+}
+h1 {
+    margin: 0;
+    padding-top: 6px;
 }
   </style>
 </head>
 <body>
   <header>
     <h1>yoob.Resizer Demo</h1>
-    <p><button id='hide'>Hide header</button> (reload to bring it back)</p>
+    <button id='hide'>Hide header</button> (reload to bring it back)
   </header>
   <article>
     <canvas id="c1"></canvas>
   </article>
 </body>
+<script src="../src/yoob/element-factory.js"></script>
 <script src="../src/yoob/canvas-resizer.js"></script>
 <script type="text/javascript">
 "use strict";
+var header = document.getElementsByTagName('header')[0];
 var canvas = document.getElementById('c1');
 var ctx = c1.getContext('2d');
 
@@ -36,14 +44,35 @@ var cr = (new yoob.CanvasResizer()).init({
         ctx.fillStyle = 'red';
         ctx.fillRect(0, 0, canvas.width / 2, canvas.height / 2);
         ctx.fillStyle = 'blue';
-        ctx.fillRect(canvas.width / 2, canvas.height / 2, canvas.width, canvas.height);
+        ctx.fillRect(canvas.width / 2, canvas.height / 2, canvas.width / 2, canvas.height / 2);
+        ctx.beginPath();
+        ctx.fillStyle = 'green';
+        ctx.arc(canvas.width / 2, canvas.height / 2, canvas.height / 2, 0, 2 * Math.PI, false);
+        ctx.fill();
     },
     desiredWidth: 640,
     desiredHeight: 400
 }).register();
 
 document.getElementById('hide').onclick = function() {
-    document.getElementsByTagName('header')[0].style.display='none';
+    header.style.display = "none";
     cr.resizeCanvas();
 };
+yoob.makeCheckbox(header, true, "redimension canvas", function(b) {
+    cr.redimensionCanvas = b;
+    cr.resizeCanvas();
+});
+yoob.makeCheckbox(header, true, "preserve aspect ratio", function(b) {
+    cr.preserveAspectRatio = b;
+    cr.resizeCanvas();
+});
+yoob.makeCheckbox(header, false, "allow expansion", function(b) {
+    cr.allowExpansion = b;
+    cr.resizeCanvas();
+});
+yoob.makeCheckbox(header, true, "center vertically", function(b) {
+    cr.centerVertically = b;
+    cr.resizeCanvas();
+});
+
 </script>
