@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <title>yoob.CanvasResizer Demo</title>
+  <style>
+html, body, article {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    line-height: 0;
+    text-align: center;
+}
+header {
+    background: goldenrod;
+}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>yoob.Resizer Demo</h1>
+    <p><button id='hide'>Hide header</button> (reload to bring it back)</p>
+  </header>
+  <article>
+    <canvas id="c1"></canvas>
+  </article>
+</body>
+<script src="../src/yoob/canvas-resizer.js"></script>
+<script type="text/javascript">
+"use strict";
+var canvas = document.getElementById('c1');
+var ctx = c1.getContext('2d');
+
+var cr = (new yoob.CanvasResizer()).init({
+    canvas: canvas,
+    redraw: function() {
+        ctx.fillStyle = 'red';
+        ctx.fillRect(0, 0, canvas.width / 2, canvas.height / 2);
+        ctx.fillStyle = 'blue';
+        ctx.fillRect(canvas.width / 2, canvas.height / 2, canvas.width, canvas.height);
+    },
+    desiredWidth: 640,
+    desiredHeight: 400
+}).register();
+
+document.getElementById('hide').onclick = function() {
+    document.getElementsByTagName('header')[0].style.display='none';
+    cr.resizeCanvas();
+};
+</script>
