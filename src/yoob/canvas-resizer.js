@@ -34,6 +34,11 @@ yoob.CanvasResizer = function() {
      *   of the canvas after resizing?  defaults to true.
      * `allowExpansion`: should we ever resize the canvas to a size larger
      *   than the desired width & height?  defaults to false.
+     * `allowContraction`: should we ever resize the canvas to a size smaller
+     *   than the desired width & height?  defaults to true.
+     * `missingCanvasElement`: if allowContraction is false, this should be
+     *   a DOM element whose `display` style will be changed from `none` to
+     *   `block` when the viewport is too small to display the canvas.
      * `centerVertically`: should we apply a top margin to the canvas
      *   element, to equal half the available space below it, after resizing
      *   it?  defaults to defaults to true.
@@ -46,6 +51,8 @@ yoob.CanvasResizer = function() {
         this.redimensionCanvas = cfg.redimensionCanvas === false ? false : true;
         this.preserveAspectRatio = cfg.preserveAspectRatio === false ? false : true;
         this.allowExpansion = !!cfg.allowExpansion;
+        this.allowContraction = cfg.allowContraction === false ? false : true;
+        this.missingCanvasElement = cfg.missingCanvasElement;
         this.centerVertically = cfg.centerVertically === false ? false : true;
         return this;
     };
@@ -93,25 +100,51 @@ yoob.CanvasResizer = function() {
         var availHeight = avail[1];
         var newWidth = availWidth;
         var newHeight = availHeight;
+
         if (this.preserveAspectRatio) {
             var scale = this.getFitScale(availWidth, availHeight);
             if (!this.allowExpansion) {
                 scale = Math.min(scale, 1);
             }
+            if (!this.allowContraction) {
+                scale = Math.max(scale, 1);
+            }
             newWidth = Math.trunc(this.desiredWidth * scale);
             newHeight = Math.trunc(this.desiredHeight * scale);
-        } else if (!this.allowExpansion) {
+        } else {
             // if we don't care about preserving the aspect ratio but do
-            // care about preserving the maximum size, clamp each dimension
-            newWidth = Math.min(newWidth, this.desiredWidth);
-            newHeight = Math.min(newHeight, this.desiredHeight);
+            // care about preserving the size, clamp each dimension
+            if (!this.allowExpansion) {
+                newWidth = Math.min(newWidth, this.desiredWidth);
+                newHeight = Math.min(newHeight, this.desiredHeight);
+            }
+            if (!this.allowContraction) {
+                newWidth = Math.max(newWidth, this.desiredWidth);
+                newHeight = Math.max(newHeight, this.desiredHeight);
+            }
         }
+
+        if (newWidth > availWidth || newHeight > availHeight) {
+            // due to not allowing contraction, our canvas is still
+            // too big to display.  hide it and show the other thing
+            canvas.style.display = 'none';
+            if (this.missingCanvasElement) {
+                this.missingCanvasElement.style.display = 'block';
+            }
+        } else {
+            canvas.style.display = 'block';
+            if (this.missingCanvasElement) {
+                this.missingCanvasElement.style.display = 'none';
+            }
+        }
+
         if (true) {
             // TODO: add an option to skip this part...?
             // you might want to skip it if you have these as %'s
             this.canvas.style.width = newWidth + "px";
             this.canvas.style.height = newHeight + "px";
         }
+
         this.canvas.style.marginTop = "0";
         if (this.centerVertically) {
             if (availHeight > newHeight) {
@@ -119,6 +152,7 @@ yoob.CanvasResizer = function() {
                     Math.trunc((availHeight - newHeight) / 2) + "px";
             }
         }
+
         if (this.redimensionCanvas) {
             if (this.canvas.width !== newWidth || this.canvas.height !== newHeight) {
                 this.canvas.width = newWidth;
