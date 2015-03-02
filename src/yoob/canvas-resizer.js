@@ -38,7 +38,7 @@ yoob.CanvasResizer = function() {
      *   than the desired width & height?  defaults to true.
      * `missingCanvasElement`: if allowContraction is false, this should be
      *   a DOM element whose `display` style will be changed from `none` to
-     *   `block` when the viewport is too small to display the canvas.
+     *   `inline-block` when the viewport is too small to display the canvas.
      * `centerVertically`: should we apply a top margin to the canvas
      *   element, to equal half the available space below it, after resizing
      *   it?  defaults to defaults to true.
@@ -127,12 +127,12 @@ yoob.CanvasResizer = function() {
         if (newWidth > availWidth || newHeight > availHeight) {
             // due to not allowing contraction, our canvas is still
             // too big to display.  hide it and show the other thing
-            canvas.style.display = 'none';
+            this.canvas.style.display = 'none';
             if (this.missingCanvasElement) {
-                this.missingCanvasElement.style.display = 'block';
+                this.missingCanvasElement.style.display = 'inline-block';
             }
         } else {
-            canvas.style.display = 'block';
+            this.canvas.style.display = 'inline-block';
             if (this.missingCanvasElement) {
                 this.missingCanvasElement.style.display = 'none';
             }
