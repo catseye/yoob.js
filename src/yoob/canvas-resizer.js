@@ -32,6 +32,10 @@ yoob.CanvasResizer = function() {
      *   called after the canvas has actually been resized.  This can be
      *   used to, for example, redraw the canvas contents.
      *
+     * `onResizeFail`: an optional function which, if supplied, will be
+     *   called after the canvas has failed to be resized (because
+     *  allowContraction is false and there is no room for it.)
+     *
      * `desired{Width,Height}`: the desired width and height of the canvas
      *
      * `redimensionCanvas`: should we set the canvas's width and height
@@ -61,6 +65,7 @@ yoob.CanvasResizer = function() {
         this.redraw = cfg.redraw || nop;
         this.onResizeStart = cfg.onResizeStart || nop;
         this.onResizeEnd = cfg.onResizeEnd || nop;
+        this.onResizeFail = cfg.onResizeFail || nop;
         this.desiredWidth = cfg.desiredWidth || null;
         this.desiredHeight = cfg.desiredHeight || null;
         this.redimensionCanvas = cfg.redimensionCanvas === false ? false : true;
@@ -146,6 +151,7 @@ yoob.CanvasResizer = function() {
             if (this.missingCanvasElement) {
                 this.missingCanvasElement.style.display = 'inline-block';
             }
+            this.onResizeFail();
             return;
         }
 
