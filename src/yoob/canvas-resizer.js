@@ -6,8 +6,6 @@
 if (window.yoob === undefined) yoob = {};
 
 /*
- * NOTE: this still has bugs!
- *
  * This class provides objects that resize a canvas to fill (or be centered in)
  * an area in the viewport, with several options.
  *
@@ -24,28 +22,45 @@ yoob.CanvasResizer = function() {
      * any DOM events, so generally you want to call .register() afterwards.
      *
      * `canvas`: the canvas to resize
-     * `redraw`: a function that redraws the canvas after redimensioning
-     *   (optional; not needed if redimensionCanvas is false.)
+     *
+     * `onResizeStart`: an optional function which, if supplied, will be
+     *   called, passing the new width and height as parameters, after the
+     *   new canvas size has been computed, but before the canvas is actually
+     *   resized.  It may return the exact object `false` to cancel the resize.
+     *
+     * `onResizeEnd`: an optional function which, if supplied, will be
+     *   called after the canvas has actually been resized.  This can be
+     *   used to, for example, redraw the canvas contents.
+     *
      * `desired{Width,Height}`: the desired width and height of the canvas
+     *
      * `redimensionCanvas`: should we set the canvas's width and height
      *   properties to the clientWidth and clientHeight of the element
      *   after it has been resized?  defaults to true.
+     *
      * `preserveAspectRatio`: should we try to preserve the aspect ratio
      *   of the canvas after resizing?  defaults to true.
+     *
      * `allowExpansion`: should we ever resize the canvas to a size larger
      *   than the desired width & height?  defaults to false.
+     *
      * `allowContraction`: should we ever resize the canvas to a size smaller
      *   than the desired width & height?  defaults to true.
+     *
      * `missingCanvasElement`: if allowContraction is false, this should be
      *   a DOM element whose `display` style will be changed from `none` to
      *   `inline-block` when the viewport is too small to display the canvas.
+     *
      * `centerVertically`: should we apply a top margin to the canvas
      *   element, to equal half the available space below it, after resizing
      *   it?  defaults to defaults to true.
      */
     this.init = function(cfg) {
+        var nop = function() {};
         this.canvas = cfg.canvas;
-        this.redraw = cfg.redraw || function() {};
+        this.redraw = cfg.redraw || nop;
+        this.onResizeStart = cfg.onResizeStart || nop;
+        this.onResizeEnd = cfg.onResizeEnd || nop;
         this.desiredWidth = cfg.desiredWidth || null;
         this.desiredHeight = cfg.desiredHeight || null;
         this.redimensionCanvas = cfg.redimensionCanvas === false ? false : true;
@@ -131,11 +146,17 @@ yoob.CanvasResizer = function() {
             if (this.missingCanvasElement) {
                 this.missingCanvasElement.style.display = 'inline-block';
             }
-        } else {
-            this.canvas.style.display = 'inline-block';
-            if (this.missingCanvasElement) {
-                this.missingCanvasElement.style.display = 'none';
-            }
+            return;
+        }
+
+        this.canvas.style.display = 'inline-block';
+        if (this.missingCanvasElement) {
+            this.missingCanvasElement.style.display = 'none';
+        }
+
+        var result = this.onResizeStart(newWidth, newHeight);
+        if (result === false) {
+            return;
         }
 
         if (true) {
@@ -144,7 +165,7 @@ yoob.CanvasResizer = function() {
             this.canvas.style.width = newWidth + "px";
             this.canvas.style.height = newHeight + "px";
         }
-
+        
         this.canvas.style.marginTop = "0";
         if (this.centerVertically) {
             if (availHeight > newHeight) {
@@ -153,12 +174,15 @@ yoob.CanvasResizer = function() {
             }
         }
 
+        var changed = false;
         if (this.redimensionCanvas) {
             if (this.canvas.width !== newWidth || this.canvas.height !== newHeight) {
                 this.canvas.width = newWidth;
                 this.canvas.height = newHeight;
-                this.redraw();
+                changed = true;
             }
         }
+
+        this.onResizeEnd(newWidth, newHeight, changed);
     };
 };
