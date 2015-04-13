@@ -125,6 +125,7 @@ yoob.Sprite = function() {
                 y >= this.getTopY() && y <= this.getBottomY());
     };
 
+    // NOTE: this assumes that `sprite` is larger or equal in size to `this`.
     // you may need to override this in a sophisticated way if you
     // expect it to detect sprites of different shapes intersecting
     this.intersects = function(sprite) {
@@ -280,6 +281,10 @@ yoob.SpriteManager = function() {
         if (index !== undefined) {
             this.sprites.splice(index, 1);
         }
+    };
+
+    this.clearSprites = function() {
+        this.sprites = [];
     };
     
     this.moveToFront = function(sprite) {

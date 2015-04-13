@@ -13,7 +13,7 @@ Changelog
     `yoob.SpriteManager` underwent significant refactoring.  In particular,
     the x and y values are assumed to always refer to the centre of the
     sprite.  An `intersects()` method was added, to help detect collision
-    between two sprites.
+    between two sprites.  A `clearSprites()` method was also added.
     
 *   version 0.8
     
