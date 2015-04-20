@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <title>yoob/element-factory.js Demo</title>
+</head>
+<body>
+
+<h1>yoob/element-factory.js Demo</h1>
+
+<div id="container"></div>
+
+</body>
+<script src="../src/yoob/element-factory.js"></script>
+<script type="text/javascript">
+  var container = document.getElementById('container');
+
+  var p = yoob.makeParagraph(container, "This element was created by Javascript.");
+  var panel = yoob.makePanel(container, "Collapsible Panel", false);
+  yoob.makeButton(panel, "Click me!", function(e) {
+      p.style.border = "1px solid black";
+  });
+  var canvas = yoob.makeCanvas(container, 100, 100);
+  canvas.style.border = "1px solid blue";
+
+  yoob.makeLineBreak(container);
+
+  var svg = yoob.makeSVG(container);
+  svg.style.height = "300px";
+  svg.style.width = "500px";
+  svg.style.border = "1px solid red";
+
+  yoob.makeSVGElem(this.svg, "rect", {
+      x: 100,
+      y: 100,
+      width: 500,
+      height: 200,
+      fill: "#603020"
+  });
+  
+  yoob.makeSVGElem(this.svg, "circle", {
+      cx: 100,
+      cy: 100,
+      r: 50,
+      fill: "black",
+      stroke: "white"
+  });
+</script>
