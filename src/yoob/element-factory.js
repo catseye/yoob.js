@@ -201,3 +201,21 @@ yoob.makeSliderPlusTextInput = function(container, label, min_, max_, size, valu
         'callback': fun
     });
 };
+
+yoob.makeSVG = function(container) {
+    var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    /* <svg viewBox = "0 0 200 200" version = "1.1"> */
+    container.appendChild(svg);
+    return svg;
+};
+
+yoob.makeSVGElem = function(svg, tag, cfg) {
+    var elem = document.createElementNS(svg.namespaceURI, tag);
+    for (var key in cfg) {
+        if (cfg.hasOwnProperty(key)) {
+            elem.setAttribute(key, cfg[key]);
+        }
+    }
+    svg.appendChild(elem);
+    return elem;
+};
