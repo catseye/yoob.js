@@ -1,5 +1,5 @@
 /*
- * This file is part of yoob.js version 0.8
+ * This file is part of yoob.js version 0.9-PRE
  * Available from https://github.com/catseye/yoob.js/
  * This file is in the public domain.  See http://unlicense.org/ for details.
  */
@@ -129,7 +129,7 @@ yoob.makeTextArea = function(container, cols, rows, initial) {
     textarea.rows = "" + rows;
     textarea.cols = "" + cols;
     if (initial) {
-        container.value = initial;
+        textarea.value = initial;
     }
     container.appendChild(textarea);
     return textarea;
