@@ -1,7 +1,7 @@
 Changelog
 =========
 
-*   version 0.9-PRE
+*   version 0.9
     
     Several more objects support the standard `init` protocol: caller passes
     in a configuation object, and the method is chainable (returns the object
