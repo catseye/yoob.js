@@ -15,6 +15,17 @@ Changelog
     sprite.  An `intersects()` method was added, to help detect collision
     between two sprites.  A `clearSprites()` method was also added.
     
+    Added a new `yoob.CanvasResizer` object, which attempts to intelligently
+    resize a canvas element to fit in the browser window, with options to
+    preserve maximum size, aspect ratio, etc.
+    
+    In `yoob/element-factory.js`, a bug was fixed in `makeTextArea`, and
+    functions were added for creating SVG elements.
+    
+    `yoob.Chargen`'s `init` method now takes a configuration object, for
+    consistency, and spells the word `color`, if not correctly, then at least
+    consistently.
+
 *   version 0.8
     
     Added `yoob.SourceManager`.
