@@ -266,6 +266,13 @@ The classes are currently:
     one value to another, automatically stopping the animation when the final
     value has been reached.
 
+*   `yoob.CanvasResizer`, in `yoob/canvas-resizer.js`
+    
+    An object which attempts to intelligently resize a canvas element, to make
+    it fit inside the browser window at all times, resizing it or making it
+    disappear if necessary, and retaining a maximum size or aspect ratio, if
+    requested.
+
 Plus some functions which aren't classes:
 
 *   `yoob.showSplashScreen`, in `yoob/splash-screen.js`
@@ -277,6 +284,12 @@ Plus some functions which aren't classes:
 
     The intention is to allow a "splash screen", which may contain a disclaimer
     or similar, before the "main stage" is actually displayed and started.
+
+*   `yoob.make*`, in `yoob/element-factory.js`
+
+    Convenience functions for creating DOM elements.  Some of them create
+    groups of elements that co-operate to provide a functionality in the UI
+    (e.g. spin controls.)
 
 ### Planned ###
 
