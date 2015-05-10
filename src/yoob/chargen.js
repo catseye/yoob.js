@@ -1,5 +1,5 @@
 /*
- * This file is part of yoob.js version 0.9
+ * This file is part of yoob.js version 0.10-PRE
  * Available from https://github.com/catseye/yoob.js/
  * This file is in the public domain.  See http://unlicense.org/ for details.
  */
@@ -24,6 +24,7 @@ yoob.Chargen = function() {
         this.charHeight = cfg.charHeight || 8;
         this.charsPerRow = cfg.charsPerRow || 16;
         this.rows = cfg.rows || 16;
+        this.colorToAlpha = cfg.colorToAlpha;
         this.bitmaps = [];  // canvas elements
 
         for (var i = 0; i < this.colorTriples.length; i++) {
@@ -75,15 +76,21 @@ yoob.Chargen = function() {
         var w = this.img.width;
         var h = this.img.height;
         var imageData = ctx.getImageData(0, 0, w, h);
-        for (var color = 1; color < this.colorTriples.length; color++) {
+        for (var color = 0; color < this.colorTriples.length; color++) {
             var newData = ctx.getImageData(0, 0, w, h);
             for (var y = 0; y < h; y++) {
                 for (var x = 0; x < w; x++) {
                     var index = (y * w + x) * 4;
-                    //var red = imageData.data[index];
-                    //var green = imageData.data[index + 1];
-                    //var blue = imageData.data[index + 2];
+                    var red = imageData.data[index];
+                    var green = imageData.data[index + 1];
+                    var blue = imageData.data[index + 2];
                     var alpha = imageData.data[index + 3];
+                    if (this.colorToAlpha &&
+                        red === this.colorToAlpha[0] &&
+                        green === this.colorToAlpha[1] &&
+                        blue === this.colorToAlpha[2]) {
+                        alpha = 0;
+                    }
                     newData.data[index] = this.colorTriples[color][0];
                     newData.data[index + 1] = this.colorTriples[color][1];
                     newData.data[index + 2] = this.colorTriples[color][2];
