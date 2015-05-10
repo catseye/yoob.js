@@ -47,7 +47,7 @@ yoob.StackHTMLView = function() {
         var text = "";
         this.stack.foreach(function(pos, value) {
             text += this.render(value) + "<br/>";
-        }
+        });
         this.element.innerHTML = text;
     };
 };

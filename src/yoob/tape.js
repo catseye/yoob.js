@@ -53,12 +53,22 @@ yoob.Tape = function() {
      * position and value.  If this callback returns a value,
      * it is written into the Tape at that position.
      * This function iterates in a defined order: ascending.
+     * The callback is not called for cells containing the
+     * default value unless `dense: true` is given in the
+     * configuration object.
      */
-    this.foreach = function(fun) {
+    this.foreach = function(fun, cfg) {
+        cfg = cfg || {};
+        var dense = !!cfg.dense;
         for (var pos = this.min; pos <= this.max; pos++) {
             var value = this._store[pos];
-            if (value === undefined)
-                continue;
+            if (value === undefined) {
+                if (dense) {
+                    value = this.default;
+                } else {
+                    continue;
+                }
+            }
             var result = fun(pos, value);
             if (result !== undefined) {
                 this.put(pos, result);

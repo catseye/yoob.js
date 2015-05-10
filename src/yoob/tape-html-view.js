@@ -46,8 +46,8 @@ yoob.TapeHTMLView = function() {
     this.draw = function() {
         var text = "";
         this.tape.foreach(function(pos, value) {
-            text += '' + pos + ': ' + this.render(value) + "<br/>";
-        }
+            text += this.render(value) + "<br/>";
+        }, { dense: true });
         this.element.innerHTML = text;
     };
 };
