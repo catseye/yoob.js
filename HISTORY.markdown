@@ -1,6 +1,23 @@
 Changelog
 =========
 
+*   version 0.10-PRE
+    
+    `yoob.Chargen` can be `init`ed with a `colorToAlpha` triple; if it is
+    given, that color will be treated as transparent when creating the
+    coloured bitmaps of the characters.
+    
+    New `StackHTMLView` and `TapeHTMLView` view objects.
+    
+    `Tape.foreach()` supports a dense traversal, which visits every cell of
+    the tape between the lowest and highest written cells, even if intervening
+    cells have never been written.
+    
+    `yoob.makeSelect()`, in `yoob/element-factory.js`, now takes optional
+    arguments: `fun` (a function that will be called when the selection is
+    changed) and `def` (a default value which will be initially selected.
+    This will also cause the callback function to be called.)
+
 *   version 0.9
     
     Several more objects support the standard `init` protocol: caller passes
