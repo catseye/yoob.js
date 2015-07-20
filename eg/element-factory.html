@@ -6,6 +6,7 @@
 <body>
 
 <h1>yoob/element-factory.js Demo</h1>
+<h4>Look at the browser's console to see the effect of some controls.</h4>
 
 <div id="container"></div>
 
@@ -19,8 +20,22 @@
   yoob.makeButton(panel, "Click me!", function(e) {
       p.style.border = "1px solid black";
   });
+
+  var select = yoob.makeSelect(panel, "Select:", [
+      ['0', 'Zero'],
+      ['1', 'One']
+  ], function(key) {
+      console.log(key);
+  }, '1');
+
   var canvas = yoob.makeCanvas(container, 100, 100);
   canvas.style.border = "1px solid blue";
+
+  yoob.makeLineBreak(container);
+
+  yoob.makeSliderPlusTextInput(container, "Speed:", 0, 100, 5, 50, function(v) {
+      console.log('new speed:' + v);
+  });
 
   yoob.makeLineBreak(container);
 

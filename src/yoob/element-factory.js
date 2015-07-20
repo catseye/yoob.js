@@ -1,5 +1,5 @@
 /*
- * This file is part of yoob.js version 0.9
+ * This file is part of yoob.js version 0.10-PRE
  * Available from https://github.com/catseye/yoob.js/
  * This file is in the public domain.  See http://unlicense.org/ for details.
  */
@@ -141,7 +141,7 @@ yoob.makeLineBreak = function(container) {
     return br;
 };
 
-yoob.makeSelect = function(container, labelText, optionsArray) {
+yoob.makeSelect = function(container, labelText, optionsArray, fun, def) {
     var label = document.createElement('label');
     label.innerHTML = labelText;
     container.appendChild(label);
@@ -160,11 +160,31 @@ yoob.makeSelect = function(container, labelText, optionsArray) {
         select.options.add(op);
     }
 
+    if (fun) {
+        select.onchange = function(e) {
+            fun(optionsArray[select.selectedIndex][0]);
+        };
+    }
+
+    if (def) {
+        var i = 0;
+        var opt = select.options[i];
+        while (opt) {
+            if (opt.value === def) {
+                select.selectedIndex = i;
+                if (fun) fun(def);
+                break;
+            }
+            i++;
+            opt = select.options[i];
+        }
+    }
+
     container.appendChild(select);
     return select;
 };
 
-SliderPlusTextInput = function() {
+var SliderPlusTextInput = function() {
     this.init = function(cfg) {
         this.slider = cfg.slider;
         this.textInput = cfg.textInput;
