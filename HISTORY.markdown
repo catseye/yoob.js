@@ -1,7 +1,7 @@
 Changelog
 =========
 
-*   version 0.10-PRE
+*   version 0.10
     
     `yoob.Chargen` can be `init`ed with a `colorToAlpha` triple; if it is
     given, that color will be treated as transparent when creating the

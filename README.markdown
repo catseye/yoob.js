@@ -1,7 +1,7 @@
 yoob.js
 =======
 
-*Version 0.10-PRE.  Everything subject to change.*
+*Version 0.10.  Everything subject to change.*
 *For version history, see the file [HISTORY.markdown](HISTORY.markdown).*
 
 yoob.js started out as the HTML5 counterpart to [yoob][], but has since
