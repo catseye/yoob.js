@@ -83,9 +83,9 @@ yoob.PlayfieldCanvasView = function() {
      *   of the entire playfield.
      */
     this.drawContext = function(ctx, offsetX, offsetY, cellWidth, cellHeight) {
-        var self = this;
+        var $this = this;
         this.pf.foreach(function (x, y, value) {
-            self.drawCell(ctx, value, x, y,
+            $this.drawCell(ctx, value, x, y,
                           offsetX + x * cellWidth, offsetY + y * cellHeight,
                           cellWidth, cellHeight);
         });
@@ -126,8 +126,8 @@ yoob.PlayfieldCanvasView = function() {
         var offsetY = 0;
 
         if (!this.fixedPosition) {
-            offsetX = (this.getLowerX() || 0) * cellWidth * -1;
-            offsetY = (this.getLowerY() || 0) * cellHeight * -1;
+            offsetX = (this.pf.getLowerX() || 0) * cellWidth * -1;
+            offsetY = (this.pf.getLowerY() || 0) * cellHeight * -1;
         }
 
         if (this.drawCursorsFirst) {

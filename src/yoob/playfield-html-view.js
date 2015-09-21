@@ -50,9 +50,13 @@ yoob.PlayfieldHTMLView = function() {
     this.draw = function() {
         var text = "";
         var cursors = this.pf.cursors;
-        for (var y = this.getLowerY(); y <= this.getUpperY(); y++) {
+        var lowerY = this.pf.getLowerY();
+        var upperY = this.pf.getUpperY();
+        var lowerX = this.pf.getLowerX();
+        var upperX = this.pf.getUpperX();
+        for (var y = lowerY; y <= upperY; y++) {
             var row = "";
-            for (var x = this.getLowerX(); x <= this.getUpperX(); x++) {
+            for (var x = lowerX; x <= upperX; x++) {
                 var rendered = this.render(this.pf.get(x, y));
                 for (var i = 0; i < cursors.length; i++) {
                     if (cursors[i].x === x && cursors[i].y === y) {

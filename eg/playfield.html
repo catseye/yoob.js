@@ -38,13 +38,21 @@ Your browser doesn't support displaying an HTML5 canvas.
   var canvas = document.getElementById('canvas');
   var ip = new yoob.Cursor();
   ip.fillStyle = "#c0c050";
-  var pf = new yoob.Playfield().setDefault(' ').setCursors([ip]);
-  var canvasView = new yoob.PlayfieldCanvasView();
-  canvasView.init(pf, canvas).setCellDimensions(undefined, 20);
+  var pf = new yoob.Playfield().init({
+      defaultValue: ' ',
+      cursors: [ip]
+  });
+  var canvasView = new yoob.PlayfieldCanvasView().init({
+      playfield: pf,
+      canvas: canvas,
+      cellWidth: 20,
+      cellHeight: 20
+  });
 
-  var htmlView = new yoob.PlayfieldHTMLView();
-  htmlView.init(pf, document.getElementById('pre'));
-  htmlView.setCursors([ip]);
+  var htmlView = new yoob.PlayfieldHTMLView().init({
+      playfield: pf,
+      element: document.getElementById('pre')
+  });
 
   var textarea = document.getElementById('program');
   document.getElementById('load').onclick = function(e) {
