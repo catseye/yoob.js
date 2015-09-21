@@ -1,5 +1,5 @@
 /*
- * This file is part of yoob.js version 0.6
+ * This file is part of yoob.js version 0.11-PRE
  * Available from https://github.com/catseye/yoob.js/
  * This file is in the public domain.  See http://unlicense.org/ for details.
  */
@@ -9,12 +9,18 @@ if (window.yoob === undefined) yoob = {};
  * A two-dimensional Cartesian grid of values.
  */
 yoob.Playfield = function() {
-    this._store = {};
-    this.minX = undefined;
-    this.minY = undefined;
-    this.maxX = undefined;
-    this.maxY = undefined;
-    this._default = undefined;
+    this.init = function(cfg) {
+        this._store = {};
+        this.minX = undefined;
+        this.minY = undefined;
+        this.maxX = undefined;
+        this.maxY = undefined;
+        this._default = cfg.defaultValue;
+        this.cursors = cfg.cursors || [];
+        return this;
+    };
+
+    /*** Chainable setters ***/
 
     /*
      * Set the default value for this Playfield.  This
@@ -25,6 +31,17 @@ yoob.Playfield = function() {
         this._default = v;
         return this;
     };
+
+    /*
+     * Set the list of cursors to the given list of yoob.Cursor (or compatible)
+     * objects.
+     */
+    this.setCursors = function(cursors) {
+        this.cursors = cursors;
+        return this;
+    };
+
+    /*** Accessors, etc. ***/
 
     /*
      * Obtain the value at (x, y).  The default value will
@@ -281,6 +298,76 @@ yoob.Playfield = function() {
             return 0;
         } else {
             return this.maxY - this.minY + 1;
+        }
+    };
+
+    /*
+     * Return the requested bounds of the occupied portion of the playfield.
+     * "Occupation" in this sense includes all cursors.
+     *
+     * These may return 'undefined' if there is nothing in the playfield.
+     *
+     * Override these if you want to draw some portion of the
+     * playfield which is not the whole playfield.
+     */
+    this.getLowerX = function() {
+        var minX = this.getMinX();
+        for (var i = 0; i < this.cursors.length; i++) {
+            if (minX === undefined || this.cursors[i].x < minX) {
+                minX = this.cursors[i].x;
+            }
+        }
+        return minX;
+    };
+    this.getUpperX = function() {
+        var maxX = this.getMaxX();
+        for (var i = 0; i < this.cursors.length; i++) {
+            if (maxX === undefined || this.cursors[i].x > maxX) {
+                maxX = this.cursors[i].x;
+            }
+        }
+        return maxX;
+    };
+    this.getLowerY = function() {
+        var minY = this.getMinY();
+        for (var i = 0; i < this.cursors.length; i++) {
+            if (minY === undefined || this.cursors[i].y < minY) {
+                minY = this.cursors[i].y;
+            }
+        }
+        return minY;
+    };
+    this.getUpperY = function() {
+        var maxY = this.getMaxY();
+        for (var i = 0; i < this.cursors.length; i++) {
+            if (maxY === undefined || this.cursors[i].y > maxY) {
+                maxY = this.cursors[i].y;
+            }
+        }
+        return maxY;
+    };
+
+    /*
+     * Returns the number of occupied cells in the x direction.
+     * "Occupation" in this sense includes all cursors.
+     */
+    this.getCursoredExtentX = function() {
+        if (this.getLowerX() === undefined || this.getUpperX() === undefined) {
+            return 0;
+        } else {
+            return this.getUpperX() - this.getLowerX() + 1;
+        }
+    };
+
+    /*
+     * Returns the number of occupied cells in the y direction.
+     * "Occupation" in this sense includes all cursors.
+     */
+    this.getCursoredExtentY = function() {
+        if (this.getLowerY() === undefined || this.getUpperY() === undefined) {
+            return 0;
+        } else {
+            return this.getUpperY() - this.getLowerY() + 1;
         }
     };
 };

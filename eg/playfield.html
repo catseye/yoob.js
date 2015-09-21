@@ -36,11 +36,11 @@ Your browser doesn't support displaying an HTML5 canvas.
 </body>
 <script>
   var canvas = document.getElementById('canvas');
-  var pf = new yoob.Playfield().setDefault(' ');
   var ip = new yoob.Cursor();
   ip.fillStyle = "#c0c050";
+  var pf = new yoob.Playfield().setDefault(' ').setCursors([ip]);
   var canvasView = new yoob.PlayfieldCanvasView();
-  canvasView.init(pf, canvas).setCursors([ip]).setCellDimensions(undefined, 20);
+  canvasView.init(pf, canvas).setCellDimensions(undefined, 20);
 
   var htmlView = new yoob.PlayfieldHTMLView();
   htmlView.init(pf, document.getElementById('pre'));

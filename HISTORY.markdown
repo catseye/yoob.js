@@ -1,6 +1,15 @@
 Changelog
 =========
 
+*   version 0.11-PRE
+    
+    `yoob.Playfield` and its Views (`yoob.PlayfieldCanvasView`,
+    `yoob.PlayfieldHTMLView`) take configuration dictionaries as their
+    single argument to `init()`.
+    
+    `yoob.Cursors` are now attached to `yoob.Playfield` objects, and no
+    longer attached to their Views.
+
 *   version 0.10
     
     `yoob.Chargen` can be `init`ed with a `colorToAlpha` triple; if it is

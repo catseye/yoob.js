@@ -1,5 +1,5 @@
 /*
- * This file is part of yoob.js version 0.8
+ * This file is part of yoob.js version 0.11-PRE
  * Available from https://github.com/catseye/yoob.js/
  * This file is in the public domain.  See http://unlicense.org/ for details.
  */
@@ -10,34 +10,30 @@ if (window.yoob === undefined) yoob = {};
  * object on an HTML5 <canvas> element (or compatible object).
  *
  * TODO: don't necesarily resize canvas each time?
- * TODO: option to stretch content rendering to fill a fixed-size canvas
  */
 yoob.PlayfieldCanvasView = function() {
-    this.init = function(pf, canvas) {
-        this.pf = pf;
-        this.canvas = canvas;
+    this.init = function(cfg) {
+        this.pf = cfg.playfield;
+        this.canvas = cfg.canvas;
         this.ctx = canvas.getContext('2d');
-        this.cursors = [];
-        this.fixedPosition = false;
-        this.fixedSizeCanvas = false;
-        this.drawCursorsFirst = true;
-        this.setCellDimensions(8, 8);
+        this.cursors = cfg.cursors || [];
+        this.fixedPosition = !!cfg.fixedPosition;
+        this.fixedSizeCanvas = !!cfg.fixedSizeCanvas;
+        this.drawCursorsFirst = (cfg.drawCursorsFirst === undefined) ? true : !!cfg.drawCursorsFirst;
+        this.setCellDimensions(cfg.cellWidth || 8, cfg.cellHeight || 8);
         return this;
     };
 
     /*** Chainable setters ***/
 
-    /*
-     * Set the list of cursors to the given list of yoob.Cursor (or compatible)
-     * objects.
-     */
-    this.setCursors = function(cursors) {
-        this.cursors = cursors;
+    this.setPlayfield = function(pf) {
+        this.pf = pf;
         return this;
     };
 
-    this.setPlayfield = function(pf) {
-        this.pf = pf;
+    this.setCanvas = function(element) {
+        this.canvas = element;
+        this.ctx = this.canvas.getContext('2d');
         return this;
     };
 
@@ -58,76 +54,6 @@ yoob.PlayfieldCanvasView = function() {
         this.cellWidth = cellWidth;
         this.cellHeight = cellHeight;
         return this;
-    };
-
-    /*
-     * Return the requested bounds of the occupied portion of the playfield.
-     * "Occupation" in this sense includes all cursors.
-     *
-     * These may return 'undefined' if there is nothing in the playfield.
-     *
-     * Override these if you want to draw some portion of the
-     * playfield which is not the whole playfield.
-     */
-    this.getLowerX = function() {
-        var minX = this.pf.getMinX();
-        for (var i = 0; i < this.cursors.length; i++) {
-            if (minX === undefined || this.cursors[i].x < minX) {
-                minX = this.cursors[i].x;
-            }
-        }
-        return minX;
-    };
-    this.getUpperX = function() {
-        var maxX = this.pf.getMaxX();
-        for (var i = 0; i < this.cursors.length; i++) {
-            if (maxX === undefined || this.cursors[i].x > maxX) {
-                maxX = this.cursors[i].x;
-            }
-        }
-        return maxX;
-    };
-    this.getLowerY = function() {
-        var minY = this.pf.getMinY();
-        for (var i = 0; i < this.cursors.length; i++) {
-            if (minY === undefined || this.cursors[i].y < minY) {
-                minY = this.cursors[i].y;
-            }
-        }
-        return minY;
-    };
-    this.getUpperY = function() {
-        var maxY = this.pf.getMaxY();
-        for (var i = 0; i < this.cursors.length; i++) {
-            if (maxY === undefined || this.cursors[i].y > maxY) {
-                maxY = this.cursors[i].y;
-            }
-        }
-        return maxY;
-    };
-
-    /*
-     * Returns the number of occupied cells in the x direction.
-     * "Occupation" in this sense includes all cursors.
-     */
-    this.getExtentX = function() {
-        if (this.getLowerX() === undefined || this.getUpperX() === undefined) {
-            return 0;
-        } else {
-            return this.getUpperX() - this.getLowerX() + 1;
-        }
-    };
-
-    /*
-     * Returns the number of occupied cells in the y direction.
-     * "Occupation" in this sense includes all cursors.
-     */
-    this.getExtentY = function() {
-        if (this.getLowerY() === undefined || this.getUpperY() === undefined) {
-            return 0;
-        } else {
-            return this.getUpperY() - this.getLowerY() + 1;
-        }
     };
 
     /*
@@ -166,7 +92,7 @@ yoob.PlayfieldCanvasView = function() {
     };
 
     this.drawCursors = function(ctx, offsetX, offsetY, cellWidth, cellHeight) {
-        var cursors = this.cursors;
+        var cursors = this.pf.cursors;
         for (var i = 0; i < cursors.length; i++) {
             cursors[i].drawContext(
               ctx,
@@ -186,10 +112,9 @@ yoob.PlayfieldCanvasView = function() {
         var ctx = canvas.getContext('2d');
         var cellWidth = this.cellWidth;
         var cellHeight = this.cellHeight;
-        var cursors = this.cursors;
 
-        var width = this.getExtentX();
-        var height = this.getExtentY();
+        var width = this.pf.getCursoredExtentX();
+        var height = this.pf.getCursoredExtentY();
 
         canvas.width = width * cellWidth;
         canvas.height = height * cellHeight;
