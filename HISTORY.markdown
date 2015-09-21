@@ -9,6 +9,11 @@ Changelog
     
     `yoob.Cursors` are now attached to `yoob.Playfield` objects, and no
     longer attached to their Views.
+    
+    `yoob.Playfield.foreach` now calls `get()` to retrieve elements from
+    the playfield.
+
+    Added `yoob.Playfield.foreachVonNeumannNeighbour`.
 
 *   version 0.10
     

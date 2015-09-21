@@ -211,19 +211,37 @@ yoob.Playfield = function() {
      * x, y, and value.  If this callback returns a value,
      * it is written into the Playfield at that position.
      * This function ensures a particular order.
+     * This function uses .get() to retrieve elements from
+     * the Playfield, and .set() to modify them.  For more
+     * efficient (but non-subclass-supporting) behaviour,
+     * use foreachRaw() (which is not yet written.)
      */
     this.foreach = function(fun) {
         for (var y = this.minY; y <= this.maxY; y++) {
             for (var x = this.minX; x <= this.maxX; x++) {
-                var key = x+','+y;
-                var value = this._store[key];
+                var value = this.get(x, y);
                 if (value === undefined)
                     continue;
                 var result = fun(x, y, value);
+                // TODO: Playfield.UNDEFINED vs. undefined meaning "no change"?
                 if (result !== undefined) {
-                    if (result === ' ') {
-                        result = undefined;
-                    }
+                    this.put(x, y, result);
+                }
+            }
+        }
+    };
+
+    this.foreachVonNeumannNeighbour = function(x, y, fun) {
+        for (var dx = -1; dx <= 1; dx++) {
+            for (var dy = -1; dy <= 1; dy++) {
+                if (dx === 0 && dy === 0)
+                    continue;
+                var value = this.get(x + dx, y + dy);
+                if (value === undefined)
+                    continue;
+                var result = fun(x, y, value);
+                // TODO: Playfield.UNDEFINED vs. undefined meaning "no change"?
+                if (result !== undefined) {
                     this.put(x, y, result);
                 }
             }
