@@ -22,10 +22,10 @@ if (window.yoob === undefined) yoob = {};
 yoob.Cursor = function() {
     this.init = function(cfg) {
         cfg = cfg || {};
-        this.x = cfg.x || 0;
-        this.y = cfg.y || 0;
-        this.dx = cfg.dx || 0;
-        this.dy = cfg.dy || 0;
+        this.setX(cfg.x || 0);
+        this.setY(cfg.y || 0);
+        this.setDx(cfg.dx || 0);
+        this.setDy(cfg.dy || 0);
         this.fillStyle = cfg.fillStyle;
         return this;
     };
@@ -34,20 +34,36 @@ yoob.Cursor = function() {
         return new yoob.Cursor().init(this.x, this.y, this.dx, this.dy);
     };
 
+    /*** Chainable setters ***/
+
+    this.setX = function(x) {
+        this.x = x;
+        return this;
+    };
+
+    this.setY = function(y) {
+        this.y = y;
+        return this;
+    };
+
+    this.setDx = function(dx) {
+        this.dx = dx;
+        return this;
+    };
+
+    this.setDy = function(dy) {
+        this.dy = dy;
+        return this;
+    };
+
+    /*** Accessors ***/
+
     this.getX = function() {
         return this.x;
     };
 
     this.getY = function() {
         return this.y;
-    };
-
-    this.setX = function(x) {
-        this.x = x;
-    };
-
-    this.setY = function(y) {
-        this.y = y;
     };
 
     this.isHeaded = function(dx, dy) {
