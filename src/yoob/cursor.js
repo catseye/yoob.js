@@ -1,5 +1,5 @@
 /*
- * This file is part of yoob.js version 0.7
+ * This file is part of yoob.js version 0.11-PRE
  * Available from https://github.com/catseye/yoob.js/
  * This file is in the public domain.  See http://unlicense.org/ for details.
  */
@@ -20,11 +20,13 @@ if (window.yoob === undefined) yoob = {};
  * it is not defined.
  */
 yoob.Cursor = function() {
-    this.init = function(x, y, dx, dy) {
-        this.x = x;
-        this.y = y;
-        this.dx = dx;
-        this.dy = dy;
+    this.init = function(cfg) {
+        cfg = cfg || {};
+        this.x = cfg.x || 0;
+        this.y = cfg.y || 0;
+        this.dx = cfg.dx || 0;
+        this.dy = cfg.dy || 0;
+        this.fillStyle = cfg.fillStyle;
         return this;
     };
 
