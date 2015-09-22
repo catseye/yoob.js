@@ -45,6 +45,15 @@ yoob.PlayfieldHTMLView = function() {
     };
 
     /*
+     * Override if you like.
+     */
+    this.wrapCursorText = function(cursor, text) {
+        var fillStyle = this.cursorFillStyle || "#50ff50";
+        return '<span style="background: ' + fillStyle + '">' +
+               text + '</span>';
+    };
+
+    /*
      * Render the playfield, as HTML, on the DOM element.
      */
     this.draw = function() {
@@ -60,7 +69,7 @@ yoob.PlayfieldHTMLView = function() {
                 var rendered = this.render(this.pf.get(x, y));
                 for (var i = 0; i < cursors.length; i++) {
                     if (cursors[i].x === x && cursors[i].y === y) {
-                        rendered = cursors[i].wrapText(rendered);
+                        rendered = this.wrapCursorText(cursors[i], rendered);
                     }
                 }
                 row += rendered;

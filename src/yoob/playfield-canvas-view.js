@@ -91,15 +91,20 @@ yoob.PlayfieldCanvasView = function() {
         });
     };
 
+    /*
+     * Override if you like.
+     */
+    this.drawCursor = function(ctx, cursor, offsetX, offsetY, cellWidth, cellHeight) {
+        ctx.fillStyle = this.cursorFillStyle || "#50ff50";
+        var x = offsetX + cursors[i].x * cellWidth,
+        var y = offsetY + cursors[i].y * cellHeight,
+        ctx.fillRect(x, y, cellWidth, cellHeight);
+    };
+
     this.drawCursors = function(ctx, offsetX, offsetY, cellWidth, cellHeight) {
         var cursors = this.pf.cursors;
         for (var i = 0; i < cursors.length; i++) {
-            cursors[i].drawContext(
-              ctx,
-              offsetX + cursors[i].x * cellWidth,
-              offsetY + cursors[i].y * cellHeight,
-              cellWidth, cellHeight
-            );
+            this.drawCursor(ctx, cursors[i], offsetX, offsetY, cellWidth, cellHeight);
         }
     };
 

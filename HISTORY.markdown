@@ -7,12 +7,14 @@ Changelog
     `yoob.PlayfieldHTMLView`), and `yoob.Cursor` all take configuration
     dictionaries as their single argument to `init()`.
     
-    `yoob.Cursors` are now attached to `yoob.Playfield` objects, and no
-    longer attached to their Views.
+    `yoob.Cursor`s are now attached to `yoob.Playfield` objects, and no
+    longer attached to their Views.  `yoob.Cursor` also no longer has
+    a "built-in simple view"; viewing methods for cursors have been added
+    to the PlayfieldViews.
     
     `yoob.Playfield.foreach` now calls `get()` to retrieve elements from
     the playfield.
-
+    
     Added `yoob.Playfield.foreachVonNeumannNeighbour`.
 
 *   version 0.10

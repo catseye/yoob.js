@@ -11,13 +11,6 @@ if (window.yoob === undefined) yoob = {};
  * source) or a two-dimensional Cartesian space (such as a yoob.Playfield.)
  * A direction vector accompanies the position, so the cursor can "know which
  * way it's headed", but this facility need not be used.
- *
- * A cursor contains a built-in simple view, i.e. it knows how to render
- * itself on a canvas (drawContext method) or in the midst of HTML text
- * (wrapText method).  These methods are used by the view classes (playfield,
- * tape, source, etc.)  The default methods draw basic block cursors in the
- * colour given by the fillStyle attribute, if present, or a light green if
- * it is not defined.
  */
 yoob.Cursor = function() {
     this.init = function(cfg) {
@@ -26,7 +19,6 @@ yoob.Cursor = function() {
         this.setY(cfg.y || 0);
         this.setDx(cfg.dx || 0);
         this.setDy(cfg.dy || 0);
-        this.fillStyle = cfg.fillStyle;
         return this;
     };
 
@@ -145,22 +137,5 @@ yoob.Cursor = function() {
     this.write = function(value) {
         if (!this.tape) return;
         this.tape.put(this.x, value);
-    };
-
-    /*
-     * For HTML views.  Override if you like.
-     */
-    this.wrapText = function(text) {
-        var fillStyle = this.fillStyle || "#50ff50";
-        return '<span style="background: ' + fillStyle + '">' +
-               text + '</span>';
-    };
-
-    /*
-     * For canvas views.  Override if you like.
-     */
-    this.drawContext = function(ctx, x, y, cellWidth, cellHeight) {
-        ctx.fillStyle = this.fillStyle || "#50ff50";
-        ctx.fillRect(x, y, cellWidth, cellHeight);
     };
 }
