@@ -9,6 +9,12 @@ if (window.yoob === undefined) yoob = {};
  * A view (in the MVC sense) for depicting a yoob.Playfield (-compatible)
  * object on an HTML5 <canvas> element (or compatible object).
  *
+ * drawCursorsFirst defaults to true.  This produces the pleasing visual
+ * effect of the cursor being behind the cell values, but only if the cell values
+ * themselves have transparent areas (e.g. if they're glyphs in some font.)
+ * If the cell values are solid and fill the entire cell, drawCursorsFirst: false
+ * may be in order.
+ *
  * TODO: don't necesarily resize canvas each time?
  */
 yoob.PlayfieldCanvasView = function() {
@@ -94,17 +100,18 @@ yoob.PlayfieldCanvasView = function() {
     /*
      * Override if you like.
      */
-    this.drawCursor = function(ctx, cursor, offsetX, offsetY, cellWidth, cellHeight) {
+    this.drawCursor = function(ctx, cursor, canvasX, canvasY, cellWidth, cellHeight) {
         ctx.fillStyle = this.cursorFillStyle || "#50ff50";
-        var x = offsetX + cursor.getX() * cellWidth;
-        var y = offsetY + cursor.getY() * cellHeight;
-        ctx.fillRect(x, y, cellWidth, cellHeight);
+        ctx.fillRect(canvasX, canvasY, cellWidth, cellHeight);
     };
 
     this.drawCursors = function(ctx, offsetX, offsetY, cellWidth, cellHeight) {
         var cursors = this.pf.cursors;
         for (var i = 0; i < cursors.length; i++) {
-            this.drawCursor(ctx, cursors[i], offsetX, offsetY, cellWidth, cellHeight);
+            var cursor = cursors[i];
+            var x = offsetX + cursor.getX() * cellWidth;
+            var y = offsetY + cursor.getY() * cellHeight;
+            this.drawCursor(ctx, cursor, x, y, cellWidth, cellHeight);
         }
     };
 

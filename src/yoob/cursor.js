@@ -48,23 +48,10 @@ yoob.Cursor = function() {
         return this;
     };
 
-    /*** Accessors ***/
-
-    this.getX = function() {
-        return this.x;
-    };
-
-    this.getY = function() {
-        return this.y;
-    };
-
-    this.isHeaded = function(dx, dy) {
-        return this.dx === dx && this.dy === dy;
-    };
-
     this.advance = function() {
         this.x += this.dx;
         this.y += this.dy;
+        return this;
     };
 
     this.rotateClockwise = function() {
@@ -85,6 +72,7 @@ yoob.Cursor = function() {
         } else if (this.dx === -1 && this.dy === -1) {
             this.dx = 0; this.dy = -1;
         }
+        return this;
     };
 
     this.rotateCounterclockwise = function() {
@@ -105,6 +93,7 @@ yoob.Cursor = function() {
         } else if (this.dx === 1 && this.dy === -1) {
             this.dx = 0; this.dy = -1;
         }
+        return this;
     };
 
     this.rotateDegrees = function(degrees) {
@@ -112,21 +101,47 @@ yoob.Cursor = function() {
             this.rotateCounterclockwise();
             degrees -= 45;
         }
+        return this;
     };
 
     /* from yoob.TapeHead; may go away or change slightly */
     this.move = function(delta) {
         this.x += delta;
+        return this;
     };
 
     this.moveLeft = function(amount) {
         if (amount === undefined) amount = 1;
         this.x -= amount;
+        return this;
     };
 
     this.moveRight = function(amount) {
         if (amount === undefined) amount = 1;
         this.x += amount;
+        return this;
+    };
+
+    /*** Accessors ***/
+
+    this.getX = function() {
+        return this.x;
+    };
+
+    this.getY = function() {
+        return this.y;
+    };
+
+    this.getDx = function() {
+        return this.dx;
+    };
+
+    this.getDy = function() {
+        return this.dy;
+    };
+
+    this.isHeaded = function(dx, dy) {
+        return this.dx === dx && this.dy === dy;
     };
 
     this.read = function() {
@@ -137,5 +152,6 @@ yoob.Cursor = function() {
     this.write = function(value) {
         if (!this.tape) return;
         this.tape.put(this.x, value);
+        return this;
     };
 }
