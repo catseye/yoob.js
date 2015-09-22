@@ -96,8 +96,8 @@ yoob.PlayfieldCanvasView = function() {
      */
     this.drawCursor = function(ctx, cursor, offsetX, offsetY, cellWidth, cellHeight) {
         ctx.fillStyle = this.cursorFillStyle || "#50ff50";
-        var x = offsetX + cursors[i].x * cellWidth,
-        var y = offsetY + cursors[i].y * cellHeight,
+        var x = offsetX + cursor.getX() * cellWidth;
+        var y = offsetY + cursor.getY() * cellHeight;
         ctx.fillRect(x, y, cellWidth, cellHeight);
     };
 
