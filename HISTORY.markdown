@@ -24,9 +24,9 @@ Changelog
     `yoob.Tape` no longer contains "built in canvas view"; these methods
     have been moved to a new `yoob.TapeCanvasView` class.
     
-    `yoob.Tape` has been given `pop()` and `push()` methods to allow it to
-    be used as a stack.  `yoob.Stack` and `yoob.StackHTMLView` have been
-    removed.
+    `yoob.Tape` has been given `push()`, `pop()`, `peek()`, and `getSize()`
+    methods to allow it to be used as a first-in, first-out stack.
+    `yoob.Stack` and `yoob.StackHTMLView` have been removed.
 
 *   version 0.10
     

@@ -144,6 +144,12 @@ The classes are currently:
     It can also be used as a push-down, first-in-first-out stack of values,
     like you'd find on a push-down automaton.
 
+*   `yoob.TapeCanvasView`, in `yoob/tape-canvas-view.js`
+    and `yoob.TapeHTMLView`, in `yoob/tape-html-view.js`
+    
+    Like `yoob.PlayfieldCanvasView` and `yoob.PlayfieldHTMLView`,
+    except for `yoob.Tape`s.
+
 *   `yoob.Tree`, in `yoob/tree.js`
     
     A multi-purpose, n-ary tree, with optional node name (String identifier)
@@ -304,7 +310,7 @@ Plus some functions which aren't classes:
     
     Although yoob.js will likely not ship with an unbounded integer
     implementation (unless someone wants to contribute one), certain
-    classes (Tape, Stack, Playfield) should probably, one day, have limited
+    classes (Tape, Playfield) should probably, one day, have limited
     support for working with objects which conform to a subset of the API
     exposed by Matthew Crumley's [Javascript BigInteger][] class, which is
     unastonishing.
