@@ -40,13 +40,29 @@ yoob.TapeHTMLView = function() {
     };
 
     /*
+     * Override if you like.
+     */
+    this.wrapCursorText = function(cursor, text) {
+        var fillStyle = this.cursorFillStyle || "#50ff50";
+        return '<span style="background: ' + fillStyle + '">' +
+               text + '</span>';
+    };
+
+    /*
      * Render the Tape, as HTML, on the DOM element.
      * TODO: make this not awful.
      */
     this.draw = function() {
+        var cursors = this.tape.cursors;
         var text = "";
         this.tape.foreach(function(pos, value) {
-            text += this.render(value) + "<br/>";
+            var rendered = this.render(value);
+            for (var i = 0; i < cursors.length; i++) {
+                if (cursors[i].x === x && cursors[i].y === y) {
+                    rendered = this.wrapCursorText(cursors[i], rendered);
+                }
+            }
+            text += rendered + "<br/>";
         }, { dense: true });
         this.element.innerHTML = text;
     };

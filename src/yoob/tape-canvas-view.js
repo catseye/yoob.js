@@ -6,7 +6,7 @@
 if (window.yoob === undefined) yoob = {};
 
 /*
- * A view (in the MVC sense) for depicting a yoob.Playfield (-compatible)
+ * A view (in the MVC sense) for depicting a yoob.Tape (-compatible)
  * object on an HTML5 <canvas> element (or compatible object).
  *
  * drawCursorsFirst defaults to true.  This produces the pleasing visual
@@ -14,12 +14,10 @@ if (window.yoob === undefined) yoob = {};
  * themselves have transparent areas (e.g. if they're glyphs in some font.)
  * If the cell values are solid and fill the entire cell, drawCursorsFirst: false
  * may be in order.
- *
- * TODO: don't necesarily resize canvas each time?
  */
-yoob.PlayfieldCanvasView = function() {
+yoob.TapeCanvasView = function() {
     this.init = function(cfg) {
-        this.pf = cfg.playfield;
+        this.tape = cfg.tape;
         this.canvas = cfg.canvas;
         this.ctx = this.canvas.getContext('2d');
         this.fixedPosition = !!cfg.fixedPosition;
@@ -31,8 +29,8 @@ yoob.PlayfieldCanvasView = function() {
 
     /*** Chainable setters ***/
 
-    this.setPlayfield = function(pf) {
-        this.pf = pf;
+    this.setTape = function(tape) {
+        this.tape = tape;
         return this;
     };
 
@@ -62,7 +60,7 @@ yoob.PlayfieldCanvasView = function() {
     };
 
     /*
-     * Draws cells of the Playfield in a drawing context.
+     * Draws cells of the Tape in a drawing context.
      * cellWidth and cellHeight are canvas units of measure.
      *
      * The default implementation tries to call a .draw() method on the cell's
@@ -70,10 +68,10 @@ yoob.PlayfieldCanvasView = function() {
      *
      * Override if you wish to draw elements in some other way.
      */
-    this.drawCell = function(ctx, value, playfieldX, playfieldY,
+    this.drawCell = function(ctx, value, pos,
                              canvasX, canvasY, cellWidth, cellHeight) {
         if (value.draw !== undefined) {
-            value.draw(ctx, playfieldX, playfieldY, canvasX, canvasY,
+            value.draw(ctx, pos, canvasX, canvasY,
                        cellWidth, cellHeight);
         } else {
             ctx.fillStyle = "black";
@@ -82,16 +80,16 @@ yoob.PlayfieldCanvasView = function() {
     };
 
     /*
-     * Draws the Playfield in a drawing context.
+     * Draws the Tape in a drawing context.
      * cellWidth and cellHeight are canvas units of measure for each cell.
      * offsetX and offsetY are canvas units of measure for the top-left
      *   of the entire playfield.
      */
     this.drawContext = function(ctx, offsetX, offsetY, cellWidth, cellHeight) {
         var $this = this;
-        this.pf.foreach(function (x, y, value) {
-            $this.drawCell(ctx, value, x, y,
-                          offsetX + x * cellWidth, offsetY + y * cellHeight,
+        this.tape.foreach(function (pos, value) {
+            $this.drawCell(ctx, value, pos,
+                          offsetX + pos * cellWidth, offsetY,
                           cellWidth, cellHeight);
         });
     };
@@ -105,17 +103,17 @@ yoob.PlayfieldCanvasView = function() {
     };
 
     this.drawCursors = function(ctx, offsetX, offsetY, cellWidth, cellHeight) {
-        var cursors = this.pf.cursors;
+        var cursors = this.tape.cursors;
         for (var i = 0; i < cursors.length; i++) {
             var cursor = cursors[i];
-            var x = offsetX + cursor.getX() * cellWidth;
-            var y = offsetY + cursor.getY() * cellHeight;
-            this.drawCursor(ctx, cursor, x, y, cellWidth, cellHeight);
+            this.drawCursor(ctx, cursor,
+                            offsetX + cursor.getX() * cellWidth, offsetY,
+                            cellWidth, cellHeight);
         }
     };
 
     /*
-     * Draw the Playfield, and its set of Cursors, on the canvas element.
+     * Draw the Tape, and its set of Cursors, on the canvas element.
      * Resizes the canvas to the needed dimensions first.
      */
     this.draw = function() {
@@ -123,8 +121,8 @@ yoob.PlayfieldCanvasView = function() {
         var cellWidth = this.cellWidth;
         var cellHeight = this.cellHeight;
 
-        var width = this.pf.getCursoredExtentX();
-        var height = this.pf.getCursoredExtentY();
+        var width = this.tape.getCursoredExtent(); // this.max - this.min + 1;
+        var height = 1;
 
         canvas.width = width * cellWidth;
         canvas.height = height * cellHeight;
@@ -134,13 +132,19 @@ yoob.PlayfieldCanvasView = function() {
         ctx.textBaseline = "top";
         ctx.font = cellHeight + "px monospace";
 
-        var offsetX = 0;
+        if (cellWidth === undefined) {
+            cellWidth = ctx.measureText("@").width;
+        }
+
+        var offsetX = 0; // this.min * cellWidth * -1;
         var offsetY = 0;
 
+        /*
         if (!this.fixedPosition) {
             offsetX = (this.pf.getLowerX() || 0) * cellWidth * -1;
             offsetY = (this.pf.getLowerY() || 0) * cellHeight * -1;
         }
+        */
 
         if (this.drawCursorsFirst) {
             this.drawCursors(ctx, offsetX, offsetY, cellWidth, cellHeight);
@@ -152,5 +156,4 @@ yoob.PlayfieldCanvasView = function() {
             this.drawCursors(ctx, offsetX, offsetY, cellWidth, cellHeight);
         }
     };
-
 };
