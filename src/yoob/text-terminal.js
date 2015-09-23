@@ -1,5 +1,5 @@
 /*
- * This file is part of yoob.js version 0.4
+ * This file is part of yoob.js version 0.11-PRE
  * Available from https://github.com/catseye/yoob.js/
  * This file is in the public domain.  See http://unlicense.org/ for details.
  */
@@ -7,23 +7,22 @@ if (window.yoob === undefined) yoob = {};
 
 /*
  * A text-based-console simulation in Javascript.  It is, in actuality, a
- * facade for a yoob.Playfield and a yoob.Cursor.  (And soon, perhaps, a
- * yoob.Playfield*View also.)
+ * facade for a yoob.Playfield and a yoob.Cursor.
  *
  * The yoob.TextTerminal has no concern for display; in MVC terms it is a
  * "model" and you will need to use a "view" such as yoob.PlayfieldCanvasView
- * or yoob.PlayfieldHTMLView to display it.
+ * or yoob.PlayfieldHTMLView to display it.  (There is a convenience method on
+ * to create such an object.)
  *
- * Create a new yoob.TextTerminal object t, then call t.init(80, 25), then call
- * t.write() to write text to the console.
+ * Create a new yoob.TextTerminal object t, then call t.init({ columns: 80, rows: 25}),
+ * then call t.write() to write text to the console.
  *
  * You can also call t.setColors() to set the text and background colors of
  * the next text to be written, between calls to t.write().  You can call
  * t.reset() to clear the simulated screen (to the selected backgroundColor.)
  *
- * Note there is no overStrike mode anymore.  But also, because the TextTerminal
- * is backed by a Playfield, you can read characters and colors at any position
- * on the console.  Also, cursor doesn't blink anymore; will be addressed.
+ * Because the TextTerminal is backed by a Playfield, you can read characters and
+ * colors at any position on the console.
  *
  * Note that this is not a completely "dumb" or "raw" console.  Some methods do
  * understand terminal control codes.  But you don't have to use them.
@@ -52,31 +51,36 @@ yoob.TextTerminal = function() {
         };
     };
 
-    this.init = function(cols, rows) {
-        this.pf = new yoob.Playfield();
+    this.init = function(cfg) {
+        cfg = cfg || {};
+        this.rows = cfg.rows || 25;
+        this.cols = cfg.columns || 80;
+        this.textColor = cfg.textColor || "green";
+        this.backgroundColor = cfg.backgroundColor || "black";
+        this.cursor = new yoob.Cursor().init({ dx: 1 });
         this.defaultCell = new ConsoleCell().init(' ', 'green', 'black');
-        this.pf.setDefault(this.defaultCell);
-        this.cursor = new yoob.Cursor(0, 0, 1, 0);
-        this.rows = rows;
-        this.cols = cols;
-        this.textColor = "green";
-        this.backgroundColor = "black";
+        this.pf = new yoob.Playfield(),init({
+            defaultValue: this.defaultCell,
+            cursors: [this.cursor]
+        });
         this.reset();
         return this;
     };
 
     // convenience function
-    this.createPlayfieldCanvasView = function(element, cellWidth, cellHeight) {
-        var view = new yoob.PlayfieldCanvasView();
-        view.init(this.pf, element);
-        view.setCursors([this.cursor]);
-        view.setCellDimensions(cellWidth, cellHeight);
-        var self = this;
+    this.createPlayfieldCanvasView = function(canvas, cellWidth, cellHeight) {
+        var view = new yoob.PlayfieldCanvasView().init({
+            playfield: this.pf,
+            canvas: canvas,
+            cellWidth: cellWidth,
+            cellHeight: cellHeight,
+            fixedPosition: true
+        });
+        var $this = this;
         view.getLowerX = function() { return 0; };
         view.getLowerY = function() { return 0; };
-        view.getUpperX = function() { return self.cols - 1; };
-        view.getUpperY = function() { return self.rows - 1; };
-        view.fixedPosition = true;
+        view.getUpperX = function() { return $this.cols - 1; };
+        view.getUpperY = function() { return $this.rows - 1; };
         return view;
     };
 
@@ -137,8 +141,7 @@ yoob.TextTerminal = function() {
      * make the cursor visible(?), and home it.
      */
     this.reset = function() {
-        this.cursor.x = 0;
-        this.cursor.y = 0;
+        this.cursor.setX(0).setY(0);
         this.pf.clear();
     };
 
@@ -147,12 +150,11 @@ yoob.TextTerminal = function() {
      * TextTerminal display if necessary.
      */
     this.advanceRow = function() {
-        this.cursor.x = 0;
-        this.cursor.y += 1;
-        while (this.cursor.y >= this.rows) {
+        this.cursor.setX(0).setY(this.cursor.getY() + 1);
+        while (this.cursor.getY() >= this.rows) {
             this.pf.scrollRectangleY(-1, 0, 0, this.cols-1, this.rows-1);
             this.pf.clearRectangle(0, this.rows-1, this.cols-1, this.rows-1);
-            this.cursor.y -= 1;
+            this.cursor.setY(this.cursor.getY() - 1);
         }
     };
 
@@ -161,8 +163,8 @@ yoob.TextTerminal = function() {
      * next row if necessary.
      */
     this.advanceCol = function() {
-        this.cursor.x += 1;
-        if (this.cursor.x >= this.cols) {
+        this.cursor.setX(this.cursor.getX() + 1);
+        if (this.cursor.getX() >= this.cols) {
             this.advanceRow();
         }
     };
@@ -200,8 +202,8 @@ yoob.TextTerminal = function() {
             if (c === '\n') {
                 this.advanceRow();
             } else if (c === '\b') {
-                if (this.cursor.x > 0) {
-                    this.cursor.x--;
+                if (this.cursor.getX()  > 0) {
+                    this.cursor.setX(this.cursor.getX() - 1);
                 }
             } else {
                 this.writeChar(c);
@@ -214,7 +216,6 @@ yoob.TextTerminal = function() {
      * (0-based) and y is the row number (also 0-based.)
      */
     this.gotoxy = function(x, y) {
-        this.cursor.x = x;
-        this.cursor.y = y;
+        this.cursor.setX(x).setY(y);
     };
 };

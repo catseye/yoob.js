@@ -4,8 +4,8 @@ Changelog
 *   version 0.11-PRE
     
     `yoob.Playfield`, its Views (`yoob.PlayfieldCanvasView`,
-    `yoob.PlayfieldHTMLView`), and `yoob.Cursor` all take configuration
-    dictionaries as their single argument to `init()`.
+    `yoob.PlayfieldHTMLView`), `yoob.Cursor`, and `yoob.TextTerminal`
+    all take configuration dictionaries as their single argument to `init()`.
     
     `yoob.Cursor`s are now attached to `yoob.Playfield` and `yoob.Tape`
     objects, and are no longer attached to the PlatfieldViews.
