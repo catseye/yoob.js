@@ -55,11 +55,12 @@ yoob.TapeHTMLView = function() {
     this.draw = function() {
         var cursors = this.tape.cursors;
         var text = "";
+        var $this = this;
         this.tape.foreach(function(pos, value) {
-            var rendered = this.render(value);
+            var rendered = $this.render(value);
             for (var i = 0; i < cursors.length; i++) {
-                if (cursors[i].x === x && cursors[i].y === y) {
-                    rendered = this.wrapCursorText(cursors[i], rendered);
+                if (cursors[i].getX() === pos) {
+                    rendered = $this.wrapCursorText(cursors[i], rendered);
                 }
             }
             text += rendered + "<br/>";
