@@ -128,7 +128,6 @@ yoob.PlayfieldCanvasView = function() {
 
         canvas.width = width * cellWidth;
         canvas.height = height * cellHeight;
-        this.ctx = canvas.getContext('2d');
         var ctx = this.ctx;
 
         ctx.textBaseline = "top";

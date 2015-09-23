@@ -52,6 +52,8 @@ yoob.TextTerminal = function() {
     };
 
     this.init = function(cfg) {
+        var $this = this;
+
         cfg = cfg || {};
         this.rows = cfg.rows || 25;
         this.cols = cfg.columns || 80;
@@ -59,10 +61,16 @@ yoob.TextTerminal = function() {
         this.backgroundColor = cfg.backgroundColor || "black";
         this.cursor = new yoob.Cursor().init({ dx: 1 });
         this.defaultCell = new ConsoleCell().init(' ', 'green', 'black');
+
         this.pf = new yoob.Playfield().init({
             defaultValue: this.defaultCell,
             cursors: [this.cursor]
         });
+        this.pf.getLowerX = function() { return 0; };
+        this.pf.getLowerY = function() { return 0; };
+        this.pf.getUpperX = function() { return $this.cols - 1; };
+        this.pf.getUpperY = function() { return $this.rows - 1; };
+
         this.reset();
         return this;
     };
@@ -76,11 +84,6 @@ yoob.TextTerminal = function() {
             cellHeight: cellHeight,
             fixedPosition: true
         });
-        var $this = this;
-        view.getLowerX = function() { return 0; };
-        view.getLowerY = function() { return 0; };
-        view.getUpperX = function() { return $this.cols - 1; };
-        view.getUpperY = function() { return $this.rows - 1; };
         return view;
     };
 
@@ -141,7 +144,7 @@ yoob.TextTerminal = function() {
      * make the cursor visible(?), and home it.
      */
     this.reset = function() {
-        this.cursor.setX(0).setY(0);
+        this.cursor.moveTo(0, 0);
         this.pf.clear();
     };
 
@@ -150,11 +153,11 @@ yoob.TextTerminal = function() {
      * TextTerminal display if necessary.
      */
     this.advanceRow = function() {
-        this.cursor.setX(0).setY(this.cursor.getY() + 1);
+        this.cursor.setX(0).moveBy(0, 1);
         while (this.cursor.getY() >= this.rows) {
             this.pf.scrollRectangleY(-1, 0, 0, this.cols-1, this.rows-1);
             this.pf.clearRectangle(0, this.rows-1, this.cols-1, this.rows-1);
-            this.cursor.setY(this.cursor.getY() - 1);
+            this.cursor.moveBy(0, -1);
         }
     };
 
@@ -163,7 +166,7 @@ yoob.TextTerminal = function() {
      * next row if necessary.
      */
     this.advanceCol = function() {
-        this.cursor.setX(this.cursor.getX() + 1);
+        this.cursor.moveRight();
         if (this.cursor.getX() >= this.cols) {
             this.advanceRow();
         }
@@ -173,8 +176,7 @@ yoob.TextTerminal = function() {
      * Write a character to the console.  Control characters are not heeded.
      */
     this.writeChar = function(c) {
-        this.pf.put(
-            this.cursor.x, this.cursor.y,
+        this.pf.write(
             new ConsoleCell().init(c, this.textColor, this.backgroundColor)
         );
         this.advanceCol();
@@ -203,7 +205,7 @@ yoob.TextTerminal = function() {
                 this.advanceRow();
             } else if (c === '\b') {
                 if (this.cursor.getX()  > 0) {
-                    this.cursor.setX(this.cursor.getX() - 1);
+                    this.cursor.moveLeft();
                 }
             } else {
                 this.writeChar(c);
@@ -216,6 +218,6 @@ yoob.TextTerminal = function() {
      * (0-based) and y is the row number (also 0-based.)
      */
     this.gotoxy = function(x, y) {
-        this.cursor.setX(x).setY(y);
+        this.cursor.moveTo(x, y);
     };
 };

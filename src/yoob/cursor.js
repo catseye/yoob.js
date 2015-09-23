@@ -11,6 +11,10 @@ if (window.yoob === undefined) yoob = {};
  * source) or a two-dimensional Cartesian space (such as a yoob.Playfield.)
  * A direction vector accompanies the position, so the cursor can "know which
  * way it's headed", but this facility need not be used.
+ *
+ * These methods are written for efficiency rather than inheritability, so
+ * if you e.g. override setX() in a subclass, you will want to override
+ * advance() et al too.
  */
 yoob.Cursor = function() {
     this.init = function(cfg) {
@@ -48,11 +52,61 @@ yoob.Cursor = function() {
         return this;
     };
 
+    /*** Accessors ***/
+
+    this.getX = function() {
+        return this.x;
+    };
+
+    this.getY = function() {
+        return this.y;
+    };
+
+    this.getDx = function() {
+        return this.dx;
+    };
+
+    this.getDy = function() {
+        return this.dy;
+    };
+
+    this.isHeaded = function(dx, dy) {
+        return this.dx === dx && this.dy === dy;
+    };
+
+    /*** Motion ***/
+
+    this.moveTo = function(x, y) {
+        this.x = x;
+        this.y = y;
+        return this;
+    };
+
+    this.moveBy = function(dx, dy) {
+        this.x += dx;
+        this.y += dy;
+        return this;
+    };
+
+    this.moveLeft = function(amount) {
+        if (amount === undefined) amount = 1;
+        this.x -= amount;
+        return this;
+    };
+
+    this.moveRight = function(amount) {
+        if (amount === undefined) amount = 1;
+        this.x += amount;
+        return this;
+    };
+
     this.advance = function() {
         this.x += this.dx;
         this.y += this.dy;
         return this;
     };
+
+    /*** Orientation ***/
 
     this.rotateClockwise = function() {
         if (this.dx === 0 && this.dy === -1) {
@@ -102,45 +156,5 @@ yoob.Cursor = function() {
             degrees -= 45;
         }
         return this;
-    };
-
-    /* from yoob.TapeHead; may go away or change slightly */
-    this.move = function(delta) {
-        this.x += delta;
-        return this;
-    };
-
-    this.moveLeft = function(amount) {
-        if (amount === undefined) amount = 1;
-        this.x -= amount;
-        return this;
-    };
-
-    this.moveRight = function(amount) {
-        if (amount === undefined) amount = 1;
-        this.x += amount;
-        return this;
-    };
-
-    /*** Accessors ***/
-
-    this.getX = function() {
-        return this.x;
-    };
-
-    this.getY = function() {
-        return this.y;
-    };
-
-    this.getDx = function() {
-        return this.dx;
-    };
-
-    this.getDy = function() {
-        return this.dy;
-    };
-
-    this.isHeaded = function(dx, dy) {
-        return this.dx === dx && this.dy === dy;
     };
 }

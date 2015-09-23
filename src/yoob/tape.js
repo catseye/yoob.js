@@ -125,7 +125,7 @@ yoob.Tape = function() {
     this.push = function(value) {
         var cursor = this.cursors[0];
         this.put(cursor.getX(), value);  // updates bounds
-        cursor.setX(cursor.getX() + 1);
+        cursor.moveRight();
         return this;
     };
 
