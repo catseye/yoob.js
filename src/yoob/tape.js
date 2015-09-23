@@ -133,8 +133,8 @@ yoob.Tape = function() {
 
     this.push = function(value) {
         var cursor = this.cursors[0];
-        cursor.setX(cursor.getX() + 1);
         this.put(cursor.getX(), value);
+        cursor.setX(cursor.getX() + 1);
         return this;
     };
 };

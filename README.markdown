@@ -140,13 +140,9 @@ The classes are currently:
 
 *   `yoob.Tape`, in `yoob/tape.js`
     
-    A (theoretically) unbounded tape, like you'd find on a Turing machine,
-    optionally associated with a `<canvas>` on which it is depicted.
-
-*   `yoob.Stack`, in `yoob/stack.js`
-    
-    An object implementing a push-down, first-in-first-out stack of values,
-    optionally associated with a `<canvas>` on which it is depicted.
+    A (theoretically) unbounded tape, like you'd find on a Turing machine.
+    It can also be used as a push-down, first-in-first-out stack of values,
+    like you'd find on a push-down automaton.
 
 *   `yoob.Tree`, in `yoob/tree.js`
     
