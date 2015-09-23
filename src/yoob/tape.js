@@ -7,6 +7,11 @@ if (window.yoob === undefined) yoob = {};
 
 /*
  * A (theoretically) unbounded tape, like you'd find on a Turing machine.
+ *
+ * It can also be used as a stack -- in this case, give it a single cursor
+ * starting at x=0.
+ *
+ * TODO: recalculate bounds?
  */
 yoob.Tape = function() {
     this.init = function(cfg) {
@@ -46,6 +51,10 @@ yoob.Tape = function() {
             delete this._store[pos];
         }
         this._store[pos] = value;
+    };
+
+    this.size = function() {
+        return this._top;
     };
 
     /*
@@ -103,6 +112,28 @@ yoob.Tape = function() {
 
     this.write = function(value, index) {
         var cursor = this.cursors[index || 0];
+        this.put(cursor.getX(), value);
+        return this;
+    };
+
+    /*
+     * Cursored stack interface.
+     */
+    this.pop = function() {
+        var cursor = this.cursors[0];
+        if (cursor.getX() === 0) {
+            return undefined;
+        }
+        cursor.setX(cursor.getX() - 1);
+        value = this.get(cursor.getX());
+        this.put(cursor.getX(), this._default);
+        // recalculate bounds
+        return value;
+    };
+
+    this.push = function(value) {
+        var cursor = this.cursors[0];
+        cursor.setX(cursor.getX() + 1);
         this.put(cursor.getX(), value);
         return this;
     };
