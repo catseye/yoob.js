@@ -11,8 +11,7 @@ if (window.yoob === undefined) yoob = {};
  *
  * The yoob.TextTerminal has no concern for display; in MVC terms it is a
  * "model" and you will need to use a "view" such as yoob.PlayfieldCanvasView
- * or yoob.PlayfieldHTMLView to display it.  (There is a convenience method on
- * to create such an object.)
+ * or yoob.PlayfieldHTMLView to display it.
  *
  * Create a new yoob.TextTerminal object t, then call t.init({ columns: 80, rows: 25}),
  * then call t.write() to write text to the console.
@@ -75,16 +74,8 @@ yoob.TextTerminal = function() {
         return this;
     };
 
-    // convenience function
-    this.createPlayfieldCanvasView = function(canvas, cellWidth, cellHeight) {
-        var view = new yoob.PlayfieldCanvasView().init({
-            playfield: this.pf,
-            canvas: canvas,
-            cellWidth: cellWidth,
-            cellHeight: cellHeight,
-            fixedPosition: true
-        });
-        return view;
+    this.getPlayfield = function() {
+        return this.pf;
     };
 
     this.setColors = function(textColor, backgroundColor) {

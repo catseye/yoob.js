@@ -12,11 +12,9 @@
 
 <h1>yoob.TextTerminal Demo</h1>
 
-<!--
-<pre id="terminal" tabindex="0"></pre>
--->
+<pre id="html_view" tabindex="0"></pre>
 
-<canvas id="terminal" width="600" height="400" tabindex="0">
+<canvas id="canvas_view" width="600" height="400" tabindex="0">
   Your browser doesn't support displaying an HTML5 canvas.
 </canvas>
 
@@ -28,12 +26,27 @@
 <script src="../src/yoob/text-terminal.js"></script>
 <script src="../src/yoob/line-input-buffer.js"></script>
 <script>
-    var element = document.getElementById('terminal');
-    var t = new yoob.TextTerminal().init(80, 25);
-    var view = t.createPlayfieldCanvasView(element, 12, 18);
+    var element = document.getElementById('canvas_view');
+    var t = new yoob.TextTerminal().init({ columns: 80, rows: 25 });
+
+    var view = new yoob.PlayfieldCanvasView().init({
+        playfield: t.getPlayfield(),
+        canvas: element,
+        cellWidth: 12,
+        cellHeight: 18,
+        fixedPosition: true
+    });
+
     /*
-    var view = new yoob.PlayfieldHTMLView();
-    view.init(pf, element);
+    var view = new yoob.PlayfieldHTMLView().init({
+        playfield: t.getPlayfield(),
+        element: element
+    });
+    view.render = function(value) {
+        //var style = ''; // "background-color: " + value.backgroundColor + "; color: " + value.textColor;
+        //return '<span style="' + style + '">' + value.character + "</span>";
+        return value.character;
+    };
     */
 
     t.write("Click me!\n");
