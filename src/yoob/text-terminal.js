@@ -59,7 +59,7 @@ yoob.TextTerminal = function() {
         this.backgroundColor = cfg.backgroundColor || "black";
         this.cursor = new yoob.Cursor().init({ dx: 1 });
         this.defaultCell = new ConsoleCell().init(' ', 'green', 'black');
-        this.pf = new yoob.Playfield(),init({
+        this.pf = new yoob.Playfield().init({
             defaultValue: this.defaultCell,
             cursors: [this.cursor]
         });
