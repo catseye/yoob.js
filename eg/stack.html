@@ -15,15 +15,19 @@
 
 <h1>Using yoob.Tape as a Stack Demo</h1>
 
+<div>
+  <button id="push_0">Push 0</button>
+  <button id="push_1">Push 1</button>
+  <button id="pop">Pop</button>
+  <button id="peek">Peek</button>
+  <button id="size">Size?</button>
+</div>
+
 <canvas id="canvas_view" width="400" height="40">
 Your browser doesn't support displaying an HTML5 canvas.
 </canvas>
 
 <pre id="html_view"></pre>
-
-<button id="push_0">Push 0</button>
-<button id="push_1">Push 1</button>
-<button id="pop">Pop</button>
 
 </body>
 <script>
@@ -60,5 +64,17 @@ Your browser doesn't support displaying an HTML5 canvas.
       alert(v);
       canvasView.draw();
       htmlView.draw();
+  };
+
+  document.getElementById('peek').onclick = function(e) {
+      var v = stack.peek();
+      v = (v === undefined ? "Empty stack" : v); 
+      alert(v);
+      canvasView.draw();
+      htmlView.draw();
+  };
+
+  document.getElementById('size').onclick = function(e) {
+      alert(stack.getSize());
   };
 </script>

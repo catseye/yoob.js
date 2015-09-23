@@ -9,7 +9,8 @@ if (window.yoob === undefined) yoob = {};
  * A (theoretically) unbounded tape, like you'd find on a Turing machine.
  *
  * It can also be used as a stack -- in this case, give it a single cursor
- * starting at x=0.
+ * starting at x=0.  Note that the result of trying to use it both as a stack
+ * and as a tape is currently undefined.
  *
  * TODO: recalculate bounds?
  */
@@ -45,11 +46,13 @@ yoob.Tape = function() {
      * Write a new value into the given position.
      */
     this.put = function(pos, value) {
-        if (this.min === undefined || pos < this.min) this.min = pos;
-        if (this.max === undefined || pos > this.max) this.max = pos;
         if (value === this._default) {
             delete this._store[pos];
+            // NOTE: this does not recalculate the bounds.
+            return;
         }
+        if (this.min === undefined || pos < this.min) this.min = pos;
+        if (this.max === undefined || pos > this.max) this.max = pos;
         this._store[pos] = value;
     };
 
@@ -58,7 +61,7 @@ yoob.Tape = function() {
     };
 
     /*
-     * Iterate over every defined cell on the Tape.
+     * Iterate over every cell on the Tape.
      * fun is a callback which takes two parameters:
      * position and value.  If this callback returns a value,
      * it is written into the Tape at that position.
@@ -119,22 +122,44 @@ yoob.Tape = function() {
     /*
      * Cursored stack interface.
      */
-    this.pop = function() {
-        var cursor = this.cursors[0];
-        if (cursor.getX() === 0) {
-            return undefined;
-        }
-        cursor.setX(cursor.getX() - 1);
-        value = this.get(cursor.getX());
-        this.put(cursor.getX(), this._default);
-        // recalculate bounds
-        return value;
-    };
-
     this.push = function(value) {
         var cursor = this.cursors[0];
-        this.put(cursor.getX(), value);
+        this.put(cursor.getX(), value);  // updates bounds
         cursor.setX(cursor.getX() + 1);
         return this;
     };
+
+    this.pop = function() {
+        var cursor = this.cursors[0];
+        var x = cursor.getX();
+        if (x === 0) {
+            return undefined;  // stack underflow
+        }
+        x--;
+        cursor.setX(x);
+        value = this.get(x);
+        this.put(x, this._default);
+        if (x === this.max) {  // which it really should be.  recalculate bounds
+            this.max--;
+            if (this.max < this.min) {
+                this.max = undefined;
+                this.min = undefined;
+            }
+        }
+        return value;
+    };
+
+    this.peek = function() {
+        var cursor = this.cursors[0];
+        var x = cursor.getX();
+        if (x === 0) {
+            return undefined;  // empty stack
+        }
+        return this.get(x - 1);
+    };
+
+    this.getSize = function() {
+        return this.max === undefined ? 0 : this.max + 1;
+    };
+
 };

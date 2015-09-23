@@ -59,6 +59,9 @@ yoob.Playfield = function() {
     this.put = function(x, y, value) {
         var key = x+','+y;
         if (value === undefined || value === this._default) {
+            // NOTE: this does not recalculate the bounds, nor
+            // will it set the bounds back to 'undefined'
+            // if the playfield is now empty.
             delete this._store[key];
             return;
         }
