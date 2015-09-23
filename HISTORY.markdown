@@ -7,15 +7,22 @@ Changelog
     `yoob.PlayfieldHTMLView`), and `yoob.Cursor` all take configuration
     dictionaries as their single argument to `init()`.
     
-    `yoob.Cursor`s are now attached to `yoob.Playfield` objects, and no
-    longer attached to their Views.  `yoob.Cursor` also no longer has
-    a "built-in simple view"; viewing methods for cursors have been added
-    to the PlayfieldViews.
+    `yoob.Cursor`s are now attached to `yoob.Playfield` and `yoob.Tape`
+    objects, and are no longer attached to the PlatfieldViews.
+    `yoob.Cursor` also no longer has a "built-in simple view"; viewing
+    methods for cursors have been added to the PlayfieldViews.
     
     `yoob.Playfield.foreach` now calls `get()` to retrieve elements from
     the playfield.
     
     Added `yoob.Playfield.foreachVonNeumannNeighbour`.
+    
+    `yoob.Cursor` no longer supports `read()`/`write()`; instead,
+    `yoob.Playfield` and `yoob.Tape` both support the "cursored read/write
+    interface".
+    
+    `yoob.Tape` no longer contains "built in canvas view"; these methods
+    have been moved to a new `yoob.TapeCanvasView` class.
 
 *   version 0.10
     
