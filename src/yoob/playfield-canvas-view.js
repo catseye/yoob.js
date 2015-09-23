@@ -89,7 +89,7 @@ yoob.PlayfieldCanvasView = function() {
      */
     this.drawContext = function(ctx, offsetX, offsetY, cellWidth, cellHeight) {
         var $this = this;
-        this.pf.foreach(function (x, y, value) {
+        this.pf.foreachDirect(function (x, y, value) {
             $this.drawCell(ctx, value, x, y,
                           offsetX + x * cellWidth, offsetY + y * cellHeight,
                           cellWidth, cellHeight);

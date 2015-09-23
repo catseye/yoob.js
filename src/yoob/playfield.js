@@ -215,12 +215,28 @@ yoob.Playfield = function() {
      * This function uses .get() to retrieve elements from
      * the Playfield, and .set() to modify them.  For more
      * efficient (but non-subclass-supporting) behaviour,
-     * use foreachRaw() (which is not yet written.)
+     * use foreachDirect().
      */
     this.foreach = function(fun) {
         for (var y = this.minY; y <= this.maxY; y++) {
             for (var x = this.minX; x <= this.maxX; x++) {
                 var value = this.get(x, y);
+                if (value === undefined)
+                    continue;
+                var result = fun(x, y, value);
+                // TODO: Playfield.UNDEFINED vs. undefined meaning "no change"?
+                if (result !== undefined) {
+                    this.put(x, y, result);
+                }
+            }
+        }
+    };
+
+    this.foreachDirect = function(fun) {
+        for (var y = this.minY; y <= this.maxY; y++) {
+            for (var x = this.minX; x <= this.maxX; x++) {
+                var key = x+','+y;
+                var value = this._store[key];
                 if (value === undefined)
                     continue;
                 var result = fun(x, y, value);
