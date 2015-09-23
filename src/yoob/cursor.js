@@ -143,15 +143,4 @@ yoob.Cursor = function() {
     this.isHeaded = function(dx, dy) {
         return this.dx === dx && this.dy === dy;
     };
-
-    this.read = function() {
-        if (!this.tape) return undefined;
-        return this.tape.get(this.x);
-    };
-
-    this.write = function(value) {
-        if (!this.tape) return;
-        this.tape.put(this.x, value);
-        return this;
-    };
 }

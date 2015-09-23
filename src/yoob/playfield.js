@@ -10,13 +10,10 @@ if (window.yoob === undefined) yoob = {};
  */
 yoob.Playfield = function() {
     this.init = function(cfg) {
-        this._store = {};
-        this.minX = undefined;
-        this.minY = undefined;
-        this.maxX = undefined;
-        this.maxY = undefined;
+        cfg = cfg || {};
         this._default = cfg.defaultValue;
         this.cursors = cfg.cursors || [];
+        this.clear();
         return this;
     };
 
@@ -119,6 +116,7 @@ yoob.Playfield = function() {
         this.minY = undefined;
         this.maxX = undefined;
         this.maxY = undefined;
+        return this;
     };
 
     /*
@@ -387,5 +385,19 @@ yoob.Playfield = function() {
         } else {
             return this.getUpperY() - this.getLowerY() + 1;
         }
+    };
+
+    /*
+     * Cursored read/write interface
+     */
+    this.read = function(index) {
+        var cursor = this.cursors[index || 0];
+        return this.get(cursor.getX(), cursor.getY());
+    };
+
+    this.write = function(value, index) {
+        var cursor = this.cursors[index || 0];
+        this.put(cursor.getX(), cursor.getY(), value);
+        return this;
     };
 };

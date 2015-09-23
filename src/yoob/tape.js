@@ -1,5 +1,5 @@
 /*
- * This file is part of yoob.js version 0.9
+ * This file is part of yoob.js version 0.11-PRE
  * Available from https://github.com/catseye/yoob.js/
  * This file is in the public domain.  See http://unlicense.org/ for details.
  */
@@ -11,7 +11,8 @@ if (window.yoob === undefined) yoob = {};
 yoob.Tape = function() {
     this.init = function(cfg) {
         cfg = cfg || {};
-        this.default = cfg.default;
+        this._default = cfg.defaultValue;
+        this.cursors = cfg.cursors || [];
         this.clear();
         return this;
     };
@@ -32,7 +33,7 @@ yoob.Tape = function() {
      */
     this.get = function(pos) {
         var val = this._store[pos];
-        return val === undefined ? this.default : val;
+        return val === undefined ? this._default : val;
     };
 
     /*
@@ -41,7 +42,7 @@ yoob.Tape = function() {
     this.put = function(pos, value) {
         if (this.min === undefined || pos < this.min) this.min = pos;
         if (this.max === undefined || pos > this.max) this.max = pos;
-        if (value === this.default) {
+        if (value === this._default) {
             delete this._store[pos];
         }
         this._store[pos] = value;
@@ -64,7 +65,7 @@ yoob.Tape = function() {
             var value = this._store[pos];
             if (value === undefined) {
                 if (dense) {
-                    value = this.default;
+                    value = this._default;
                 } else {
                     continue;
                 }
@@ -74,6 +75,20 @@ yoob.Tape = function() {
                 this.put(pos, result);
             }
         }
+    };
+
+    /*
+     * Cursored read/write interface
+     */
+    this.read = function(index) {
+        var cursor = this.cursors[index || 0];
+        return this.get(cursor.getX());
+    };
+
+    this.write = function(value, index) {
+        var cursor = this.cursors[index || 0];
+        this.put(cursor.getX(), value);
+        return this;
     };
 
     /*
