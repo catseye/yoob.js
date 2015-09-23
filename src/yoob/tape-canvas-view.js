@@ -121,7 +121,7 @@ yoob.TapeCanvasView = function() {
         var cellWidth = this.cellWidth;
         var cellHeight = this.cellHeight;
 
-        var width = this.tape.getCursoredExtent(); // this.max - this.min + 1;
+        var width = this.tape.getCursoredExtent();
         var height = 1;
 
         canvas.width = width * cellWidth;

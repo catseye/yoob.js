@@ -77,6 +77,22 @@ yoob.Tape = function() {
         }
     };
 
+    this.getExtent = function() {
+        return this.max - this.min + 1;
+    };
+
+    this.getCursoredExtent = function() {
+        var max_ = this.max;
+        var min_ = this.min;
+        var i;
+        for (i = 0; i < this.cursors.length; i++) {
+            var x = this.cursors[i].getX();
+            if (x > max_) max_ = x;
+            if (x < min_) min_ = x;
+        }
+        return max_ - min_ + 1;
+    };
+
     /*
      * Cursored read/write interface
      */
