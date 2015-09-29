@@ -12,9 +12,6 @@ Changelog
     `yoob.Cursor` also no longer has a "built-in simple view"; viewing
     methods for cursors have been added to the PlayfieldViews.
     
-    `yoob.Playfield.foreach` now calls `get()` to retrieve elements from
-    the playfield.
-    
     Added `yoob.Playfield.foreachVonNeumannNeighbour`.
     
     `yoob.Cursor` no longer supports `read()`/`write()`; instead,
@@ -27,6 +24,10 @@ Changelog
     `yoob.Tape` has been given `push()`, `pop()`, `peek()`, and `getSize()`
     methods to allow it to be used as a first-in, first-out stack.
     `yoob.Stack` and `yoob.StackHTMLView` have been removed.
+    
+    `yoob.Controller` now has a `setResetState()` method, which can be
+    called, typically before `clickReset()`, to set the state that resetting
+    the controller will reset to.
 
 *   version 0.10
     
