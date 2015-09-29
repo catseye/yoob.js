@@ -211,28 +211,12 @@ yoob.Playfield = function() {
      * fun is a callback which takes three parameters:
      * x, y, and value.  If this callback returns a value,
      * it is written into the Playfield at that position.
-     * This function ensures a particular order.
-     * This function uses .get() to retrieve elements from
-     * the Playfield, and .set() to modify them.  For more
-     * efficient (but non-subclass-supporting) behaviour,
-     * use foreachDirect().
+     * This function ensures a particular order.  For efficiency,
+     * This function knows about the structure of the backing
+     * store, so if you override .get() or .put() in a subclass,
+     * you should also override this.
      */
     this.foreach = function(fun) {
-        for (var y = this.minY; y <= this.maxY; y++) {
-            for (var x = this.minX; x <= this.maxX; x++) {
-                var value = this.get(x, y);
-                if (value === undefined)
-                    continue;
-                var result = fun(x, y, value);
-                // TODO: Playfield.UNDEFINED vs. undefined meaning "no change"?
-                if (result !== undefined) {
-                    this.put(x, y, result);
-                }
-            }
-        }
-    };
-
-    this.foreachDirect = function(fun) {
         for (var y = this.minY; y <= this.maxY; y++) {
             for (var x = this.minX; x <= this.maxX; x++) {
                 var key = x+','+y;

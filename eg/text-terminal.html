@@ -3,7 +3,10 @@
   <meta charset="utf-8">
   <title>yoob.TextTerminal Demo</title>
   <style>
-#terminal {
+#canvas_view {
+    background: black;
+}
+#html_view {
     background: black;
 }
   </style>
@@ -29,25 +32,24 @@
     var element = document.getElementById('canvas_view');
     var t = new yoob.TextTerminal().init({ columns: 80, rows: 25 });
 
-    var view = new yoob.PlayfieldCanvasView().init({
-        playfield: t.getPlayfield(),
-        canvas: element,
-        cellWidth: 12,
-        cellHeight: 18,
-        fixedPosition: true
-    });
-
-    /*
-    var view = new yoob.PlayfieldHTMLView().init({
-        playfield: t.getPlayfield(),
-        element: element
-    });
-    view.render = function(value) {
-        //var style = ''; // "background-color: " + value.backgroundColor + "; color: " + value.textColor;
-        //return '<span style="' + style + '">' + value.character + "</span>";
-        return value.character;
-    };
-    */
+    var view;
+    if (true) {
+        view = t.createPlayfieldCanvasView({
+            canvas: element,
+            cellWidth: 12,
+            cellHeight: 18
+        });
+    } else {
+        view = new yoob.PlayfieldHTMLView().init({
+            playfield: t.getPlayfield(),
+            element: element
+        });
+        view.render = function(value) {
+            //var style = ''; // "background-color: " + value.backgroundColor + "; color: " + value.textColor;
+            //return '<span style="' + style + '">' + value.character + "</span>";
+            return value.character;
+        };
+    }
 
     t.write("Click me!\n");
     

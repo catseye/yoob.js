@@ -30,7 +30,7 @@ yoob.TextTerminal = function() {
     
     // Inner Class
     var upper = this;
-    var ConsoleCell = function() {        
+    var ConsoleCell = function() {
         this.init = function(c, tc, bc) {
             this.character = c;
             this.textColor = tc;
@@ -72,6 +72,13 @@ yoob.TextTerminal = function() {
 
         this.reset();
         return this;
+    };
+
+    this.createPlayfieldCanvasView = function(cfg) {
+        cfg.playfield = this.pf;
+        cfg.fixedPosition = true;
+        var view = new yoob.PlayfieldCanvasView().init(cfg);
+        return view;
     };
 
     this.getPlayfield = function() {
