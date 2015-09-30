@@ -1,7 +1,7 @@
 Changelog
 =========
 
-*   version 0.11-PRE
+*   version 0.11
     
     `yoob.Playfield`, its Views (`yoob.PlayfieldCanvasView`,
     `yoob.PlayfieldHTMLView`), `yoob.Cursor`, and `yoob.TextTerminal`
