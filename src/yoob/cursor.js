@@ -27,7 +27,12 @@ yoob.Cursor = function() {
     };
 
     this.clone = function() {
-        return new yoob.Cursor().init(this.x, this.y, this.dx, this.dy);
+        return new yoob.Cursor().init({
+            x: this.x,
+            y: this.y,
+            dx: this.dx,
+            dy: this.dy
+        });
     };
 
     /*** Chainable setters ***/

@@ -1,6 +1,10 @@
 Changelog
 =========
 
+*   version 0.12-PRE
+    
+    Fixed a bug in `yoob.Cursor.clone`.
+
 *   version 0.11
     
     `yoob.Playfield`, its Views (`yoob.PlayfieldCanvasView`,
