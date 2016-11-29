@@ -33,8 +33,14 @@
 
   yoob.makeLineBreak(container);
 
-  yoob.makeSliderPlusTextInput(container, "Speed:", 0, 100, 5, 50, function(v) {
-      console.log('new speed:' + v);
+  yoob.makeRangeControl(container, {
+      label: "Speed:",
+      min: 0,
+      max: 100,
+      value: 50,
+      callback: function(v) {
+          console.log('new speed:' + v);
+      }
   });
 
   yoob.makeLineBreak(container);
