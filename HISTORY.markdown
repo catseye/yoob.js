@@ -4,6 +4,11 @@ Changelog
 *   version 0.12-PRE
     
     Fixed a bug in `yoob.Cursor.clone`.
+    
+    Added `yoob.makeRangeControl()` in `yoob/element-factory.js`, which
+    improves upon `sliderPlusTextInput` by adding optional increment and
+    decrement buttons, and taking a configuration object as a parameter
+    for construction.
 
 *   version 0.11
     
