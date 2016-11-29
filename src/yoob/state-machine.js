@@ -1,5 +1,5 @@
 /*
- * This file is part of yoob.js version 0.7
+ * This file is part of yoob.js version 0.12-PRE
  * Available from https://github.com/catseye/yoob.js/
  * This file is in the public domain.  See http://unlicense.org/ for details.
  */
@@ -19,7 +19,7 @@ yoob.StateMachine = function() {
             if (this.state[nm].init) {
                 this.state[nm].init();
             } else {
-                alert('Internal error: "' + nm + '" must implement .init');
+                throw new Error('"' + nm + '" must implement .init');
             }
         }
         return this;
@@ -34,7 +34,7 @@ yoob.StateMachine = function() {
             if (this.currentState.onleave) {
                 this.currentState.onleave();
             } else {
-                alert('Internal error: "' + nm + '" must implement .onleave');
+                throw new Error('"' + nm + '" must implement .onleave');
             }
         }
         var state = this.state[nm];
@@ -42,7 +42,7 @@ yoob.StateMachine = function() {
         if (state.onenter) {
             state.onenter(args);
         } else {
-            alert('Internal error: "' + nm + '" must implement .onenter');
+            throw new Error('"' + nm + '" must implement .onenter');
         }
         return this;
     };
@@ -53,7 +53,7 @@ yoob.StateMachine = function() {
  */
 yoob.State = function() {
     this.init = function() {
-        alert("You must implement .init()");
+        throw new Error("You must implement .init()");
     };
 
     /*
@@ -66,7 +66,7 @@ yoob.State = function() {
      *     should only do so as the last thing in the handler.
      */
     this.onenter = function(args) {
-        alert("You must implement .onenter()");
+        throw new Error("You must implement .onenter()");
     };
 
     /*
@@ -76,6 +76,6 @@ yoob.State = function() {
      *   Cancel timers/animations
      */
     this.onleave = function() {
-        alert("You must implement .onleave()");
+        throw new Error("You must implement .onleave()");
     };
 };

@@ -1,5 +1,5 @@
 /*
- * This file is part of yoob.js version 0.8
+ * This file is part of yoob.js version 0.12-PRE
  * Available from https://github.com/catseye/yoob.js/
  * This file is in the public domain.  See http://unlicense.org/ for details.
  */
@@ -68,7 +68,7 @@ yoob.PresetManager = function() {
     };
 
     this.setPreset = function(id) {
-        alert("No default setPreset callback configured");
+        throw new Error("No default setPreset callback configured");
     };
 
     /*

@@ -1,5 +1,5 @@
 /*
- * This file is part of yoob.js version 0.11
+ * This file is part of yoob.js version 0.12-PRE
  * Available from https://github.com/catseye/yoob.js/
  * This file is in the public domain.  See http://unlicense.org/ for details.
  */
@@ -197,7 +197,7 @@ yoob.Controller = function() {
      * - `block` to indicate that the program is waiting for more input.
      */
     this.step = function() {
-        alert("step() NotImplementedError");
+        throw new Error("step() NotImplementedError");
     };
 
     /******************
@@ -266,7 +266,7 @@ yoob.Controller = function() {
     };
 
     this.reset = function(state) {
-        alert("reset() NotImplementedError");
+        throw new Error("reset() NotImplementedError");
     };
 
     this.setResetState = function(state) {
