@@ -9,6 +9,11 @@ Changelog
     improves upon `sliderPlusTextInput` by adding optional increment and
     decrement buttons, and taking a configuration object as a parameter
     for construction.
+    
+    `yoob.PlayfieldCanvasView` now accepts `resizeCanvas` argument,
+    which defaults to true, but can be set to false to suppress the
+    default behaviour of resizing the canvas to fit the playfield
+    just before each time it is drawn.
 
 *   version 0.11
     

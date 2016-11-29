@@ -1,5 +1,5 @@
 /*
- * This file is part of yoob.js version 0.11
+ * This file is part of yoob.js version 0.12-PRE
  * Available from https://github.com/catseye/yoob.js/
  * This file is in the public domain.  See http://unlicense.org/ for details.
  */
@@ -15,7 +15,10 @@ if (window.yoob === undefined) yoob = {};
  * If the cell values are solid and fill the entire cell, drawCursorsFirst: false
  * may be in order.
  *
- * TODO: don't necesarily resize canvas each time?
+ * resizeCanvas defaults to true.  If set to false, the canvas element will
+ * not be resized before each draw.  You may wish to do this yourself in your
+ * code which calls playfieldCanvasView.draw().
+ *
  */
 yoob.PlayfieldCanvasView = function() {
     this.init = function(cfg) {
@@ -26,6 +29,7 @@ yoob.PlayfieldCanvasView = function() {
         this.fixedSizeCanvas = !!cfg.fixedSizeCanvas;
         this.drawCursorsFirst = (cfg.drawCursorsFirst === undefined) ? true : !!cfg.drawCursorsFirst;
         this.setCellDimensions(cfg.cellWidth || 8, cfg.cellHeight || 8);
+        this.resizeCanvas = cfg.resizeCanvas === false ? false : true;
         return this;
     };
 
@@ -116,7 +120,7 @@ yoob.PlayfieldCanvasView = function() {
 
     /*
      * Draw the Playfield, and its set of Cursors, on the canvas element.
-     * Resizes the canvas to the needed dimensions first.
+     * Optionally resizes the canvas to the needed dimensions first.
      */
     this.draw = function() {
         var canvas = this.canvas;
@@ -126,8 +130,10 @@ yoob.PlayfieldCanvasView = function() {
         var width = this.pf.getCursoredExtentX();
         var height = this.pf.getCursoredExtentY();
 
-        canvas.width = width * cellWidth;
-        canvas.height = height * cellHeight;
+        if (this.resizeCanvas) {
+            canvas.width = width * cellWidth;
+            canvas.height = height * cellHeight;
+        }
         var ctx = this.ctx;
 
         ctx.textBaseline = "top";
