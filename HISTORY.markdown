@@ -14,6 +14,9 @@ Changelog
     which defaults to true, but can be set to false to suppress the
     default behaviour of resizing the canvas to fit the playfield
     just before each time it is drawn.
+    
+    In many places where the code was calling `alert()` to signify an
+    error, it now throws a new `Error` object instead.
 
 *   version 0.11
     
