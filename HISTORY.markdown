@@ -1,7 +1,7 @@
 Changelog
 =========
 
-*   version 0.12-PRE
+*   version 0.12
     
     Fixed a bug in `yoob.Cursor.clone`.
     
