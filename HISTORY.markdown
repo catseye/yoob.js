@@ -1,6 +1,12 @@
 Changelog
 =========
 
+*   version 0.13
+    
+    Fixed NaN bugs in element-factory.
+    
+    Fixed a bug in `yoob.Playfield.map`.
+    
 *   version 0.12
     
     Fixed a bug in `yoob.Cursor.clone`.
