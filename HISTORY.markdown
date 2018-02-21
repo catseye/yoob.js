@@ -3,7 +3,9 @@ Changelog
 
 *   version 0.13
     
-    Fixed NaN bugs in element-factory.
+    Added `populateFromPairs` helper method to `yoob.PresetManager`.
+    
+    Fixed `NaN` bugs in element-factory.
     
     Fixed a bug in `yoob.Playfield.map`.
     
