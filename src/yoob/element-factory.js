@@ -1,5 +1,5 @@
 /*
- * This file is part of yoob.js version 0.12
+ * This file is part of yoob.js version 0.13
  * Available from https://github.com/catseye/yoob.js/
  * This file is in the public domain.  See http://unlicense.org/ for details.
  */
@@ -210,7 +210,7 @@ yoob.makeSliderPlusTextInput = function(container, label, min_, max_, size, valu
     };
     textInput.onchange = function(e) {
         var v = parseInt(textInput.value, 10);
-        if (v !== NaN) {
+        if (!isNaN(v)) {
             slider.value = "" + v;
             fun(v);
         }
@@ -258,7 +258,7 @@ yoob.makeRangeControl = function(container, config) {
     };
     textInput.onchange = function(e) {
         var v = parseInt(textInput.value, 10);
-        if (v !== NaN) {
+        if (!isNaN(v)) {
             slider.value = "" + v;
             callback(v);
         }
@@ -268,7 +268,7 @@ yoob.makeRangeControl = function(container, config) {
     if (withButtons) {
         decButton = yoob.makeButton(container, "-", function() { 
             var v = parseInt(textInput.value, 10);
-            if (v !== NaN && v > min_) {
+            if ((!isNaN(v)) && v > min_) {
                 v--;
                 textInput.value = "" + v;
                 slider.value = "" + v;
@@ -277,7 +277,7 @@ yoob.makeRangeControl = function(container, config) {
         });
         incButton = yoob.makeButton(container, "+", function() {
             var v = parseInt(textInput.value, 10);
-            if (v !== NaN && v < max_) {
+            if ((!isNaN(v)) && v < max_) {
                 v++;
                 textInput.value = "" + v;
                 slider.value = "" + v;
@@ -303,11 +303,9 @@ yoob.makeSVG = function(container) {
 
 yoob.makeSVGElem = function(svg, tag, cfg) {
     var elem = document.createElementNS(svg.namespaceURI, tag);
-    for (var key in cfg) {
-        if (cfg.hasOwnProperty(key)) {
-            elem.setAttribute(key, cfg[key]);
-        }
-    }
+    Object.keys(cfg).forEach(function(key) {
+        elem.setAttribute(key, cfg[key]);
+    });
     svg.appendChild(elem);
     return elem;
 };

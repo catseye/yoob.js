@@ -1,5 +1,5 @@
 /*
- * This file is part of yoob.js version 0.12
+ * This file is part of yoob.js version 0.13
  * Available from https://github.com/catseye/yoob.js/
  * This file is in the public domain.  See http://unlicense.org/ for details.
  */
@@ -274,7 +274,7 @@ yoob.Playfield = function() {
         if (maxDy === undefined) maxDy = 0;
         for (var y = this.minY + minDy; y <= this.maxY + maxDy; y++) {
             for (var x = this.minX + minDx; x <= this.maxX + maxDx; x++) {
-                destPf.putDirty(x, y, fun(pf, x, y));
+                destPf.putDirty(x, y, fun(this, x, y));
             }
         }
         destPf.recalculateBounds();
